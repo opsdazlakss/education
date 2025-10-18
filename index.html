@@ -738,6 +738,68 @@
     </div>
 
     <script>
+        const quizQuestionPools = {
+            1: [ // Stage 1 için soru havuzu
+                {
+                    question: 'MAT projesi hangi ilkelere dayanmaktadır?',
+                    options: ['Kapalı kaynak', 'Açık kaynak', 'Ticari ürün'],
+                    correctAnswer: 'Açık kaynak'
+                },
+                {
+                    question: 'MAT hangi platformdur?',
+                    options: ['Eğitim platformu', 'Oyun platformu', 'Alışveriş sitesi'],
+                    correctAnswer: 'Eğitim platformu'
+                },
+                {
+                    question: 'Topluluk desteği var mı?',
+                    options: ['Evet', 'Hayır', 'Bazen'],
+                    correctAnswer: 'Evet'
+                },
+                {
+                    question: 'MAT projesi hangi amaçla kurulmuştur?',
+                    options: ['Kar elde etmek', 'Eğitim sağlamak', 'Reklam yapmak'],
+                    correctAnswer: 'Eğitim sağlamak'
+                },
+                {
+                    question: 'Proje kaç katmandan oluşur?',
+                    options: ['2', '3', '4'],
+                    correctAnswer: '3'
+                },
+                {
+                    question: 'Backend hangi dilde yazılmıştır?',
+                    options: ['Python', 'JavaScript', 'Java'],
+                    correctAnswer: 'JavaScript'
+                },
+                {
+                    question: 'Veritabanı olarak ne kullanılır?',
+                    options: ['MySQL', 'MongoDB', 'PostgreSQL'],
+                    correctAnswer: 'MongoDB'
+                },
+                {
+                    question: 'API tipi nedir?',
+                    options: ['REST', 'GraphQL', 'SOAP'],
+                    correctAnswer: 'REST'
+                },
+                {
+                    question: 'Kimlik doğrulama nasıl yapılır?',
+                    options: ['JWT', 'Session', 'Cookie'],
+                    correctAnswer: 'JWT'
+                },
+                {
+                    question: 'Frontend framework nedir?',
+                    options: ['React', 'Vue', 'Angular'],
+                    correctAnswer: 'React'
+                }
+            ],
+            2: [ // Stage 2 için soru havuzu (örnek)
+                {
+                    question: 'MAT projesi kaç ana katmandan oluşmaktadır?',
+                    options: ['2', '3', '4'],
+                    correctAnswer: '3'
+                },
+                // Soru eklemek için üstteki formatta devam keeeee
+            ]
+        };
         const stages = [
             {
                 id: 1,
@@ -753,23 +815,8 @@
                         type: 'quiz',
                         title: 'Aşama 1 Testi',
                         icon: '❓',
-                        questions: [
-                            {
-                                question: 'MAT projesi hangi ilkelere dayanmaktadır?',
-                                options: ['Kapalı kaynak', 'Açık kaynak', 'Ticari ürün'],
-                                correctAnswer: 'Açık kaynak'
-                            },
-                            {
-                                question: 'MAT hangi platformdur?',
-                                options: ['Eğitim platformu', 'Oyun platformu', 'Alışveriş sitesi'],
-                                correctAnswer: 'Eğitim platformu'
-                            },
-                            {
-                                question: 'Topluluk desteği var mı?',
-                                options: ['Evet', 'Hayır', 'Bazen'],
-                                correctAnswer: 'Evet'
-                            }
-                        ]
+                        questionCount: 5, // Kaç soru sorulacak
+                        stageId: 1 // Hangi havuzdan soru çekilecek
                     }
                 ]
             },
@@ -868,7 +915,29 @@
                     { type: 'link', title: 'Başlangıç Şablonu', icon: '🔗', data: 'https://github.com/mat/starter-template' },
                     { type: 'survey', title: 'Final Değerlendirmesi', icon: '📋', data: ['Proje tamamlanmış mı?', 'Neler öğrendiniz?', 'Geri bildirim ve gelecek planlarınız'] }
                 ]
-            }
+            },
+            {
+                id: 10,
+                title: "10",
+                description: "Daha derinlemesine teknik konular",
+                type: "Presentasyon",
+                contents: [
+                    { type: 'video', title: 'İleri Konular Videosu', icon: '🎥', data: 'https://www.youtube.com/embed/jNQXAC9IVRw' },
+                    { type: 'text', title: 'Detaylı Rehber', icon: '📄', data: 'Scalability: Veritabanı optimizasyonu ve caching stratejileri. Security: Encryption, authentication ve authorization mekanizmaları. Performance: Load balancing ve CDN kullanımı.' },
+                    { type: 'survey', title: 'Bilgi Testi', icon: '📋', data: ['API authentication nasıl yapılır?', 'Veritabanı optimizasyonunun önemi nedir?', 'Rate limiting neden gereklidir?'] }
+                ]
+            },
+            {
+                id: 11,
+                title: "11",
+                description: "Daha derinlemesine teknik konular",
+                type: "Presentasyon",
+                contents: [
+                    { type: 'video', title: 'İleri Konular Videosu', icon: '🎥', data: 'https://www.youtube.com/embed/jNQXAC9IVRw' },
+                    { type: 'text', title: 'Detaylı Rehber', icon: '📄', data: 'Scalability: Veritabanı optimizasyonu ve caching stratejileri. Security: Encryption, authentication ve authorization mekanizmaları. Performance: Load balancing ve CDN kullanımı.' },
+                    { type: 'survey', title: 'Bilgi Testi', icon: '📋', data: ['API authentication nasıl yapılır?', 'Veritabanı optimizasyonunun önemi nedir?', 'Rate limiting neden gereklidir?'] }
+                ]
+            },
         ];
 
         let currentStage = 1;
@@ -949,7 +1018,7 @@
 
                 item.appendChild(itemInner);
                 item.onclick = () => {
-                    if (!completedContents[contentId]) {
+                    if (!completedContents[contentId] && content.type !== 'quiz') {
                         completedContents[contentId] = true;
                     }
                     showContentModal(content);
@@ -977,6 +1046,29 @@
             nextBtn.textContent = currentStage === 9 ? 'Tamamlandı! 🎉' : 'Sonraki Aşama →';
         }
 
+        function getRandomQuestions(stageId, count) {
+            const pool = quizQuestionPools[stageId] || [];
+            if (pool.length === 0) return [];
+            
+            // Havuzdaki tüm soruları kopyala
+            const availableQuestions = [...pool];
+            const selectedQuestions = [];
+            
+            // İstenen sayıda (veya havuzdaki toplam soru sayısı kadar) soru seç
+            const questionCount = Math.min(count, availableQuestions.length);
+            
+            for (let i = 0; i < questionCount; i++) {
+                // Rastgele bir index seç
+                const randomIndex = Math.floor(Math.random() * availableQuestions.length);
+                // Soruyu ekle
+                selectedQuestions.push(availableQuestions[randomIndex]);
+                // Seçilen soruyu havuzdan çıkar (tekrar seçilmesin)
+                availableQuestions.splice(randomIndex, 1);
+            }
+            
+            return selectedQuestions;
+        }
+
         function canAccessStage(stageId) {
             if (stageId === 1) return true;
             return isStageFullyCompleted(stageId - 1);
@@ -994,6 +1086,7 @@
             return count;
         }
 
+        //ben bu fonksiyonun taaa aq
         function showContentModal(content) {
             const modal = document.getElementById('contentModal');
             const modalBody = document.getElementById('modalBody');
@@ -1006,18 +1099,30 @@
             document.getElementById('modalTitle').textContent = content.title;
 
             if (content.type === 'quiz') {
+                // Rastgele sorular seç
+                const quizQuestions = getRandomQuestions(content.stageId, content.questionCount);
+                
+                if (quizQuestions.length === 0) {
+                    modalBody.innerHTML = '<p style="color: #ef4444; text-align: center;">Soru havuzu boş!</p>';
+                    modal.classList.add('active');
+                    return;
+                }
+                
+                // Seçilen soruları content'e ekle
+                content.questions = quizQuestions;
+                
                 // İlk soruyu göster
                 currentQuizIndex = 0;
-                currentQuizAnswers = new Array(content.questions.length).fill(null);
+                currentQuizAnswers = new Array(quizQuestions.length).fill(null);
                 
-                const currentQ = content.questions[currentQuizIndex];
+                const currentQ = quizQuestions[currentQuizIndex];
                 let optionsHTML = currentQ.options.map((opt, idx) => `
                     <button class="quiz-option" data-answer="${opt}">${opt}</button>
                 `).join('');
 
                 modalBody.innerHTML = `
                     <div class="quiz-box">
-                        <div class="quiz-progress-info">Soru ${currentQuizIndex + 1} / ${content.questions.length}</div>
+                        <div class="quiz-progress-info">Soru ${currentQuizIndex + 1} / ${quizQuestions.length}</div>
                         <p class="quiz-question">${currentQ.question}</p>
                         <div class="quiz-options" id="quizOptionsContainer">${optionsHTML}</div>
                         <p id="quizResult" class="quiz-result"></p>
@@ -1027,11 +1132,12 @@
                     </div>
                 `;
 
-                // Seçeneklere tıklama eventi ekle
                 document.querySelectorAll('.quiz-option').forEach(btn => {
                     btn.onclick = () => checkMultiQuizAnswer(btn, content);
                 });
-            } else if (content.type === 'text') {
+            } 
+            // Diğer içerik tipleri aynı kalacak...
+            else if (content.type === 'text') {
                 modalBody.innerHTML = `<div class="text-content">${content.data}</div>`;
             } else if (content.type === 'video') {
                 modalBody.innerHTML = `<div class="video-container"><iframe src="${content.data}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`;
@@ -1144,22 +1250,35 @@
             });
 
             const percentage = Math.round((correctCount / content.questions.length) * 100);
-            const passed = percentage >= 60;
+            const passed = correctCount === content.questions.length; // Tüm soruları doğru cevaplamalı
+
+            // Eğer tüm sorular doğru ise quiz'i tamamlanmış olarak işaretle
+            if (passed) {
+                const stageData = stages[currentStage - 1];
+                stageData.contents.forEach((c, idx) => {
+                    if (c.type === 'quiz' && c.title === content.title) {
+                        const contentId = `${currentStage}-${idx}`;
+                        completedContents[contentId] = true;
+                    }
+                });
+            }
 
             const modalBody = document.getElementById('modalBody');
             modalBody.innerHTML = `
                 <div class="quiz-box" style="text-align: center;">
                     <div style="font-size: 64px; margin-bottom: 1rem;">${passed ? '🎉' : '📚'}</div>
                     <h2 style="font-size: 28px; color: ${passed ? '#22c55e' : '#ef4444'}; margin-bottom: 1rem;">
-                        ${passed ? 'Tebrikler!' : 'Tekrar Deneyin'}
+                        ${passed ? 'Tebrikler! Tüm Soruları Doğru Cevapladınız!' : 'Tüm Soruları Doğru Cevaplamalısınız'}
                     </h2>
                     <p style="font-size: 18px; margin-bottom: 2rem;">
-                        ${correctCount} / ${content.questions.length} doğru cevap (%${percentage})
+                        ${correctCount} / ${content.questions.length} doğru cevap
                     </p>
+                    ${!passed ? '<p style="color: #94a3b8; margin-bottom: 1rem;">Lütfen testi tekrar deneyin ve tüm soruları doğru cevaplayın.</p>' : ''}
                     <button class="btn btn-primary" onclick="closeModal(); render();">Kapat</button>
                 </div>
             `;
         }
+
         function closeModal() {
             document.getElementById('contentModal').classList.remove('active');
         }
