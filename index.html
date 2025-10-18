@@ -1174,8 +1174,9 @@
             render();
             }, 1000);
             } else {
-            result.innerHTML = `❌ Yanlış cevap. Doğru cevap: <b>${correct}</b>`;
-            result.style.color = '#ef4444';
+                result.innerHTML = `❌ Yanlış cevap verdiniz.`;
+                result.style.color = '#ef4444';
+                //result.innerHTML = `❌ Yanlış cevap. Doğru cevap: <b>${correct}</b>`; bu kısım test kısmında eğer doğru cevabı da göstermek istersek olacak şu anlık doğru cevap gösterme yoks
             }
         }
         let currentQuizIndex = 0;
@@ -1201,8 +1202,9 @@
             } else {
                 button.style.background = 'rgba(239, 68, 68, 0.3)';
                 button.style.borderColor = '#ef4444';
-                result.innerHTML = `❌ Yanlış cevap. Doğru cevap: <b>${currentQ.correctAnswer}</b>`;
+                result.innerHTML = `❌ Yanlış cevap verdiniz.`;
                 result.style.color = '#ef4444';
+                //result.innerHTML = `❌ Yanlış cevap. Doğru cevap: <b>${currentQ.correctAnswer}</b>`; //doğru cevabı gösteren kod
             }
 
             // Son soru değilse "Sonraki Soru" butonunu göster
