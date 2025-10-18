@@ -1,0 +1,1210 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MAT - Eğitim Sistemi</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #0f172a;
+            color: #e2e8f0;
+            line-height: 1.6;
+        }
+
+        header {
+            border-bottom: 1px solid #1e293b;
+            background: rgba(15, 23, 42, 0.5);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 40;
+        }
+
+        .header-content {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            background: linear-gradient(to bottom right, #3b82f6, #06b6d4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 18px;
+            color: white;
+        }
+
+        .logo-text h1 {
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .logo-text p {
+            font-size: 12px;
+            color: #94a3b8;
+        }
+
+        .progress-section {
+            text-align: right;
+        }
+
+        .progress-section p {
+            font-size: 14px;
+            color: #94a3b8;
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-bar {
+            width: 130px;
+            height: 6px;
+            background-color: #1e293b;
+            border-radius: 9999px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(to right, #3b82f6, #06b6d4);
+            transition: width 0.3s ease;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 1024px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .sidebar {
+            position: sticky;
+            top: 100px;
+            height: fit-content;
+            max-height: calc(100vh - 120px);
+            overflow: hidden;
+        }
+
+        .sidebar h2 {
+            font-size: 12px;
+            font-weight: 600;
+            color: #cbd5e1;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 1rem;
+        }
+
+        .stages-list {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0.75rem;
+            max-height: calc(100vh - 200px);
+            overflow-y: auto;
+            padding-right: 0.5rem;
+        }
+
+        .stages-list::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .stages-list::-webkit-scrollbar-track {
+            background: rgba(30, 41, 59, 0.3);
+            border-radius: 10px;
+        }
+
+        .stages-list::-webkit-scrollbar-thumb {
+            background: rgba(59, 130, 246, 0.5);
+            border-radius: 10px;
+        }
+
+        .stages-list::-webkit-scrollbar-thumb:hover {
+            background: rgba(59, 130, 246, 0.7);
+        }
+
+        .stage-btn {
+            text-align: left;
+            padding: 1.25rem;
+            border-radius: 12px;
+            border: 1px solid #334155;
+            background: rgba(30, 41, 59, 0.4);
+            color: #e2e8f0;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            font-size: 14px;
+            min-height: 100px;
+            justify-content: space-between;
+        }
+
+        .stage-btn:hover:not(:disabled) {
+            background: rgba(30, 41, 59, 0.6);
+            border-color: #475569;
+            transform: translateY(-2px);
+        }
+
+        .stage-btn.active {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.3), rgba(6, 182, 212, 0.3));
+            border: 2px solid rgba(59, 130, 246, 0.6);
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+        }
+
+        .stage-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            background: rgba(30, 41, 59, 0.2);
+        }
+
+        .stage-btn-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+
+        .stage-icon {
+            font-size: 24px;
+            flex-shrink: 0;
+            margin-top: 0.25rem;
+        }
+
+        .stage-info {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .stage-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #e2e8f0;
+            line-height: 1.3;
+        }
+
+        .stage-type {
+            font-size: 11px;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stage-status {
+            font-size: 12px;
+            color: #64748b;
+            margin-top: 0.5rem;
+            padding-top: 0.75rem;
+            border-top: 1px solid rgba(59, 130, 246, 0.2);
+        }
+
+        .content-card {
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid #1e293b;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .card-header {
+            background: linear-gradient(to right, rgba(59, 130, 246, 0.1), rgba(6, 182, 212, 0.1));
+            border-bottom: 1px solid #1e293b;
+            padding: 2rem;
+        }
+
+        .card-header-top {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .stage-badge {
+            padding: 0.5rem 0.75rem;
+            background: rgba(59, 130, 246, 0.2);
+            border: 1px solid rgba(59, 130, 246, 0.4);
+            border-radius: 9999px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #93c5fd;
+        }
+
+        .card-header h2 {
+            font-size: 32px;
+            font-weight: bold;
+            color: white;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-header p {
+            color: #94a3b8;
+            font-size: 14px;
+        }
+
+        .card-body {
+            padding: 2rem;
+        }
+
+        .content-section {
+            margin-bottom: 2rem;
+        }
+
+        .content-section h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 1rem;
+        }
+
+        .content-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .content-item {
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid #334155;
+            background: rgba(30, 41, 59, 0.3);
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 15px;
+        }
+
+        .content-item:hover {
+            background: rgba(30, 41, 59, 0.5);
+            border-color: #475569;
+        }
+
+        .content-item.completed {
+            background: rgba(34, 197, 94, 0.1);
+            border-color: rgba(34, 197, 94, 0.3);
+        }
+
+        .content-emoji {
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+
+        .content-details {
+            flex: 1;
+        }
+
+        .content-title {
+            font-weight: 500;
+            color: #e2e8f0;
+            margin-bottom: 0.25rem;
+        }
+
+        .content-type {
+            font-size: 12px;
+            color: #64748b;
+        }
+
+        .content-check {
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+
+        .progress-section-card {
+            background: rgba(30, 41, 59, 0.3);
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+
+        .progress-header p {
+            font-size: 14px;
+            font-weight: 500;
+            color: #cbd5e1;
+        }
+
+        .progress-count {
+            font-size: 14px;
+            font-weight: 600;
+            color: #06b6d4;
+        }
+        .quiz-progress-info {
+            font-size: 14px;
+            color: #94a3b8;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .quiz-navigation {
+            display: flex;
+            justify-content: center;
+        }
+
+        .progress-bar-full {
+            width: 100%;
+            height: 8px;
+            background-color: #1e293b;
+            border-radius: 9999px;
+            overflow: hidden;
+        }
+
+        .progress-fill-full {
+            height: 100%;
+            background: linear-gradient(to right, #06b6d4, #3b82f6);
+            transition: width 0.3s ease;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            border: none;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 15px;
+        }
+
+        .btn-secondary {
+            border: 1px solid #475569;
+            color: #cbd5e1;
+            background: transparent;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(30, 41, 59, 0.5);
+        }
+
+        .btn-primary {
+            background: linear-gradient(to right, #3b82f6, #06b6d4);
+            color: white;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: linear-gradient(to right, #2563eb, #0891b2);
+        }
+
+        .btn-primary:disabled {
+            background: #475569;
+            color: #64748b;
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+
+        .info-card {
+            margin-top: 1.5rem;
+            background: rgba(15, 23, 42, 0.3);
+            border: 1px solid #1e293b;
+            border-radius: 8px;
+            padding: 1.5rem;
+        }
+
+        .info-card p {
+            font-size: 14px;
+            color: #94a3b8;
+        }
+
+        .info-card span {
+            font-weight: 600;
+            color: #cbd5e1;
+        }
+
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(4px);
+            z-index: 50;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 800px;
+            max-height: 80vh;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            background: linear-gradient(to right, rgba(59, 130, 246, 0.1), rgba(6, 182, 212, 0.1));
+            border-bottom: 1px solid #334155;
+            padding: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .modal-title-section h3 {
+            font-size: 20px;
+            font-weight: bold;
+            color: white;
+            margin-top: 0.5rem;
+        }
+
+        .modal-type {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: #94a3b8;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: #94a3b8;
+            cursor: pointer;
+            font-size: 24px;
+            transition: color 0.2s;
+        }
+
+        .close-btn:hover {
+            color: #e2e8f0;
+        }
+
+        .modal-body {
+            padding: 2rem;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .text-content {
+            background: rgba(30, 41, 59, 0.3);
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 1.5rem;
+            color: #e2e8f0;
+            white-space: pre-wrap;
+            line-height: 1.8;
+        }
+
+        .video-container {
+            aspect-ratio: 16 / 9;
+            background: black;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .video-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .link-box {
+            background: rgba(30, 41, 59, 0.3);
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 1.5rem;
+        }
+
+        .link-box p {
+            color: #cbd5e1;
+            margin-bottom: 1rem;
+            font-size: 14px;
+        }
+
+        .link-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            background: linear-gradient(to right, #3b82f6, #06b6d4);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            text-decoration: none;
+        }
+
+        .link-btn:hover {
+            background: linear-gradient(to right, #2563eb, #0891b2);
+        }
+
+        .link-url {
+            font-size: 12px;
+            color: #64748b;
+            word-break: break-all;
+            margin-top: 1rem;
+        }
+
+        .survey-questions {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .question-box {
+            background: rgba(30, 41, 59, 0.3);
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 1.5rem;
+        }
+
+        .question-number {
+            font-weight: 600;
+            color: #e2e8f0;
+            margin-bottom: 1rem;
+            font-size: 14px;
+        }
+
+        .question-textarea {
+            width: 100%;
+            padding: 0.75rem;
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 6px;
+            color: #e2e8f0;
+            resize: vertical;
+            min-height: 80px;
+            font-family: inherit;
+            font-size: 14px;
+        }
+
+        .question-textarea:focus {
+            outline: none;
+            border-color: #3b82f6;
+        }
+
+        .submit-survey-btn {
+            width: 100%;
+            padding: 0.75rem;
+            background: linear-gradient(to right, #3b82f6, #06b6d4);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 15px;
+            margin-top: 1rem;
+        }
+
+        .submit-survey-btn:hover {
+            background: linear-gradient(to right, #2563eb, #0891b2);
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <div class="logo-icon">M</div>
+                <div class="logo-text">
+                    <h1>MAT</h1>
+                    <p>Eğitim Sistemi</p>
+                </div>
+            </div>
+            <div class="progress-section">
+                <p>Aşama <span id="currentStageDisplay">1</span>/9</p>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="headerProgressFill" style="width: 11.11%"></div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="container">
+        <div class="main-grid">
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <h2>Aşamalar</h2>
+                <div class="stages-list" id="stagesList"></div>
+            </div>
+
+            <!-- Main Content -->
+            <div>
+                <div class="content-card">
+                    <div class="card-header">
+                        <div class="card-header-top">
+                            <div class="stage-badge">Aşama <span id="stageId">1</span></div>
+                            <span id="stageTypeLabel">Konferans</span>
+                        </div>
+                        <h2 id="stageTitle">Proje Tanıtımı</h2>
+                        <p id="stageDescription">MAT projesinin temel bilgileri ve hedefleri</p>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="content-section">
+                            <h3>Aşama İçeriği</h3>
+                            <div class="content-list" id="contentList"></div>
+                        </div>
+
+                        <div class="progress-section-card">
+                            <div class="progress-header">
+                                <p>Bu Aşamayı Tamamlama İlerlemesi</p>
+                                <span class="progress-count"><span id="completedCount">0</span>/<span id="totalCount">4</span></span>
+                            </div>
+                            <div class="progress-bar-full">
+                                <div class="progress-fill-full" id="stageProgressFill" style="width: 0%"></div>
+                            </div>
+                        </div>
+
+                        <div class="action-buttons">
+                            <button class="btn btn-secondary" id="prevBtn" style="display: none;">← Önceki</button>
+                            <button class="btn btn-primary" id="nextBtn">Sonraki Aşama →</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <p>💡 <span>İpucu:</span> Bu aşamadaki tüm içeriği tamamladıktan sonra sonraki aşamaya geçebilirsiniz.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal" id="contentModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title-section">
+                    <div class="modal-type" id="modalType">Metin</div>
+                    <h3 id="modalTitle">İçerik Başlığı</h3>
+                </div>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="modalBody"></div>
+        </div>
+    </div>
+
+    <script>
+        const stages = [
+            {
+                id: 1,
+                title: "Proje Tanıtımı",
+                description: "MAT projesinin temel bilgileri ve hedefleri",
+                type: "Konferans",
+                contents: [
+                    { type: 'text', title: 'Proje Hakkında Bilgi', icon: '📄', data: 'MAT projesi, modern teknoloji ve inovasyon üzerine kurulan bir platformdur. Proje, topluluk tarafından desteklenen ve açık kaynak ilkeleriyle yönetilen bir sistemdir.' },
+                    { type: 'video', title: 'Tanıtım Videosu', icon: '🎥', data: 'https://www.youtube.com/embed/jfKfPfyJRdk'},
+                    { type: 'link', title: 'Resmi Dokümantasyon', icon: '🔗', data: 'https://docs.example.com' },
+                    { type: 'survey', title: 'Başlangıç Anketi', icon: '📋', data: ['Projeden haberiniz vardı mı?', 'Hangi alanda kullanmayı planlıyorsunuz?', 'Deneyim seviyeniz nedir?'] },
+                    {
+                        type: 'quiz',
+                        title: 'Aşama 1 Testi',
+                        icon: '❓',
+                        questions: [
+                            {
+                                question: 'MAT projesi hangi ilkelere dayanmaktadır?',
+                                options: ['Kapalı kaynak', 'Açık kaynak', 'Ticari ürün'],
+                                correctAnswer: 'Açık kaynak'
+                            },
+                            {
+                                question: 'MAT hangi platformdur?',
+                                options: ['Eğitim platformu', 'Oyun platformu', 'Alışveriş sitesi'],
+                                correctAnswer: 'Eğitim platformu'
+                            },
+                            {
+                                question: 'Topluluk desteği var mı?',
+                                options: ['Evet', 'Hayır', 'Bazen'],
+                                correctAnswer: 'Evet'
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 2,
+                title: "Genel Bakış",
+                description: "Proje yapısı ve ana bileşenleri hakkında bilgi",
+                type: "Video",
+                contents: [
+                    { type: 'video', title: 'Proje Yapısı Videosu', icon: '🎥', data: 'https://www.youtube.com/embed/jNQXAC9IVRw' },
+                    { type: 'text', title: 'Mimari Detaylar', icon: '📄', data: 'MAT projesi üç ana katmandan oluşur: Frontend, Backend ve Database. Her katman bağımsız olarak çalışabilir ve modüler yapısı sayesinde kolay genişletilebilir.' },
+                    { type: 'link', title: 'GitHub Deposu', icon: '🔗', data: 'https://github.com/mat/project' },
+                    {
+                        type: 'quiz',
+                        title: 'Aşama 2 Testi',
+                        icon: '❓',
+                        question: 'MAT projesi kaç ana katmandan oluşmaktadır?',
+                        options: ['2', '3', '4'],
+                        correctAnswer: '3'
+                    }
+                ]
+            },
+            {
+                id: 3,
+                title: "Vizyon & Misyon",
+                description: "Proje vizyonu ve hedeflerimiz",
+                type: "Presentasyon",
+                contents: [
+                    { type: 'text', title: 'Vizyon Metni', icon: '📄', data: 'Vizyonumuz: Dünyanın en erişilebilir ve kullanıcı dostu teknoloji platformu olmak. Misyonumuz: Herkesin teknolojiye erişebilmesini sağlamak ve açık kaynak topluluğunu güçlendirmek.' },
+                    { type: 'video', title: 'Vizyon Sunumu', icon: '🎥', data: 'https://www.youtube.com/embed/9bZkp7q19f0' },
+                    { type: 'survey', title: 'Görüş Anketi', icon: '📋', data: ['Projemizin vizyonu size ne ifade ediyor?', 'Hangi özellik en çok ilginizi çekti?'] }
+                ]
+            },
+            {
+                id: 4,
+                title: "Teknoloji Altyapısı",
+                description: "Teknik implementasyon ve altyapı detayları",
+                type: "Video",
+                contents: [
+                    { type: 'video', title: 'Teknik Detaylar', icon: '🎥', data: 'https://www.youtube.com/embed/tYzMGcUty6s' },
+                    { type: 'text', title: 'API Dokümantasyonu', icon: '📄', data: 'REST API: Tüm uç noktalarımız RESTful standartlarını takip eder. Authentication: JWT tabanlı kimlik doğrulama kullanılır. Rate Limiting: API çağrılarında oran sınırlandırması uygulanır.' },
+                    { type: 'link', title: 'Teknik Belgeleri', icon: '🔗', data: 'https://tech-docs.example.com' }
+                ]
+            },
+            {
+                id: 5,
+                title: "Yol Haritası",
+                description: "Proje yol haritası ve milestone'lar",
+                type: "Roadmap",
+                contents: [
+                    { type: 'text', title: 'Yol Haritası Metni', icon: '📄', data: 'Q1 2024: Temel özellikler tamamlanacak. Q2 2024: Entegrasyon ve test aşaması. Q3 2024: Beta sürümü açık olacak. Q4 2024: Resmi 1.0 sürümü piyasaya çıkacak.' },
+                    { type: 'link', title: 'Etkileşimli Roadmap', icon: '🔗', data: 'https://roadmap.example.com' },
+                    { type: 'survey', title: 'Öncelik Anketi', icon: '📋', data: ['Hangi özellik önce gelmelidir?', 'Neler eksik olduğunu düşünüyorsunuz?'] }
+                ]
+            },
+            {
+                id: 6,
+                title: "Topluluk Katılımı",
+                description: "Komunite ile etkileşim ve geri bildirim",
+                type: "Anket",
+                contents: [
+                    { type: 'survey', title: 'Topluluk Geri Bildirimi', icon: '📋', data: ['Projemizi nasıl değerlendiriyorsunuz?', 'Hangi alanlarda iyileştirme yapılmalı?', 'Proje hakkında tavsiye ve önerileriniz nelerdir?'] },
+                    { type: 'text', title: 'Katılım Rehberi', icon: '📄', data: 'Projeye katkı sağlamak için GitHub üzerinden Pull Request açabilirsiniz. Önce Issues sekmesini kontrol edin, eğer benzer bir sorun varsa ona yorum yapın. Yeni özellik önerileri için Discussion açın.' },
+                    { type: 'link', title: 'Discord Sunucusu', icon: '🔗', data: 'https://discord.gg/matproject' }
+                ]
+            },
+            {
+                id: 7,
+                title: "Pratik Uygulamalar",
+                description: "Gerçek dünya senaryoları ve örnekler",
+                type: "Video",
+                contents: [
+                    { type: 'video', title: 'Pratik Örnekler', icon: '🎥', data: 'https://www.youtube.com/embed/dQw4w9WgXcQ' },
+                    { type: 'text', title: 'Kod Örnekleri', icon: '📄', data: 'Örnek 1: Basit API çağrısı\nconst response = await fetch(\'https://api.mat.com/data\');\n\nÖrnek 2: Veri işleme\nconst data = response.json();\ndata.forEach(item => console.log(item));' },
+                    { type: 'link', title: 'Demo Projeleri', icon: '🔗', data: 'https://github.com/mat/examples' }
+                ]
+            },
+            {
+                id: 8,
+                title: "İleri Konular",
+                description: "Daha derinlemesine teknik konular",
+                type: "Presentasyon",
+                contents: [
+                    { type: 'video', title: 'İleri Konular Videosu', icon: '🎥', data: 'https://www.youtube.com/embed/jNQXAC9IVRw' },
+                    { type: 'text', title: 'Detaylı Rehber', icon: '📄', data: 'Scalability: Veritabanı optimizasyonu ve caching stratejileri. Security: Encryption, authentication ve authorization mekanizmaları. Performance: Load balancing ve CDN kullanımı.' },
+                    { type: 'survey', title: 'Bilgi Testi', icon: '📋', data: ['API authentication nasıl yapılır?', 'Veritabanı optimizasyonunun önemi nedir?', 'Rate limiting neden gereklidir?'] }
+                ]
+            },
+            {
+                id: 9,
+                title: "Bitirme Projesi",
+                description: "Tüm öğrenilenlerin uygulandığı final projesi",
+                type: "Proje",
+                contents: [
+                    { type: 'text', title: 'Proje Gereksinimleri', icon: '📄', data: '1. MAT API\'sini kullanarak bir uygulama geliştirin\n2. Minimum 3 endpoint kullanmalı\n3. Hata yönetimi ve validasyon gerekli\n4. README dosyası ile dokümantasyon yapın\n5. GitHub\'da public repository oluşturun' },
+                    { type: 'link', title: 'Başlangıç Şablonu', icon: '🔗', data: 'https://github.com/mat/starter-template' },
+                    { type: 'survey', title: 'Final Değerlendirmesi', icon: '📋', data: ['Proje tamamlanmış mı?', 'Neler öğrendiniz?', 'Geri bildirim ve gelecek planlarınız'] }
+                ]
+            }
+        ];
+
+        let currentStage = 1;
+        let completedContents = {};
+
+        function renderStages() {
+            const stagesList = document.getElementById('stagesList');
+            stagesList.innerHTML = '';
+
+            stages.forEach(stage => {
+                const isLocked = !canAccessStage(stage.id);
+                const isCompleted = isStageFullyCompleted(stage.id);
+                const isActive = currentStage === stage.id;
+
+                let icon = '⭕';
+                if (isCompleted) icon = '✅';
+                if (isLocked) icon = '🔒';
+                if (isActive && !isCompleted && !isLocked) icon = '🔵';
+
+                const btn = document.createElement('button');
+                btn.className = `stage-btn ${isActive ? 'active' : ''}`;
+                btn.disabled = isLocked;
+                btn.innerHTML = `
+                    <span class="stage-icon">${icon}</span>
+                    <div class="stage-info">
+                        <span class="stage-title">${stage.title}</span>
+                        <span class="stage-type">${stage.type}</span>
+                    </div>
+                `;
+                btn.onclick = () => {
+                    if (!isLocked) {
+                        currentStage = stage.id;
+                        render();
+                    }
+                };
+                stagesList.appendChild(btn);
+            });
+        }
+
+        function renderContent() {
+            const stageData = stages[currentStage - 1];
+            document.getElementById('stageId').textContent = currentStage;
+            document.getElementById('stageTypeLabel').textContent = stageData.type;
+            document.getElementById('stageTitle').textContent = stageData.title;
+            document.getElementById('stageDescription').textContent = stageData.description;
+            document.getElementById('currentStageDisplay').textContent = currentStage;
+            document.getElementById('totalCount').textContent = stageData.contents.length;
+
+            const contentList = document.getElementById('contentList');
+            contentList.innerHTML = '';
+
+            stageData.contents.forEach((content, idx) => {
+                const contentId = `${currentStage}-${idx}`;
+                const isCompleted = completedContents[contentId];
+
+                const item = document.createElement('button');
+                item.className = `content-item ${isCompleted ? 'completed' : ''}`;
+                item.style.background = 'none';
+                item.style.border = 'none';
+                item.style.padding = '0';
+
+                const itemInner = document.createElement('div');
+                itemInner.className = 'content-item';
+                itemInner.style.width = '100%';
+                itemInner.innerHTML = `
+                    <span class="content-emoji">${content.icon}</span>
+                    <div class="content-details">
+                        <div class="content-title">${content.title}</div>
+                        <div class="content-type">
+                            ${content.type === 'text' ? '📝 Metin İçeriği' : ''}
+                            ${content.type === 'video' ? '🎥 Video' : ''}
+                            ${content.type === 'link' ? '🔗 Harici Link' : ''}
+                            ${content.type === 'survey' ? '📋 Anket' : ''}
+                        </div>
+                    </div>
+                    <span class="content-check">${isCompleted ? '✅' : '⭕'}</span>
+                `;
+
+                item.appendChild(itemInner);
+                item.onclick = () => {
+                    if (!completedContents[contentId]) {
+                        completedContents[contentId] = true;
+                    }
+                    showContentModal(content);
+                    render();
+                };
+                contentList.appendChild(item);
+            });
+
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const stageData = stages[currentStage - 1];
+            const completed = getStageCompletedContentsCount(currentStage);
+            document.getElementById('completedCount').textContent = completed;
+            const percentage = (completed / stageData.contents.length) * 100;
+            document.getElementById('stageProgressFill').style.width = percentage + '%';
+            document.getElementById('headerProgressFill').style.width = ((currentStage / 9) * 100) + '%';
+
+            document.getElementById('prevBtn').style.display = currentStage > 1 ? 'flex' : 'none';
+            
+            const nextBtn = document.getElementById('nextBtn');
+            const isCompleted = isStageFullyCompleted(currentStage);
+            nextBtn.disabled = !isCompleted || currentStage === 9;
+            nextBtn.textContent = currentStage === 9 ? 'Tamamlandı! 🎉' : 'Sonraki Aşama →';
+        }
+
+        function canAccessStage(stageId) {
+            if (stageId === 1) return true;
+            return isStageFullyCompleted(stageId - 1);
+        }
+
+        function isStageFullyCompleted(stageId) {
+            return getStageCompletedContentsCount(stageId) === stages[stageId - 1].contents.length;
+        }
+
+        function getStageCompletedContentsCount(stageId) {
+            let count = 0;
+            for (let i = 0; i < stages[stageId - 1].contents.length; i++) {
+                if (completedContents[`${stageId}-${i}`]) count++;
+            }
+            return count;
+        }
+
+        function showContentModal(content) {
+            const modal = document.getElementById('contentModal');
+            const modalBody = document.getElementById('modalBody');
+            document.getElementById('modalType').textContent =
+                content.type === 'text' ? '📝 METİN' :
+                content.type === 'video' ? '🎥 VİDEO' :
+                content.type === 'link' ? '🔗 LİNK' :
+                content.type === 'survey' ? '📋 ANKET' :
+                '❓ QUIZ';
+            document.getElementById('modalTitle').textContent = content.title;
+
+            if (content.type === 'quiz') {
+                // İlk soruyu göster
+                currentQuizIndex = 0;
+                currentQuizAnswers = new Array(content.questions.length).fill(null);
+                
+                const currentQ = content.questions[currentQuizIndex];
+                let optionsHTML = currentQ.options.map((opt, idx) => `
+                    <button class="quiz-option" data-answer="${opt}">${opt}</button>
+                `).join('');
+
+                modalBody.innerHTML = `
+                    <div class="quiz-box">
+                        <div class="quiz-progress-info">Soru ${currentQuizIndex + 1} / ${content.questions.length}</div>
+                        <p class="quiz-question">${currentQ.question}</p>
+                        <div class="quiz-options" id="quizOptionsContainer">${optionsHTML}</div>
+                        <p id="quizResult" class="quiz-result"></p>
+                        <div class="quiz-navigation" style="margin-top: 1.5rem; display: none;">
+                            <button class="btn btn-secondary" id="quizNextBtn">Sonraki Soru →</button>
+                        </div>
+                    </div>
+                `;
+
+                // Seçeneklere tıklama eventi ekle
+                document.querySelectorAll('.quiz-option').forEach(btn => {
+                    btn.onclick = () => checkMultiQuizAnswer(btn, content);
+                });
+            } else if (content.type === 'text') {
+                modalBody.innerHTML = `<div class="text-content">${content.data}</div>`;
+            } else if (content.type === 'video') {
+                modalBody.innerHTML = `<div class="video-container"><iframe src="${content.data}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`;
+            } else if (content.type === 'link') {
+                modalBody.innerHTML = `<div class="link-box"><a href="${content.data}" target="_blank" class="link-btn">Linki Aç →</a><div class="link-url">${content.data}</div></div>`;
+            } else if (content.type === 'survey') {
+                let questionsHTML = '<div class="survey-questions">';
+                content.data.forEach((question, idx) => {
+                    questionsHTML += `
+                        <div class="question-box">
+                            <div class="question-number">${idx + 1}. ${question}</div>
+                            <textarea class="question-textarea" placeholder="Cevabınızı yazın..."></textarea>
+                        </div>
+                    `;
+                });
+                questionsHTML += '<button class="submit-survey-btn" onclick="submitSurvey()">Anketi Gönder</button></div>';
+                modalBody.innerHTML = questionsHTML;
+            }
+
+            modal.classList.add('active');
+        }    
+            
+        function checkQuizAnswer(button, selected, correct) {
+            const result = document.getElementById('quizResult');
+            const buttons = button.parentNode.querySelectorAll('.quiz-option');
+            buttons.forEach(b => b.disabled = true);
+
+
+            if (selected === correct) {
+            result.textContent = '✅ Doğru cevap!';
+            result.style.color = '#22c55e';
+            setTimeout(() => {
+            closeModal();
+            render();
+            }, 1000);
+            } else {
+            result.innerHTML = `❌ Yanlış cevap. Doğru cevap: <b>${correct}</b>`;
+            result.style.color = '#ef4444';
+            }
+        }
+        let currentQuizIndex = 0;
+        let currentQuizAnswers = [];
+        let currentQuizContent = null;
+
+        function checkMultiQuizAnswer(button, content) {
+            const selected = button.getAttribute('data-answer');
+            const currentQ = content.questions[currentQuizIndex];
+            const result = document.getElementById('quizResult');
+            const buttons = document.querySelectorAll('.quiz-option');
+            
+            buttons.forEach(b => b.disabled = true);
+
+            // Cevabı kaydet
+            currentQuizAnswers[currentQuizIndex] = selected;
+
+            if (selected === currentQ.correctAnswer) {
+                button.style.background = 'rgba(34, 197, 94, 0.3)';
+                button.style.borderColor = '#22c55e';
+                result.textContent = '✅ Doğru cevap!';
+                result.style.color = '#22c55e';
+            } else {
+                button.style.background = 'rgba(239, 68, 68, 0.3)';
+                button.style.borderColor = '#ef4444';
+                result.innerHTML = `❌ Yanlış cevap. Doğru cevap: <b>${currentQ.correctAnswer}</b>`;
+                result.style.color = '#ef4444';
+            }
+
+            // Son soru değilse "Sonraki Soru" butonunu göster
+            if (currentQuizIndex < content.questions.length - 1) {
+                document.querySelector('.quiz-navigation').style.display = 'block';
+                document.getElementById('quizNextBtn').onclick = () => showNextQuestion(content);
+            } else {
+                // Son soru - testi bitir
+                setTimeout(() => {
+                    showQuizResults(content);
+                }, 1500);
+            }
+        }
+
+        function showNextQuestion(content) {
+            currentQuizIndex++;
+            const currentQ = content.questions[currentQuizIndex];
+            
+            let optionsHTML = currentQ.options.map(opt => `
+                <button class="quiz-option" data-answer="${opt}">${opt}</button>
+            `).join('');
+
+            const modalBody = document.getElementById('modalBody');
+            modalBody.innerHTML = `
+                <div class="quiz-box">
+                    <div class="quiz-progress-info">Soru ${currentQuizIndex + 1} / ${content.questions.length}</div>
+                    <p class="quiz-question">${currentQ.question}</p>
+                    <div class="quiz-options">${optionsHTML}</div>
+                    <p id="quizResult" class="quiz-result"></p>
+                    <div class="quiz-navigation" style="margin-top: 1.5rem; display: none;">
+                        <button class="btn btn-secondary" id="quizNextBtn">Sonraki Soru →</button>
+                    </div>
+                </div>
+            `;
+
+            document.querySelectorAll('.quiz-option').forEach(btn => {
+                btn.onclick = () => checkMultiQuizAnswer(btn, content);
+            });
+        }
+
+        function showQuizResults(content) {
+            let correctCount = 0;
+            content.questions.forEach((q, idx) => {
+                if (currentQuizAnswers[idx] === q.correctAnswer) correctCount++;
+            });
+
+            const percentage = Math.round((correctCount / content.questions.length) * 100);
+            const passed = percentage >= 60;
+
+            const modalBody = document.getElementById('modalBody');
+            modalBody.innerHTML = `
+                <div class="quiz-box" style="text-align: center;">
+                    <div style="font-size: 64px; margin-bottom: 1rem;">${passed ? '🎉' : '📚'}</div>
+                    <h2 style="font-size: 28px; color: ${passed ? '#22c55e' : '#ef4444'}; margin-bottom: 1rem;">
+                        ${passed ? 'Tebrikler!' : 'Tekrar Deneyin'}
+                    </h2>
+                    <p style="font-size: 18px; margin-bottom: 2rem;">
+                        ${correctCount} / ${content.questions.length} doğru cevap (%${percentage})
+                    </p>
+                    <button class="btn btn-primary" onclick="closeModal(); render();">Kapat</button>
+                </div>
+            `;
+        }
+        function closeModal() {
+            document.getElementById('contentModal').classList.remove('active');
+        }
+
+        function submitSurvey() {
+            alert('Anket başarıyla gönderildi! ✅');
+            closeModal();
+        }
+
+        function render() {
+            renderStages();
+            renderContent();
+        }
+
+        document.getElementById('prevBtn').onclick = () => {
+            if (currentStage > 1) {
+                currentStage--;
+                render();
+            }
+        };
+
+        document.getElementById('nextBtn').onclick = () => {
+            if (isStageFullyCompleted(currentStage) && currentStage < 9) {
+                currentStage++;
+                render();
+            }
+        };
+
+        document.getElementById('contentModal').onclick = (e) => {
+            if (e.target.id === 'contentModal') {
+                closeModal();
+            }
+        };
+
+        render();
+    const quizStyle = document.createElement('style');
+    quizStyle.textContent = `
+    .quiz-box { text-align: center; }
+    .quiz-question { font-size: 18px; margin-bottom: 1rem; color: #e2e8f0; }
+    .quiz-options { display: flex; flex-direction: column; gap: 0.75rem; }
+    .quiz-option { background: rgba(30,41,59,0.5); border: 1px solid #334155; border-radius: 8px; padding: 0.75rem; cursor: pointer; color: #e2e8f0; transition: 0.2s; }
+    .quiz-option:hover:not(:disabled) { background: rgba(59,130,246,0.3); }
+    .quiz-result { margin-top: 1rem; font-weight: 600; }
+    `;
+    document.head.appendChild(quizStyle);
+    </script>
+</body>
+</html>
