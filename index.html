@@ -952,20 +952,20 @@
         let currentStage = 1;
         let completedContents = {};
 
-        function renderStages() {
+        async function renderStages() {
             const stagesList = document.getElementById('stagesList');
             stagesList.innerHTML = '';
-
-            stages.forEach(stage => {
-                const isLocked = !canAccessStage(stage.id);
+        
+            for (const stage of stages) {
+                const isLocked = !(await canAccessStage(stage.id));
                 const isCompleted = isStageFullyCompleted(stage.id);
                 const isActive = currentStage === stage.id;
-
+        
                 let icon = '⭕';
                 if (isCompleted) icon = '✅';
                 if (isLocked) icon = '🔒';
                 if (isActive && !isCompleted && !isLocked) icon = '🔵';
-
+        
                 const btn = document.createElement('button');
                 btn.className = `stage-btn ${isActive ? 'active' : ''}`;
                 btn.disabled = isLocked;
@@ -976,15 +976,18 @@
                         <span class="stage-type">${stage.type}</span>
                     </div>
                 `;
+        
                 btn.onclick = () => {
                     if (!isLocked) {
                         currentStage = stage.id;
-                        render();
+                        render(); // renderContent() ve updateProgress() çağrılıyor
                     }
                 };
+        
                 stagesList.appendChild(btn);
-            });
+            }
         }
+
 
         function renderContent() {
             const stageData = stages[currentStage - 1];
@@ -994,20 +997,20 @@
             document.getElementById('stageDescription').textContent = stageData.description;
             document.getElementById('currentStageDisplay').textContent = currentStage;
             document.getElementById('totalCount').textContent = stageData.contents.length;
-
+        
             const contentList = document.getElementById('contentList');
             contentList.innerHTML = '';
-
+        
             stageData.contents.forEach((content, idx) => {
                 const contentId = `${currentStage}-${idx}`;
                 const isCompleted = completedContents[contentId];
-
+        
                 const item = document.createElement('button');
                 item.className = `content-item ${isCompleted ? 'completed' : ''}`;
                 item.style.background = 'none';
                 item.style.border = 'none';
                 item.style.padding = '0';
-
+        
                 const itemInner = document.createElement('div');
                 itemInner.className = 'content-item';
                 itemInner.style.width = '100%';
@@ -1024,7 +1027,7 @@
                     </div>
                     <span class="content-check">${isCompleted ? '✅' : '⭕'}</span>
                 `;
-
+        
                 item.appendChild(itemInner);
                 item.onclick = () => {
                     if (!completedContents[contentId] && content.type !== 'quiz') {
@@ -1032,13 +1035,15 @@
                         markContentCompleted(currentStage, idx); // Firestore'a kaydet
                     }
                     showContentModal(content);
-                    render();
+                    render(); // Güncelleme sonrası UI yenileniyor
                 };
+        
                 contentList.appendChild(item);
             });
-
+        
             updateProgress();
         }
+
 
         function updateProgress() {
             const stageData = stages[currentStage - 1];
@@ -1080,17 +1085,20 @@
         }
 
         async function canAccessStage(stageId) {
-            if (stageId === 1) return true;
+            if (stageId === 1) return true; // ilk aşama her zaman açık
         
             const prevStageId = stageId - 1;
             const progressDoc = await db.collection('userProgress').doc(currentUsername).get();
+        
+            if (!progressDoc.exists) return false;
+        
             const data = progressDoc.data();
         
-            // Önceki aşama hem tamamlanmış hem admin onaylı olmalı
-            return data.completedStages &&
-                   data.completedStages[prevStageId] &&
-                   data.completedStages[prevStageId].approved === true;
+            // Önceki aşama hem tamamlanmış hem de admin tarafından onaylanmış olmalı
+            const prevStage = data.completedStages?.[prevStageId];
+            return prevStage && prevStage.approved === true;
         }
+
 
 
         function isStageFullyCompleted(stageId) {
@@ -1509,11 +1517,12 @@
         // Kullanıcı giriş kontrolü
         auth.onAuthStateChanged(async (user) => {
             if (!user) {
+                // Kullanıcı çıkış yaptıysa login sayfasına yönlendir
                 window.location.href = 'login.html';
                 return;
             }
         
-            // Şu anki kullanıcı bilgilerini ayarla
+            // Aktif kullanıcı bilgilerini ayarla
             currentUser = user;
             currentUsername = user.email.split('@')[0];
         
@@ -1529,23 +1538,31 @@
                 }
         
                 const userData = userDoc.data();
-                console.log('Hoşgeldin:', userData.fullname);
+                console.log(`Hoşgeldin: ${userData.fullname}`);
         
                 await loadUserProgress();
         
                 await renderStages();
+        
+                renderContent();
         
                 if (userData.isAdmin) {
                     const adminBtn = document.getElementById('adminButton');
                     if (adminBtn) adminBtn.style.display = 'block';
                 }
         
+                console.log('Kullanıcı verileri ve aşamalar başarıyla yüklendi.');
+        
             } catch (error) {
                 console.error('Kullanıcı bilgisi alınamadı:', error);
-                errorMessage.textContent = 'Kullanıcı bilgileri yüklenemedi.';
-                errorMessage.classList.add('show');
+                const errorMessage = document.getElementById('errorMessage');
+                if (errorMessage) {
+                    errorMessage.textContent = 'Kullanıcı bilgileri yüklenemedi. Lütfen tekrar giriş yapın.';
+                    errorMessage.classList.add('show');
+                }
             }
         });
+
 
 
         // Çıkış fonksiyonu
