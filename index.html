@@ -1479,11 +1479,11 @@
         // Aşama onay talebi gönder
         async function requestStageApproval(stageId) {
             try {
-                // Önce mevcut onay talebi var mı kontrol et
+                // Mevcut onay talebi var mı kontrol et
                 const existingRequests = await db.collection('approvalRequests')
                     .where('username', '==', currentUsername)
                     .where('stageId', '==', stageId)
-                    .where('status', '==', 'pending')
+                    .where('status', 'in', ['pending', 'approved'])
                     .get();
         
                 if (!existingRequests.empty) {
@@ -1493,16 +1493,16 @@
         
                 const stageData = stages[stageId - 1];
                 const progressData = userProgress.completedStages[stageId] || {};
-        
                 const userDoc = await db.collection('users').doc(currentUsername).get();
                 const userData = userDoc.data();
         
+                // 📦 Firestore’a her zaman doğru veri tipinde kaydet
                 await db.collection('approvalRequests').add({
                     username: currentUsername,
                     fullname: userData.fullname,
                     stageId: stageId,
                     stageTitle: stageData.title,
-                    surveyAnswers: progressData.surveyAnswers || null,
+                    surveyAnswers: Array.isArray(progressData.surveyAnswers) ? progressData.surveyAnswers : [],
                     quizResults: progressData.quizResults || null,
                     completedContents: progressData.completedContents || {},
                     status: 'pending',
@@ -1511,12 +1511,12 @@
                 });
         
                 alert('✅ Onay talebi gönderildi! Admin onayından sonra devam edebilirsiniz.');
-        
             } catch (error) {
                 console.error('Onay talebi gönderilirken hata:', error);
                 alert('❌ Onay talebi gönderilemedi!');
             }
         }
+
 
         function render() {
             renderStages();
