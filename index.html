@@ -1079,10 +1079,19 @@
             return selectedQuestions;
         }
 
-        function canAccessStage(stageId) {
+        async function canAccessStage(stageId) {
             if (stageId === 1) return true;
-            return isStageFullyCompleted(stageId - 1);
+        
+            const prevStageId = stageId - 1;
+            const progressDoc = await db.collection('userProgress').doc(currentUsername).get();
+            const data = progressDoc.data();
+        
+            // Önceki aşama hem tamamlanmış hem admin onaylı olmalı
+            return data.completedStages &&
+                   data.completedStages[prevStageId] &&
+                   data.completedStages[prevStageId].approved === true;
         }
+
 
         function isStageFullyCompleted(stageId) {
             return getStageCompletedContentsCount(stageId) === stages[stageId - 1].contents.length;
@@ -1503,30 +1512,41 @@
                 window.location.href = 'login.html';
                 return;
             }
-            
+        
+            // Şu anki kullanıcı bilgilerini ayarla
             currentUser = user;
-            
+            currentUsername = user.email.split('@')[0];
+        
             try {
-                currentUsername = user.email.split('@')[0];
+                // Firestore'dan kullanıcı bilgilerini al
                 const userDoc = await db.collection('users').doc(currentUsername).get();
-                
-                if (userDoc.exists) {
-                    const userData = userDoc.data();
-                    console.log('Hoşgeldin:', userData.fullname);
-                    
-                    // Kullanıcı ilerlemesini yükle
-                    await loadUserProgress();
-                    
-                    // Eğer admin ise, admin butonu göster
-                    if (userData.isAdmin) {
-                        const adminBtn = document.getElementById('adminButton');
-                        if (adminBtn) adminBtn.style.display = 'block';
-                    }
+        
+                if (!userDoc.exists) {
+                    console.error('Kullanıcı Firestore’da bulunamadı.');
+                    await auth.signOut();
+                    window.location.href = 'login.html';
+                    return;
                 }
+        
+                const userData = userDoc.data();
+                console.log('Hoşgeldin:', userData.fullname);
+        
+                await loadUserProgress();
+        
+                await renderStages();
+        
+                if (userData.isAdmin) {
+                    const adminBtn = document.getElementById('adminButton');
+                    if (adminBtn) adminBtn.style.display = 'block';
+                }
+        
             } catch (error) {
                 console.error('Kullanıcı bilgisi alınamadı:', error);
+                errorMessage.textContent = 'Kullanıcı bilgileri yüklenemedi.';
+                errorMessage.classList.add('show');
             }
         });
+
 
         // Çıkış fonksiyonu
         function userLogout() {
