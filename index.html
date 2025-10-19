@@ -1089,15 +1089,24 @@
         
             const prevStageId = stageId - 1;
             const progressDoc = await db.collection('userProgress').doc(currentUsername).get();
-        
             if (!progressDoc.exists) return false;
         
             const data = progressDoc.data();
-        
-            // Önceki aşama hem tamamlanmış hem de admin tarafından onaylanmış olmalı
             const prevStage = data.completedStages?.[prevStageId];
+        
+            // Red edilirse sıfırla
+            if (prevStage && prevStage.approved === false) {
+                console.log(`Aşama ${prevStageId} reddedildi, sıfırlanıyor...`);
+                await db.collection('userProgress').doc(currentUsername).update({
+                    [`completedStages.${prevStageId}`]: firebase.firestore.FieldValue.delete()
+                });
+                return false;
+            }
+        
+            // Önceki aşama admin tarafından onaylanmışsa erişim serbest
             return prevStage && prevStage.approved === true;
         }
+
 
 
 
@@ -1438,14 +1447,24 @@
         // Aşama onay talebi gönder
         async function requestStageApproval(stageId) {
             try {
+                // Önce mevcut onay talebi var mı kontrol et
+                const existingRequests = await db.collection('approvalRequests')
+                    .where('username', '==', currentUsername)
+                    .where('stageId', '==', stageId)
+                    .where('status', 'in', ['pending', 'approved'])
+                    .get();
+        
+                if (!existingRequests.empty) {
+                    alert('❗ Bu aşama için zaten onay talebi gönderilmiş veya onaylanmış.');
+                    return;
+                }
+        
                 const stageData = stages[stageId - 1];
                 const progressData = userProgress.completedStages[stageId] || {};
-                
-                // Kullanıcı bilgilerini al
+        
                 const userDoc = await db.collection('users').doc(currentUsername).get();
                 const userData = userDoc.data();
-                
-                // Onay talebi oluştur
+        
                 await db.collection('approvalRequests').add({
                     username: currentUsername,
                     fullname: userData.fullname,
@@ -1454,18 +1473,19 @@
                     surveyAnswers: progressData.surveyAnswers || null,
                     quizResults: progressData.quizResults || null,
                     completedContents: progressData.completedContents || {},
-                    status: 'pending', // pending, approved, rejected
+                    status: 'pending',
                     requestedAt: firebase.firestore.FieldValue.serverTimestamp(),
                     adminNote: null
                 });
-                
+        
                 alert('✅ Onay talebi gönderildi! Admin onayından sonra devam edebilirsiniz.');
-                
+        
             } catch (error) {
                 console.error('Onay talebi gönderilirken hata:', error);
                 alert('❌ Onay talebi gönderilemedi!');
             }
         }
+
         function render() {
             renderStages();
             renderContent();
