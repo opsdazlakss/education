@@ -660,23 +660,25 @@
     <!-- Header -->
     <header>
         <div class="header-content">
-            <div class="logo">
-                <div class="logo-icon">M</div>
-                <div class="logo-text">
-                    <h1>MAT</h1>
-                    <p>Eğitim Sistemi</p>
-                </div>
-            </div>
-            <div style="display: flex; gap: 1rem; align-items: center;">
-                <div class="progress-section">
-                    <p>Aşama <span id="currentStageDisplay">1</span>/9</p>
-                    <div class="progress-bar">
-                        <div class="progress-fill" id="headerProgressFill" style="width: 11.11%"></div>
-                    </div>
-                </div>
-                <button onclick="userLogout()" style="padding: 0.5rem 1rem; background: rgba(239, 68, 68, 0.2); border: 1px solid rgba(239, 68, 68, 0.4); color: #ef4444; border-radius: 6px; cursor: pointer; font-weight: 500; font-size: 14px;">Çıkış</button>
+    <div class="logo">
+        <div class="logo-icon">M</div>
+        <div class="logo-text">
+            <h1>MAT</h1>
+            <p>Eğitim Sistemi</p>
+        </div>
+    </div>
+    <div style="display: flex; gap: 1rem; align-items: center;">
+        <div class="progress-section">
+            <p>Aşama <span id="currentStageDisplay">1</span>/9</p>
+            <div class="progress-bar">
+                <div class="progress-fill" id="headerProgressFill" style="width: 11.11%"></div>
             </div>
         </div>
+        <!-- Admin butonu (sadece adminlere göster) -->
+        <a href="admin.html" id="adminButton" style="display: none; padding: 0.5rem 1rem; background: rgba(59, 130, 246, 0.2); border: 1px solid rgba(59, 130, 246, 0.4); color: #3b82f6; border-radius: 6px; text-decoration: none; font-weight: 500; font-size: 14px;">🛠️ Admin</a>
+        <button onclick="userLogout()" style="padding: 0.5rem 1rem; background: rgba(239, 68, 68, 0.2); border: 1px solid rgba(239, 68, 68, 0.4); color: #ef4444; border-radius: 6px; cursor: pointer; font-weight: 500; font-size: 14px;">Çıkış</button>
+    </div>
+</div>
     </header>
 
     <!-- Main Container -->
