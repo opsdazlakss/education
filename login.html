@@ -1,1 +1,230 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MAT - Giriş</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .login-container {
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid #334155;
+            border-radius: 16px;
+            padding: 3rem;
+            width: 100%;
+            max-width: 400px;
+            backdrop-filter: blur(10px);
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .logo-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            background: linear-gradient(to bottom right, #3b82f6, #06b6d4);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 28px;
+            color: white;
+            margin-bottom: 1rem;
+        }
+
+        .logo h1 {
+            font-size: 32px;
+            color: white;
+            margin-bottom: 0.5rem;
+        }
+
+        .logo p {
+            color: #94a3b8;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            color: #cbd5e1;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem;
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            color: #e2e8f0;
+            font-size: 15px;
+            transition: border-color 0.2s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #3b82f6;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 0.875rem;
+            background: linear-gradient(to right, #3b82f6, #06b6d4);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .login-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .error-message {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #ef4444;
+            padding: 0.75rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            font-size: 14px;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .admin-link {
+            text-align: center;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #334155;
+        }
+
+        .admin-link a {
+            color: #06b6d4;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+
+        .admin-link a:hover {
+            color: #3b82f6;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="logo">
+            <div class="logo-icon">M</div>
+            <h1>MAT</h1>
+            <p>Eğitim Sistemi</p>
+        </div>
+
+        <div class="error-message" id="errorMessage"></div>
+
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="username">Kullanıcı Adı</label>
+                <input type="text" id="username" required autocomplete="username">
+            </div>
+
+            <div class="form-group">
+                <label for="password">Şifre</label>
+                <input type="password" id="password" required autocomplete="current-password">
+            </div>
+
+            <button type="submit" class="login-btn" id="loginBtn">Giriş Yap</button>
+        </form>
+
+        <div class="admin-link">
+            <a href="admin.html">Admin Paneli</a>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="firebase-config.js"></script>
+    <script>
+        const loginForm = document.getElementById('loginForm');
+        const errorMessage = document.getElementById('errorMessage');
+        const loginBtn = document.getElementById('loginBtn');
+
+        // Zaten giriş yapmış mı kontrol et
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                window.location.href = 'index.html';
+            }
+        });
+
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+
+            errorMessage.classList.remove('show');
+            loginBtn.disabled = true;
+            loginBtn.textContent = 'Giriş yapılıyor...';
+
+            try {
+                // Firestore'dan kullanıcıyı bul
+                const userDoc = await db.collection('users').doc(username).get();
+                
+                if (!userDoc.exists) {
+                    throw new Error('Kullanıcı bulunamadı');
+                }
+
+                const userData = userDoc.data();
+                const email = userData.email;
+
+                // Firebase Authentication ile giriş yap
+                await auth.signInWithEmailAndPassword(email, password);
+                
+                // Başarılı giriş - index.html'e yönlendir
+                window.location.href = 'index.html';
+
+            } catch (error) {
+                console.error('Giriş hatası:', error);
+                errorMessage.textContent = 'Kullanıcı adı veya şifre hatalı!';
+                errorMessage.classList.add('show');
+                loginBtn.disabled = false;
+                loginBtn.textContent = 'Giriş Yap';
+            }
+        });
+    </script>
+</body>
+</html>
