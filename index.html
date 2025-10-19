@@ -1451,7 +1451,7 @@
                 const existingRequests = await db.collection('approvalRequests')
                     .where('username', '==', currentUsername)
                     .where('stageId', '==', stageId)
-                    .where('status', 'in', ['pending', 'approved'])
+                    .where('status', '==', 'pending')
                     .get();
         
                 if (!existingRequests.empty) {
