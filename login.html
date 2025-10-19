@@ -191,11 +191,11 @@
             
             const username = document.getElementById('username').value.trim();
             const password = document.getElementById('password').value;
-
+        
             errorMessage.classList.remove('show');
             loginBtn.disabled = true;
             loginBtn.textContent = 'Giriş yapılıyor...';
-
+        
             try {
                 // Firestore'dan kullanıcıyı bul
                 const userDoc = await db.collection('users').doc(username).get();
@@ -203,16 +203,35 @@
                 if (!userDoc.exists) {
                     throw new Error('Kullanıcı bulunamadı');
                 }
-
+        
                 const userData = userDoc.data();
                 const email = userData.email;
-
-                // Firebase Authentication ile giriş yap
-                await auth.signInWithEmailAndPassword(email, password);
+        
+                // Eğer kullanıcıda password field'i varsa, henüz Auth'a eklenmemiş demektir
+                if (userData.password) {
+                    // Şifreyi kontrol et
+                    const hashedPassword = btoa(password);
+                    if (hashedPassword !== userData.password) {
+                        throw new Error('Şifre hatalı');
+                    }
+        
+                    // Auth'a ekle (ilk giriş)
+                    await auth.createUserWithEmailAndPassword(email, password);
+                    
+                    // Firestore'dan password field'ini kaldır (artık Auth'da güvenli)
+                    await db.collection('users').doc(username).update({
+                        password: firebase.firestore.FieldValue.delete()
+                    });
+        
+                    console.log('Kullanıcı Auth\'a eklendi ve Firestore\'dan şifre silindi');
+                } else {
+                    // Normal giriş (kullanıcı zaten Auth'da var)
+                    await auth.signInWithEmailAndPassword(email, password);
+                }
                 
-                // Başarılı giriş - index.html'e yönlendir
+                // Başarılı giriş
                 window.location.href = 'index.html';
-
+        
             } catch (error) {
                 console.error('Giriş hatası:', error);
                 errorMessage.textContent = 'Kullanıcı adı veya şifre hatalı!';
