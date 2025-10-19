@@ -1341,12 +1341,10 @@
         // Kullanıcı giriş kontrolü
         auth.onAuthStateChanged(async (user) => {
             if (!user) {
-                // Giriş yapılmamış - login sayfasına yönlendir
                 window.location.href = 'login.html';
                 return;
             }
             
-            // Kullanıcı bilgilerini al
             try {
                 const username = user.email.split('@')[0];
                 const userDoc = await db.collection('users').doc(username).get();
@@ -1354,6 +1352,12 @@
                 if (userDoc.exists) {
                     const userData = userDoc.data();
                     console.log('Hoşgeldin:', userData.fullname);
+                    
+                    // Eğer admin ise, admin butonu göster
+                    if (userData.isAdmin) {
+                        const adminBtn = document.getElementById('adminButton');
+                        if (adminBtn) adminBtn.style.display = 'block';
+                    }
                 }
             } catch (error) {
                 console.error('Kullanıcı bilgisi alınamadı:', error);
