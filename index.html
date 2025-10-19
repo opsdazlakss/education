@@ -1005,7 +1005,7 @@
                     if (!isLocked) {
                         currentStage = stage.id;
                         updateCompletedContentsForStage(currentStage);
-                        render();
+                        render(); // renderContent() ve updateProgress() çağrılıyor
                     }
                 };
         
@@ -1060,10 +1060,8 @@
                         markContentCompleted(currentStage, idx);
                     }
                     showContentModal(content);
-                    render(true); // ✅ sadece içerik kısmını yenile, aşamaları elleme
+                    render(); // Güncelleme sonrası UI yenileniyor
                 };
-
-
         
                 contentList.appendChild(item);
             });
@@ -1138,16 +1136,7 @@
 
 
         function isStageFullyCompleted(stageId) {
-            // Firestore'dan gelen veriyi kontrol et
-            const stageProgress = userProgress?.completedStages?.[stageId];
-            if (!stageProgress || !stageProgress.completedContents) return false;
-        
-            const total = stages[stageId - 1].contents.length;
-            const completed = Object.keys(stageProgress.completedContents)
-                .filter(k => stageProgress.completedContents[k])
-                .length;
-        
-            return completed === total;
+            return getStageCompletedContentsCount(stageId) === stages[stageId - 1].contents.length;
         }
 
         function getStageCompletedContentsCount(stageId) {
@@ -1366,7 +1355,7 @@
                         ${correctCount} / ${content.questions.length} doğru cevap
                     </p>
                     ${!passed ? '<p style="color: #94a3b8; margin-bottom: 1rem;">Lütfen testi tekrar deneyin ve tüm soruları doğru cevaplayın.</p>' : ''}
-                    <button class="btn btn-primary" onclick="closeModal(); render(true);">Kapat</button>
+                    <button class="btn btn-primary" onclick="closeModal(); render();">Kapat</button>
                 </div>
             `;
         }
@@ -1549,12 +1538,10 @@
 
 
 
-        function render(skipStages = false) {
-            if (!skipStages) renderStages();
+        function render() {
+            renderStages();
             renderContent();
         }
-
-
 
         document.getElementById('prevBtn').onclick = () => {
             if (currentStage > 1) {
