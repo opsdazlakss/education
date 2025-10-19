@@ -494,13 +494,22 @@
                     container.innerHTML = '<p class="no-requests">✅ Onay bekleyen talep yok</p>';
                     return;
                 }
-
+        
                 let html = '';
                 snapshot.forEach(doc => {
                     const request = doc.data();
-                    const date = request.requestedAt ? 
-                        request.requestedAt.toDate().toLocaleString('tr-TR') : 
-                        'Bilinmiyor';
+        
+                    // 🩹 Firestore'dan string olarak geldiyse parse et
+                    if (typeof request.surveyAnswers === 'string') {
+                        try { request.surveyAnswers = JSON.parse(request.surveyAnswers); } catch (e) {}
+                    }
+                    if (typeof request.quizResults === 'string') {
+                        try { request.quizResults = JSON.parse(request.quizResults); } catch (e) {}
+                    }
+        
+                    const date = request.requestedAt 
+                        ? request.requestedAt.toDate().toLocaleString('tr-TR') 
+                        : 'Bilinmiyor';
                     
                     html += `
                         <div class="approval-card">
@@ -522,8 +531,7 @@
                                     ? renderQuizResults(request.quizResults) 
                                     : '<p style="color:#64748b;font-size:13px;">❓ Test sonucu bulunamadı.</p>'}
                             </div>
-
-                            
+        
                             <div class="approval-actions">
                                 <button class="approve-btn" onclick="approveRequest('${doc.id}', '${request.username}', ${request.stageId})">
                                     ✅ Onayla
@@ -535,14 +543,15 @@
                         </div>
                     `;
                 });
-
+        
                 container.innerHTML = html;
-
+        
             } catch (error) {
                 console.error('Onay talepleri yüklenirken hata:', error);
                 container.innerHTML = '<p style="text-align: center; color: #ef4444;">Yükleme hatası</p>';
             }
         }
+
 
         // Anket cevaplarını render et
         function renderSurveyAnswers(answers) {
