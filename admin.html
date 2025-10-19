@@ -514,9 +514,15 @@
                             </div>
                             
                             <div class="approval-details">
-                                ${request.surveyAnswers ? renderSurveyAnswers(request.surveyAnswers) : ''}
-                                ${request.quizResults ? renderQuizResults(request.quizResults) : ''}
+                                ${Array.isArray(request.surveyAnswers) && request.surveyAnswers.length > 0 
+                                    ? renderSurveyAnswers(request.surveyAnswers) 
+                                    : '<p style="color:#64748b;font-size:13px;">📋 Anket yanıtı yok.</p>'}
+                            
+                                ${request.quizResults && request.quizResults.quizTitle 
+                                    ? renderQuizResults(request.quizResults) 
+                                    : '<p style="color:#64748b;font-size:13px;">❓ Test sonucu bulunamadı.</p>'}
                             </div>
+
                             
                             <div class="approval-actions">
                                 <button class="approve-btn" onclick="approveRequest('${doc.id}', '${request.username}', ${request.stageId})">
