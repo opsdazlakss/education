@@ -669,7 +669,7 @@
     </div>
     <div style="display: flex; gap: 1rem; align-items: center;">
         <div class="progress-section">
-            <p>Aşama <span id="currentStageDisplay">1</span>/9</p>
+            <p>Aşama <span id="currentStageDisplay">1</span>/<span id="totalStageDisplay">9</span></p>
             <div class="progress-bar">
                 <div class="progress-fill" id="headerProgressFill" style="width: 11.11%"></div>
             </div>
@@ -1093,7 +1093,8 @@
             document.getElementById('completedCount').textContent = completed;
             const percentage = (completed / stageData.contents.length) * 100;
             document.getElementById('stageProgressFill').style.width = percentage + '%';
-            document.getElementById('headerProgressFill').style.width = ((currentStage / 9) * 100) + '%';
+            document.getElementById('headerProgressFill').style.width = ((currentStage / stages.length) * 100) + '%';
+            document.getElementById('totalStageDisplay').textContent = stages.length;
 
             document.getElementById('prevBtn').style.display = currentStage > 1 ? 'flex' : 'none';
             
@@ -1585,41 +1586,41 @@
     render();
     const quizStyle = document.createElement('style');
     quizStyle.textContent = `
-    .quiz-box { text-align: center; padding: 1rem; }
-    .quiz-question { font-size: 18px; margin-bottom: 1.5rem; color: #e2e8f0; font-weight: 500; line-height: 1.6; }
-    .quiz-options { display: flex; flex-direction: column; gap: 0.75rem; margin-top: 1.5rem; }
-    .quiz-option { 
-        background: rgba(30,41,59,0.5); 
-        border: 1px solid #334155; 
-        border-radius: 8px; 
-        padding: 1rem 1.5rem; 
-        cursor: pointer; 
-        color: #e2e8f0; 
-        transition: all 0.2s;
-        font-size: 15px;
-        font-weight: 500;
-        text-align: left;
-        width: 100%;
-        font-family: inherit;
-    }
-    .quiz-option:hover:not(:disabled) { 
-        background: rgba(59,130,246,0.3); 
-        border-color: #3b82f6;
-        transform: translateX(4px);
-    }
-    .quiz-option:disabled {
-        cursor: not-allowed;
-        opacity: 0.7;
-    }
-    .quiz-result { 
-        margin-top: 1.5rem; 
-        font-weight: 600; 
-        font-size: 16px;
-        padding: 1rem;
-        border-radius: 8px;
-        background: rgba(30,41,59,0.3);
-    }
-    `;
+        .quiz-box { text-align: center; padding: 1rem; }
+        .quiz-question { font-size: 18px; margin-bottom: 1.5rem; color: #e2e8f0; font-weight: 500; line-height: 1.6; }
+        .quiz-options { display: flex; flex-direction: column; gap: 0.75rem; margin-top: 1.5rem; }
+        .quiz-option { 
+            background: rgba(30,41,59,0.5); 
+            border: 1px solid #334155; 
+            border-radius: 8px; 
+            padding: 1rem 1.5rem; 
+            cursor: pointer; 
+            color: #e2e8f0; 
+            transition: all 0.2s;
+            font-size: 15px;
+            font-weight: 500;
+            text-align: center;
+            width: 100%;
+            font-family: inherit;
+        }
+        .quiz-option:hover:not(:disabled) { 
+            background: rgba(59,130,246,0.3); 
+            border-color: #3b82f6;
+            transform: translateX(4px);
+        }
+        .quiz-option:disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+        .quiz-result { 
+            margin-top: 1.5rem; 
+            font-weight: 600; 
+            font-size: 16px;
+            padding: 1rem;
+            border-radius: 8px;
+            background: rgba(30,41,59,0.3);
+        }
+        `;
     document.head.appendChild(quizStyle);
     </script>
     <script src="firebase-config.js"></script>
