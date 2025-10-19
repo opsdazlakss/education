@@ -171,18 +171,20 @@
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
     <script src="firebase-config.js"></script>
     <script>
         const loginForm = document.getElementById('loginForm');
         const errorMessage = document.getElementById('errorMessage');
         const loginBtn = document.getElementById('loginBtn');
-    
-        // Eğer zaten giriş yapıldıysa, yönlendir
-        const savedUser = localStorage.getItem('currentUser');
-        if (savedUser) {
-            window.location.href = 'index.html';
-        }
+        // Zaten giriş yapmış mı kontrol et
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                window.location.href = 'index.html';
+            }
+        });
+
     
         loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -203,26 +205,36 @@
                 }
     
                 const userData = userDoc.data();
+                const email = userData.email;
+        
+                // Eğer kullanıcıda password field'i varsa, henüz Auth'a eklenmemiş demektir
+                if (userData.password) {
+                    // Şifreyi kontrol et
+                    const hashedPassword = btoa(password);
+                    if (hashedPassword !== userData.password) {
+                        throw new Error('Şifre hatalı');
+                    }
+        
+                    // Auth'a ekle (ilk giriş)
+                    await auth.signInWithEmailAndPassword(email, password);
+
+                    
+                    // Firestore'dan password field'ini kaldır (artık Auth'da güvenli)
+                    await db.collection('users').doc(username).update({
+                        password: firebase.firestore.FieldValue.delete()
+                    });
+        
+                    console.log('Kullanıcı Auth\'a eklendi ve Firestore\'dan şifre silindi');
     
-                // Şifreyi kontrol et (Base64 çözümü)
-                const hashedPassword = btoa(password);
-                if (userData.password !== hashedPassword) {
-                    throw new Error('Şifre hatalı');
-                }
-    
-                // Giriş başarılı → kullanıcıyı localStorage’a kaydet
-                localStorage.setItem('currentUser', JSON.stringify(userData));
-    
-                // Admin mi normal kullanıcı mı kontrol et
-                if (userData.isAdmin) {
-                    window.location.href = 'admin.html';
                 } else {
-                    window.location.href = 'index.html';
+                    await auth.signInWithEmailAndPassword(email, password);
                 }
+
+                window.location.href = 'index.html';
     
             } catch (error) {
                 console.error('Giriş hatası:', error);
-                errorMessage.textContent = '❌ Kullanıcı adı veya şifre hatalı!';
+                errorMessage.textContent = 'Kullanıcı adı veya şifre hatalı!';
                 errorMessage.classList.add('show');
                 loginBtn.disabled = false;
                 loginBtn.textContent = 'Giriş Yap';
