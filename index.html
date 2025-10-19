@@ -1060,8 +1060,10 @@
                         markContentCompleted(currentStage, idx);
                     }
                     showContentModal(content);
-                    render(); // Güncelleme sonrası UI yenileniyor
+                    render(true); // ✅ sadece içerik kısmını yenile, aşamaları elleme
                 };
+
+
         
                 contentList.appendChild(item);
             });
@@ -1364,7 +1366,7 @@
                         ${correctCount} / ${content.questions.length} doğru cevap
                     </p>
                     ${!passed ? '<p style="color: #94a3b8; margin-bottom: 1rem;">Lütfen testi tekrar deneyin ve tüm soruları doğru cevaplayın.</p>' : ''}
-                    <button class="btn btn-primary" onclick="closeModal(); render();">Kapat</button>
+                    <button class="btn btn-primary" onclick="closeModal(); render(true);">Kapat</button>
                 </div>
             `;
         }
@@ -1547,10 +1549,12 @@
 
 
 
-        function render() {
-            renderStages();
+        function render(skipStages = false) {
+            if (!skipStages) renderStages();
             renderContent();
         }
+
+
 
         document.getElementById('prevBtn').onclick = () => {
             if (currentStage > 1) {
