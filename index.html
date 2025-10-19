@@ -1029,6 +1029,7 @@
                 item.onclick = () => {
                     if (!completedContents[contentId] && content.type !== 'quiz') {
                         completedContents[contentId] = true;
+                        markContentCompleted(currentStage, idx); // Firestore'a kaydet
                     }
                     showContentModal(content);
                     render();
@@ -1259,21 +1260,32 @@
             content.questions.forEach((q, idx) => {
                 if (currentQuizAnswers[idx] === q.correctAnswer) correctCount++;
             });
-
+        
             const percentage = Math.round((correctCount / content.questions.length) * 100);
-            const passed = correctCount === content.questions.length; // Tüm soruları doğru cevaplamalı
-
-            // Eğer tüm sorular doğru ise quiz'i tamamlanmış olarak işaretle
+            const passed = correctCount === content.questions.length;
+        
+            // Quiz sonuçlarını kaydet
             if (passed) {
                 const stageData = stages[currentStage - 1];
                 stageData.contents.forEach((c, idx) => {
                     if (c.type === 'quiz' && c.title === content.title) {
                         const contentId = `${currentStage}-${idx}`;
                         completedContents[contentId] = true;
+                        markContentCompleted(currentStage, idx);
+                        
+                        // Quiz sonuçlarını Firestore'a kaydet
+                        saveQuizResults(currentStage, {
+                            quizTitle: content.title,
+                            correctAnswers: correctCount,
+                            totalQuestions: content.questions.length,
+                            percentage: percentage,
+                            passed: passed,
+                            completedAt: new Date().toISOString()
+                        });
                     }
                 });
             }
-
+        
             const modalBody = document.getElementById('modalBody');
             modalBody.innerHTML = `
                 <div class="quiz-box" style="text-align: center;">
@@ -1294,11 +1306,149 @@
             document.getElementById('contentModal').classList.remove('active');
         }
 
-        function submitSurvey() {
+        async function submitSurvey() {
+            const textareas = document.querySelectorAll('.question-textarea');
+            const answers = [];
+            const stageData = stages[currentStage - 1];
+            
+            // Find the survey content
+            let surveyQuestions = [];
+            stageData.contents.forEach(content => {
+                if (content.type === 'survey') {
+                    surveyQuestions = content.data;
+                }
+            });
+            
+            textareas.forEach((textarea, idx) => {
+                answers.push({
+                    question: surveyQuestions[idx],
+                    answer: textarea.value
+                });
+            });
+            
+            // Firestore'a kaydet
+            await saveSurveyAnswers(currentStage, answers);
+            
             alert('Anket başarıyla gönderildi! ✅');
             closeModal();
         }
-
+        // Kullanıcı ilerlemesini yükle
+        async function loadUserProgress() {
+            try {
+                const progressDoc = await db.collection('userProgress').doc(currentUsername).get();
+                
+                if (progressDoc.exists) {
+                    userProgress = progressDoc.data();
+                    console.log('İlerleme yüklendi:', userProgress);
+                } else {
+                    // İlk kez - yeni ilerleme oluştur
+                    userProgress = {
+                        completedStages: {},
+                        currentStage: 1,
+                        lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
+                    };
+                    await db.collection('userProgress').doc(currentUsername).set(userProgress);
+                }
+                
+                // completedContents'i userProgress'ten yükle
+                if (userProgress.completedStages && userProgress.completedStages[currentStage]) {
+                    completedContents = userProgress.completedStages[currentStage].completedContents || {};
+                }
+                
+            } catch (error) {
+                console.error('İlerleme yüklenirken hata:', error);
+                userProgress = {
+                    completedStages: {},
+                    currentStage: 1
+                };
+            }
+        }
+        
+        // İçerik tamamlandığında kaydet
+        async function markContentCompleted(stageId, contentIndex) {
+            const contentId = `${stageId}-${contentIndex}`;
+            completedContents[contentId] = true;
+            
+            // Firestore'a kaydet
+            try {
+                if (!userProgress.completedStages) {
+                    userProgress.completedStages = {};
+                }
+                
+                if (!userProgress.completedStages[stageId]) {
+                    userProgress.completedStages[stageId] = {
+                        completedContents: {},
+                        stageData: {}
+                    };
+                }
+                
+                userProgress.completedStages[stageId].completedContents = completedContents;
+                
+                await db.collection('userProgress').doc(currentUsername).update({
+                    [`completedStages.${stageId}.completedContents`]: completedContents,
+                    lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                
+            } catch (error) {
+                console.error('İlerleme kaydedilirken hata:', error);
+            }
+        }
+        
+        // Anket cevaplarını kaydet
+        async function saveSurveyAnswers(stageId, answers) {
+            try {
+                await db.collection('userProgress').doc(currentUsername).update({
+                    [`completedStages.${stageId}.surveyAnswers`]: answers,
+                    lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
+                });
+            } catch (error) {
+                console.error('Anket cevapları kaydedilirken hata:', error);
+            }
+        }
+        
+        // Quiz sonuçlarını kaydet
+        async function saveQuizResults(stageId, results) {
+            try {
+                await db.collection('userProgress').doc(currentUsername).update({
+                    [`completedStages.${stageId}.quizResults`]: results,
+                    lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
+                });
+            } catch (error) {
+                console.error('Quiz sonuçları kaydedilirken hata:', error);
+            }
+        }
+        
+        // Aşama onay talebi gönder
+        async function requestStageApproval(stageId) {
+            try {
+                const stageData = stages[stageId - 1];
+                const progressData = userProgress.completedStages[stageId] || {};
+                
+                // Kullanıcı bilgilerini al
+                const userDoc = await db.collection('users').doc(currentUsername).get();
+                const userData = userDoc.data();
+                
+                // Onay talebi oluştur
+                await db.collection('approvalRequests').add({
+                    username: currentUsername,
+                    fullname: userData.fullname,
+                    stageId: stageId,
+                    stageTitle: stageData.title,
+                    surveyAnswers: progressData.surveyAnswers || null,
+                    quizResults: progressData.quizResults || null,
+                    completedContents: progressData.completedContents || {},
+                    status: 'pending', // pending, approved, rejected
+                    requestedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    adminNote: null
+                });
+                
+                alert('✅ Onay talebi gönderildi! Admin onayından sonra devam edebilirsiniz.');
+                
+            } catch (error) {
+                console.error('Onay talebi gönderilirken hata:', error);
+                alert('❌ Onay talebi gönderilemedi!');
+            }
+        }
         function render() {
             renderStages();
             renderContent();
@@ -1311,10 +1461,14 @@
             }
         };
 
-        document.getElementById('nextBtn').onclick = () => {
+        document.getElementById('nextBtn').onclick = async () => {
             if (isStageFullyCompleted(currentStage) && currentStage < 9) {
-                currentStage++;
-                render();
+                // Onay talebi gönder
+                await requestStageApproval(currentStage);
+                
+                // Not: Artık otomatik geçmiyor, admin onayı gerekiyor
+                // currentStage++;
+                // render();
             }
         };
 
