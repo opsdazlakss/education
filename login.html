@@ -209,26 +209,36 @@
         
                 // Eğer kullanıcıda password field'i varsa, henüz Auth'a eklenmemiş demektir
                 if (userData.password) {
-                    // Şifreyi kontrol et
-                    const hashedPassword = btoa(password);
-                    if (hashedPassword !== userData.password) {
-                        throw new Error('Şifre hatalı');
-                    }
-        
-                    // Auth'a ekle (ilk giriş)
-                    await auth.signInWithEmailAndPassword(email, password);
-
-                    
-                    // Firestore'dan password field'ini kaldır (artık Auth'da güvenli)
-                    await db.collection('users').doc(username).update({
-                        password: firebase.firestore.FieldValue.delete()
-                    });
-        
-                    console.log('Kullanıcı Auth\'a eklendi ve Firestore\'dan şifre silindi');
-    
-                } else {
-                    await auth.signInWithEmailAndPassword(email, password);
+    // Şifreyi kontrol et
+                const hashedPassword = btoa(password);
+                if (hashedPassword !== userData.password) {
+                    throw new Error('Şifre hatalı');
                 }
+            
+                try {
+                    // Önce giriş yapmayı dene
+                    await auth.signInWithEmailAndPassword(email, password);
+                } catch (error) {
+                    // Eğer kullanıcı Auth’ta yoksa (ilk giriş), oluştur
+                    if (error.code === 'auth/user-not-found') {
+                        await auth.createUserWithEmailAndPassword(email, password);
+                        console.log('Kullanıcı ilk kez Auth’a eklendi:', email);
+                    } else {
+                        throw error;
+                    }
+                }
+            
+                // Firestore'dan password alanını kaldır (artık Auth kontrol edecek)
+                await db.collection('users').doc(username).update({
+                    password: firebase.firestore.FieldValue.delete()
+                });
+                
+                console.log('Şifre Firestore’dan kaldırıldı, Auth devreye alındı.');
+            } else {
+                // Normal giriş (kullanıcı zaten Auth'da var)
+                await auth.signInWithEmailAndPassword(email, password);
+            }
+
 
                 window.location.href = 'index.html';
     
