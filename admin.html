@@ -384,17 +384,19 @@
             }
 
             // Admin mi kontrol et
-            const userDoc = await db.collection('users').where('email', '==', user.email).get();
-            if (userDoc.empty || !userDoc.docs[0].data().isAdmin) {
-                alert('Bu sayfaya erişim yetkiniz yok!');
-                window.location.href = 'index.html';
-                return;
-            }
+            // 🔹 4. Firestore’a kaydet
+            await db.collection('users').doc(username).set({
+                username,
+                fullname,
+                email,
+                isAdmin: false,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            }).then(() => {
+                console.log("✅ Firestore'a da kaydedildi.");
+            }).catch(err => {
+                console.error("❌ Firestore kaydı başarısız:", err);
+            });
 
-            loadUsers();
-            loadApprovalRequests(); // Onay taleplerini yükle
-
-        });
 
         // Kullanıcı ekleme (Sadece Firestore - İlk giriş sırasında Auth'a eklenecek)
         addUserForm.addEventListener('submit', async (e) => {
@@ -417,11 +419,18 @@
                 const email = `${username}@mat.local`;
         
                 // 🔹 1. Firebase Auth’a kullanıcı ekle
-                const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+                // 🔹 1. Secondary Firebase instance oluştur (admin çıkmadan kullanıcı yaratmak için)
+                const secondaryApp = firebase.initializeApp(firebaseConfig, "Secondary");
+                
+                // 🔹 2. Yeni kullanıcıyı Auth’a ekle
+                const userCredential = await secondaryApp.auth().createUserWithEmailAndPassword(email, password);
                 const createdUser = userCredential.user;
                 console.log('Auth’a eklendi:', createdUser.uid);
                 
-                // 🔹 2. Firestore’a da kaydet
+                // 🔹 3. Secondary app'i kapat (gereksiz oturumları temizler)
+                await secondaryApp.delete();
+                
+                // 🔹 4. Firestore’a kaydet
                 await db.collection('users').doc(username).set({
                     username,
                     fullname,
@@ -429,6 +438,7 @@
                     isAdmin: false,
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
+
 
 
         
