@@ -1055,9 +1055,9 @@
         
                 item.appendChild(itemInner);
                 item.onclick = () => {
-                    if (!completedContents[contentId] && content.type !== 'quiz') {
+                    if (!completedContents[contentId] && !['quiz', 'survey'].includes(content.type)) {
                         completedContents[contentId] = true;
-                        markContentCompleted(currentStage, idx); // Firestore'a kaydet
+                        markContentCompleted(currentStage, idx);
                     }
                     showContentModal(content);
                     render(); // Güncelleme sonrası UI yenileniyor
@@ -1204,7 +1204,8 @@
                 modalBody.innerHTML = `<div class="video-container"><iframe src="${content.data}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`;
             } else if (content.type === 'link') {
                 modalBody.innerHTML = `<div class="link-box"><a href="${content.data}" target="_blank" class="link-btn">Linki Aç →</a><div class="link-url">${content.data}</div></div>`;
-            } else if (content.type === 'survey') {
+            } 
+            else if (content.type === 'survey') {
                 let questionsHTML = '<div class="survey-questions">';
                 content.data.forEach((question, idx) => {
                     questionsHTML += `
@@ -1214,10 +1215,16 @@
                         </div>
                     `;
                 });
-                questionsHTML += '<button class="submit-survey-btn" onclick="submitSurvey()">Anketi Gönder</button></div>';
+            
+                // Anket gönderim butonunda stageId ve contentIndex parametreleri geçiyoruz
+                questionsHTML += `
+                    <button class="submit-survey-btn" onclick="submitSurvey(${currentStage}, ${stages[currentStage - 1].contents.indexOf(content)})">
+                        Anketi Gönder
+                    </button>
+                `;
+                questionsHTML += '</div>';
                 modalBody.innerHTML = questionsHTML;
             }
-
             modal.classList.add('active');
         }    
             
@@ -1357,32 +1364,31 @@
             document.getElementById('contentModal').classList.remove('active');
         }
 
-        async function submitSurvey() {
+        async function submitSurvey(stageId, contentIndex) {
             const textareas = document.querySelectorAll('.question-textarea');
             const answers = [];
-            const stageData = stages[currentStage - 1];
-            
-            // Find the survey content
-            let surveyQuestions = [];
-            stageData.contents.forEach(content => {
-                if (content.type === 'survey') {
-                    surveyQuestions = content.data;
-                }
-            });
-            
+            const stageData = stages[stageId - 1];
+            const surveyContent = stageData.contents[contentIndex];
+        
             textareas.forEach((textarea, idx) => {
                 answers.push({
-                    question: surveyQuestions[idx],
-                    answer: textarea.value
+                    question: surveyContent.data[idx],
+                    answer: textarea.value.trim()
                 });
             });
-            
-            // Firestore'a kaydet
-            await saveSurveyAnswers(currentStage, answers);
-            
-            alert('Anket başarıyla gönderildi! ✅');
+        
+            // Firestore’a kaydet
+            await saveSurveyAnswers(stageId, answers);
+        
+            // ✅ Artık burada tamamlandı sayıyoruz
+            completedContents[`${stageId}-${contentIndex}`] = true;
+            await markContentCompleted(stageId, contentIndex);
+        
+            alert('📋 Anket başarıyla gönderildi!');
             closeModal();
+            render();
         }
+
         // Kullanıcı ilerlemesini yükle
         async function loadUserProgress() {
             try {
