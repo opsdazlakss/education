@@ -1005,7 +1005,7 @@
                     if (!isLocked) {
                         currentStage = stage.id;
                         updateCompletedContentsForStage(currentStage);
-                        render(); // renderContent() ve updateProgress() çağrılıyor
+                        render();
                     }
                 };
         
@@ -1136,7 +1136,16 @@
 
 
         function isStageFullyCompleted(stageId) {
-            return getStageCompletedContentsCount(stageId) === stages[stageId - 1].contents.length;
+            // Firestore'dan gelen veriyi kontrol et
+            const stageProgress = userProgress?.completedStages?.[stageId];
+            if (!stageProgress || !stageProgress.completedContents) return false;
+        
+            const total = stages[stageId - 1].contents.length;
+            const completed = Object.keys(stageProgress.completedContents)
+                .filter(k => stageProgress.completedContents[k])
+                .length;
+        
+            return completed === total;
         }
 
         function getStageCompletedContentsCount(stageId) {
