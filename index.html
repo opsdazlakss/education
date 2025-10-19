@@ -1338,6 +1338,11 @@
     </script>
     <script src="firebase-config.js"></script>
     <script>
+        // Global değişkenler
+        let currentUser = null;
+        let currentUsername = null;
+        let userProgress = null;
+        
         // Kullanıcı giriş kontrolü
         auth.onAuthStateChanged(async (user) => {
             if (!user) {
@@ -1345,13 +1350,18 @@
                 return;
             }
             
+            currentUser = user;
+            
             try {
-                const username = user.email.split('@')[0];
-                const userDoc = await db.collection('users').doc(username).get();
+                currentUsername = user.email.split('@')[0];
+                const userDoc = await db.collection('users').doc(currentUsername).get();
                 
                 if (userDoc.exists) {
                     const userData = userDoc.data();
                     console.log('Hoşgeldin:', userData.fullname);
+                    
+                    // Kullanıcı ilerlemesini yükle
+                    await loadUserProgress();
                     
                     // Eğer admin ise, admin butonu göster
                     if (userData.isAdmin) {
