@@ -183,6 +183,130 @@
         .success-message.show, .error-message.show {
             display: block;
         }
+        .approval-card {
+            background: rgba(30, 41, 59, 0.3);
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .approval-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #334155;
+        }
+
+        .approval-user {
+            font-size: 18px;
+            font-weight: 600;
+            color: white;
+        }
+
+        .approval-stage {
+            font-size: 14px;
+            color: #94a3b8;
+        }
+
+        .approval-badge {
+            padding: 0.5rem 1rem;
+            background: rgba(251, 191, 36, 0.2);
+            border: 1px solid rgba(251, 191, 36, 0.4);
+            color: #fbbf24;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .approval-details {
+            margin-bottom: 1rem;
+        }
+
+        .approval-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .approval-section h4 {
+            color: #cbd5e1;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .answer-item {
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid #334155;
+            border-radius: 6px;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .answer-question {
+            font-size: 13px;
+            color: #94a3b8;
+            margin-bottom: 0.5rem;
+        }
+
+        .answer-text {
+            font-size: 14px;
+            color: #e2e8f0;
+        }
+
+        .quiz-result {
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            border-radius: 6px;
+            padding: 1rem;
+            color: #22c55e;
+        }
+
+        .approval-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .approve-btn {
+            flex: 1;
+            padding: 0.75rem;
+            background: rgba(34, 197, 94, 0.2);
+            border: 1px solid rgba(34, 197, 94, 0.4);
+            color: #22c55e;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .approve-btn:hover {
+            background: rgba(34, 197, 94, 0.3);
+        }
+
+        .reject-btn {
+            flex: 1;
+            padding: 0.75rem;
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid rgba(239, 68, 68, 0.4);
+            color: #ef4444;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .reject-btn:hover {
+            background: rgba(239, 68, 68, 0.3);
+        }
+
+        .no-requests {
+            text-align: center;
+            color: #64748b;
+            padding: 2rem;
+        }
     </style>
 </head>
 <body>
@@ -215,7 +339,12 @@
                 <button type="submit" class="add-btn">Kullanıcı Ekle</button>
             </form>
         </div>
-
+        <div class="users-card" style="margin-bottom: 2rem;">
+            <h2>⏳ Onay Bekleyen Talepler</h2>
+            <div id="approvalRequestsList">
+                <p style="text-align: center; color: #64748b; padding: 2rem;">Yükleniyor...</p>
+            </div>
+        </div>
         <div class="users-card">
             <h2>👥 Kullanıcı Listesi</h2>
             <table class="users-table">
@@ -263,6 +392,8 @@
             }
 
             loadUsers();
+            loadApprovalRequests(); // Onay taleplerini yükle
+
         });
 
         // Kullanıcı ekleme (Sadece Firestore - İlk giriş sırasında Auth'a eklenecek)
@@ -350,7 +481,165 @@
                 usersTableBody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #ef4444;">Yükleme hatası</td></tr>';
             }
         }
+        async function loadApprovalRequests() {
+            const container = document.getElementById('approvalRequestsList');
+            
+            try {
+                const snapshot = await db.collection('approvalRequests')
+                    .where('status', '==', 'pending')
+                    .orderBy('requestedAt', 'desc')
+                    .get();
+                
+                if (snapshot.empty) {
+                    container.innerHTML = '<p class="no-requests">✅ Onay bekleyen talep yok</p>';
+                    return;
+                }
 
+                let html = '';
+                snapshot.forEach(doc => {
+                    const request = doc.data();
+                    const date = request.requestedAt ? 
+                        request.requestedAt.toDate().toLocaleString('tr-TR') : 
+                        'Bilinmiyor';
+                    
+                    html += `
+                        <div class="approval-card">
+                            <div class="approval-header">
+                                <div>
+                                    <div class="approval-user">${request.fullname} (@${request.username})</div>
+                                    <div class="approval-stage">📚 ${request.stageTitle} - Aşama ${request.stageId}</div>
+                                    <div style="font-size: 12px; color: #64748b; margin-top: 0.25rem;">🕐 ${date}</div>
+                                </div>
+                                <div class="approval-badge">⏳ ONAY BEKLİYOR</div>
+                            </div>
+                            
+                            <div class="approval-details">
+                                ${request.surveyAnswers ? renderSurveyAnswers(request.surveyAnswers) : ''}
+                                ${request.quizResults ? renderQuizResults(request.quizResults) : ''}
+                            </div>
+                            
+                            <div class="approval-actions">
+                                <button class="approve-btn" onclick="approveRequest('${doc.id}', '${request.username}', ${request.stageId})">
+                                    ✅ Onayla
+                                </button>
+                                <button class="reject-btn" onclick="rejectRequest('${doc.id}', '${request.username}')">
+                                    ❌ Reddet
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                container.innerHTML = html;
+
+            } catch (error) {
+                console.error('Onay talepleri yüklenirken hata:', error);
+                container.innerHTML = '<p style="text-align: center; color: #ef4444;">Yükleme hatası</p>';
+            }
+        }
+
+        // Anket cevaplarını render et
+        function renderSurveyAnswers(answers) {
+            if (!answers || answers.length === 0) return '';
+            
+            let html = '<div class="approval-section"><h4>📋 Anket Cevapları</h4>';
+            answers.forEach((item, idx) => {
+                html += `
+                    <div class="answer-item">
+                        <div class="answer-question">${idx + 1}. ${item.question}</div>
+                        <div class="answer-text">${item.answer || '<em>Cevap verilmedi</em>'}</div>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            return html;
+        }
+
+        // Quiz sonuçlarını render et
+        function renderQuizResults(results) {
+            if (!results) return '';
+            
+            return `
+                <div class="approval-section">
+                    <h4>❓ ${results.quizTitle}</h4>
+                    <div class="quiz-result">
+                        <strong>${results.correctAnswers}/${results.totalQuestions}</strong> doğru cevap 
+                        <strong>(${results.percentage}%)</strong>
+                        ${results.passed ? ' - ✅ Başarılı' : ' - ❌ Başarısız'}
+                    </div>
+                </div>
+            `;
+        }
+
+        // Talebi onayla
+        async function approveRequest(requestId, username, stageId) {
+            if (!confirm('Bu talebi onaylamak istediğinize emin misiniz?')) {
+                return;
+            }
+
+            try {
+                // Talebi güncelle
+                await db.collection('approvalRequests').doc(requestId).update({
+                    status: 'approved',
+                    approvedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    approvedBy: auth.currentUser.email.split('@')[0]
+                });
+
+                // Kullanıcının ilerlemesini güncelle (bir sonraki aşamaya geç)
+                await db.collection('userProgress').doc(username).update({
+                    currentStage: stageId + 1,
+                    [`completedStages.${stageId}.approved`]: true,
+                    [`completedStages.${stageId}.approvedAt`]: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                successMessage.textContent = `✅ ${username} kullanıcısının talebi onaylandı!`;
+                successMessage.classList.add('show');
+
+                // Listeyi yenile
+                loadApprovalRequests();
+
+                setTimeout(() => {
+                    successMessage.classList.remove('show');
+                }, 3000);
+
+            } catch (error) {
+                console.error('Onaylama hatası:', error);
+                errorMessage.textContent = `❌ Onaylama hatası: ${error.message}`;
+                errorMessage.classList.add('show');
+            }
+        }
+
+        // Talebi reddet
+        async function rejectRequest(requestId, username) {
+            const reason = prompt('Red nedeni (opsiyonel):');
+            
+            if (reason === null) return; // İptal edildi
+
+            try {
+                // Talebi güncelle
+                await db.collection('approvalRequests').doc(requestId).update({
+                    status: 'rejected',
+                    rejectedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    rejectedBy: auth.currentUser.email.split('@')[0],
+                    adminNote: reason || 'Red nedeni belirtilmedi'
+                });
+
+                successMessage.textContent = `✅ ${username} kullanıcısının talebi reddedildi.`;
+                successMessage.classList.add('show');
+
+                // Listeyi yenile
+                loadApprovalRequests();
+
+                setTimeout(() => {
+                    successMessage.classList.remove('show');
+                }, 3000);
+
+            } catch (error) {
+                console.error('Reddetme hatası:', error);
+                errorMessage.textContent = `❌ Reddetme hatası: ${error.message}`;
+                errorMessage.classList.add('show');
+            }
+        }
         // Kullanıcı silme
         async function deleteUser(username, email) {
             if (!confirm(`${username} kullanıcısını silmek istediğinize emin misiniz?`)) {
