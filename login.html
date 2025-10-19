@@ -216,7 +216,8 @@
                     }
         
                     // Auth'a ekle (ilk giriş)
-                    await auth.createUserWithEmailAndPassword(email, password);
+                    await auth.signInWithEmailAndPassword(email, password);
+
                     
                     // Firestore'dan password field'ini kaldır (artık Auth'da güvenli)
                     await db.collection('users').doc(username).update({
