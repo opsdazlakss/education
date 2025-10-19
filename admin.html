@@ -382,21 +382,20 @@
                 window.location.href = 'login.html';
                 return;
             }
-
+        
             // Admin mi kontrol et
-            // 🔹 4. Firestore’a kaydet
-            await db.collection('users').doc(username).set({
-                username,
-                fullname,
-                email,
-                isAdmin: false,
-                createdAt: firebase.firestore.FieldValue.serverTimestamp()
-            }).then(() => {
-                console.log("✅ Firestore'a da kaydedildi.");
-            }).catch(err => {
-                console.error("❌ Firestore kaydı başarısız:", err);
-            });
-        }
+            const userDoc = await db.collection('users').where('email', '==', user.email).get();
+            if (userDoc.empty || !userDoc.docs[0].data().isAdmin) {
+                alert('Bu sayfaya erişim yetkiniz yok!');
+                window.location.href = 'index.html';
+                return;
+            }
+        
+            // Admin ise devam et
+            loadUsers();
+            loadApprovalRequests();
+        });
+
 
 
         // Kullanıcı ekleme (Sadece Firestore - İlk giriş sırasında Auth'a eklenecek)
