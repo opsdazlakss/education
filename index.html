@@ -1479,7 +1479,7 @@
         // Aşama onay talebi gönder
         async function requestStageApproval(stageId) {
             try {
-                // 1️⃣ Önce mevcut onay talebi var mı kontrol et
+                // 🔹 1. Önce mevcut onay talebi var mı kontrol et
                 const existingRequests = await db.collection('approvalRequests')
                     .where('username', '==', currentUsername)
                     .where('stageId', '==', stageId)
@@ -1491,19 +1491,24 @@
                     return;
                 }
         
-                // 2️⃣ Kullanıcının mevcut progress verisini al
+                // 🔹 2. Kullanıcının userProgress belgesini al
                 const progressDoc = await db.collection('userProgress').doc(currentUsername).get();
-                const progressData = progressDoc.exists ? progressDoc.data() : {};
-                const stageProgress = progressData.completedStages?.[stageId] || {};
+                if (!progressDoc.exists) {
+                    alert('❌ İlerleme verisi bulunamadı!');
+                    return;
+                }
         
-                // 3️⃣ Kullanıcı bilgilerini al
+                const progressData = progressDoc.data();
+                const stageProgress = progressData.completedStages?.[String(stageId)] || {}; // 🔧 Fix burada
+        
+                // 🔹 3. Kullanıcı bilgilerini al
                 const userDoc = await db.collection('users').doc(currentUsername).get();
                 const userData = userDoc.data();
         
-                // 4️⃣ Aşama bilgilerini al
+                // 🔹 4. Aşama bilgisini al
                 const stageData = stages[stageId - 1];
         
-                // 5️⃣ Firestore'a onay talebini oluştur (detaylı şekilde)
+                // 🔹 5. Onay talebini Firestore’a kaydet
                 await db.collection('approvalRequests').add({
                     username: currentUsername,
                     fullname: userData.fullname,
@@ -1523,6 +1528,7 @@
                 alert('❌ Onay talebi gönderilemedi!');
             }
         }
+
 
 
 
