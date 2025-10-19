@@ -653,30 +653,54 @@
         }
 
         // Kullanıcı silme
+        // Kullanıcı silme (ilişkili tüm verilerle birlikte)
         async function deleteUser(username, email) {
-            if (!confirm(`${username} kullanıcısını silmek istediğinize emin misiniz?`)) {
+            if (!confirm(`${username} kullanıcısını ve tüm verilerini silmek istediğinize emin misiniz? Bu işlem geri alınamaz!`)) {
                 return;
             }
-
+        
             try {
-                // Firestore'dan sil
+                // 1️⃣ users koleksiyonundan kullanıcıyı sil
                 await db.collection('users').doc(username).delete();
-
-                successMessage.textContent = `✅ ${username} silindi!`;
+        
+                // 2️⃣ userProgress verisini sil (varsa)
+                const progressDoc = await db.collection('userProgress').doc(username).get();
+                if (progressDoc.exists) {
+                    await db.collection('userProgress').doc(username).delete();
+                    console.log(`🧹 ${username} userProgress verisi silindi.`);
+                }
+        
+                // 3️⃣ approvalRequests içinde o kullanıcıya ait tüm belgeleri sil
+                const approvalsSnapshot = await db.collection('approvalRequests')
+                    .where('username', '==', username)
+                    .get();
+        
+                const batch = db.batch();
+                approvalsSnapshot.forEach(doc => {
+                    batch.delete(doc.ref);
+                });
+                await batch.commit();
+                console.log(`🧹 ${username} kullanıcısına ait ${approvalsSnapshot.size} onay talebi silindi.`);
+        
+                // 4️⃣ Başarı mesajı
+                successMessage.textContent = `✅ ${username} ve tüm verileri başarıyla silindi!`;
                 successMessage.classList.add('show');
-
+        
+                // 5️⃣ Listeyi yenile
                 loadUsers();
-
+                loadApprovalRequests();
+        
                 setTimeout(() => {
                     successMessage.classList.remove('show');
                 }, 3000);
-
+        
             } catch (error) {
                 console.error('Silme hatası:', error);
                 errorMessage.textContent = `❌ Silme hatası: ${error.message}`;
                 errorMessage.classList.add('show');
             }
         }
+
 
         // Çıkış yap
         function logout() {
