@@ -414,25 +414,24 @@
                     throw new Error('Bu kullanıcı adı zaten kullanılıyor!');
                 }
         
-                // Email formatı oluştur
                 const email = `${username}@mat.local`;
         
-                // Şifreyi şifrele (Base64 encoding)
-                const hashedPassword = btoa(password);
+                // 🔹 1. Firebase Auth’a kullanıcı ekle
+                const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+                const createdUser = userCredential.user;
+                console.log('Auth’a eklendi:', createdUser.uid);
         
-                // Sadece Firestore'a kaydet
+                // 🔹 2. Firestore’a da kaydet
                 await db.collection('users').doc(username).set({
-                    username: username,
-                    fullname: fullname,
-                    email: email,
-                    password: hashedPassword,
+                    username,
+                    fullname,
+                    email,
                     isAdmin: false,
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
         
                 successMessage.textContent = `✅ ${fullname} başarıyla eklendi!`;
                 successMessage.classList.add('show');
-        
                 addUserForm.reset();
                 loadUsers();
         
@@ -446,6 +445,7 @@
                 errorMessage.classList.add('show');
             }
         });
+
         // Kullanıcıları yükle
         async function loadUsers() {
             try {
