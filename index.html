@@ -1479,7 +1479,7 @@
         // Aşama onay talebi gönder
         async function requestStageApproval(stageId) {
             try {
-                // Mevcut onay talebi var mı kontrol et
+                // 1️⃣ Önce mevcut onay talebi var mı kontrol et
                 const existingRequests = await db.collection('approvalRequests')
                     .where('username', '==', currentUsername)
                     .where('stageId', '==', stageId)
@@ -1491,20 +1491,27 @@
                     return;
                 }
         
-                const stageData = stages[stageId - 1];
-                const progressData = userProgress.completedStages[stageId] || {};
+                // 2️⃣ Kullanıcının mevcut progress verisini al
+                const progressDoc = await db.collection('userProgress').doc(currentUsername).get();
+                const progressData = progressDoc.exists ? progressDoc.data() : {};
+                const stageProgress = progressData.completedStages?.[stageId] || {};
+        
+                // 3️⃣ Kullanıcı bilgilerini al
                 const userDoc = await db.collection('users').doc(currentUsername).get();
                 const userData = userDoc.data();
         
-                // 📦 Firestore’a her zaman doğru veri tipinde kaydet
+                // 4️⃣ Aşama bilgilerini al
+                const stageData = stages[stageId - 1];
+        
+                // 5️⃣ Firestore'a onay talebini oluştur (detaylı şekilde)
                 await db.collection('approvalRequests').add({
                     username: currentUsername,
                     fullname: userData.fullname,
                     stageId: stageId,
                     stageTitle: stageData.title,
-                    surveyAnswers: Array.isArray(progressData.surveyAnswers) ? progressData.surveyAnswers : [],
-                    quizResults: progressData.quizResults || null,
-                    completedContents: progressData.completedContents || {},
+                    surveyAnswers: stageProgress.surveyAnswers || [],
+                    quizResults: stageProgress.quizResults || null,
+                    completedContents: stageProgress.completedContents || {},
                     status: 'pending',
                     requestedAt: firebase.firestore.FieldValue.serverTimestamp(),
                     adminNote: null
@@ -1516,6 +1523,7 @@
                 alert('❌ Onay talebi gönderilemedi!');
             }
         }
+
 
 
         function render() {
