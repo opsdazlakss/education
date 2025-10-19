@@ -1004,6 +1004,7 @@
                 btn.onclick = () => {
                     if (!isLocked) {
                         currentStage = stage.id;
+                        updateCompletedContentsForStage(currentStage);
                         render(); // renderContent() ve updateProgress() çağrılıyor
                     }
                 };
@@ -1386,12 +1387,11 @@
         async function loadUserProgress() {
             try {
                 const progressDoc = await db.collection('userProgress').doc(currentUsername).get();
-                
+        
                 if (progressDoc.exists) {
                     userProgress = progressDoc.data();
                     console.log('İlerleme yüklendi:', userProgress);
                 } else {
-                    // İlk kez - yeni ilerleme oluştur
                     userProgress = {
                         completedStages: {},
                         currentStage: 1,
@@ -1399,20 +1399,28 @@
                     };
                     await db.collection('userProgress').doc(currentUsername).set(userProgress);
                 }
-                
-                // completedContents'i userProgress'ten yükle
-                if (userProgress.completedStages && userProgress.completedStages[currentStage]) {
-                    completedContents = userProgress.completedStages[currentStage].completedContents || {};
-                }
-                
+        
+                // Şu anki aşamanın tamamlanma durumunu güncelle
+                updateCompletedContentsForStage(currentStage);
+        
             } catch (error) {
                 console.error('İlerleme yüklenirken hata:', error);
-                userProgress = {
-                    completedStages: {},
-                    currentStage: 1
-                };
+                userProgress = { completedStages: {}, currentStage: 1 };
             }
         }
+        function updateCompletedContentsForStage(stageId) {
+            if (
+                userProgress.completedStages &&
+                userProgress.completedStages[stageId] &&
+                userProgress.completedStages[stageId].completedContents
+            ) {
+                completedContents = userProgress.completedStages[stageId].completedContents;
+            } else {
+                completedContents = {};
+            }
+        }
+
+
         
         // İçerik tamamlandığında kaydet
         async function markContentCompleted(stageId, contentIndex) {
@@ -1518,20 +1526,17 @@
         document.getElementById('prevBtn').onclick = () => {
             if (currentStage > 1) {
                 currentStage--;
+                updateCompletedContentsForStage(currentStage);
                 render();
             }
         };
 
         document.getElementById('nextBtn').onclick = async () => {
-            if (isStageFullyCompleted(currentStage) && currentStage < 9) {
-                // Onay talebi gönder
+            if (isStageFullyCompleted(currentStage) && currentStage < stages.length) {
                 await requestStageApproval(currentStage);
-                
-                // Not: Artık otomatik geçmiyor, admin onayı gerekiyor
-                // currentStage++;
-                // render();
             }
         };
+
 
         document.getElementById('contentModal').onclick = (e) => {
             if (e.target.id === 'contentModal') {
