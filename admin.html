@@ -416,18 +416,12 @@
         
                 const email = `${username}@mat.local`;
         
-                // 🔹 1. Secondary Firebase instance oluştur (admin çıkmadan kullanıcı yaratmak için)
-                const secondaryApp = firebase.initializeApp(firebaseConfig, "Secondary");
-                
-                // 🔹 2. Yeni kullanıcıyı Auth’a ekle
-                const userCredential = await secondaryApp.auth().createUserWithEmailAndPassword(email, password);
+                // 🔹 1. Firebase Auth’a kullanıcı ekle
+                const userCredential = await auth.createUserWithEmailAndPassword(email, password);
                 const createdUser = userCredential.user;
                 console.log('Auth’a eklendi:', createdUser.uid);
                 
-                // 🔹 3. Secondary app'i kapat (gereksiz oturumları temizler)
-                await secondaryApp.delete();
-                
-                // 🔹 4. Firestore’a kaydet
+                // 🔹 2. Firestore’a da kaydet
                 await db.collection('users').doc(username).set({
                     username,
                     fullname,
@@ -435,6 +429,7 @@
                     isAdmin: false,
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
+
 
         
                 successMessage.textContent = `✅ ${fullname} başarıyla eklendi!`;
