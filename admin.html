@@ -312,19 +312,19 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>🛠️ Admin Paneli</h1>
-            <button class="logout-btn" onclick="logout()">Çıkış Yap</button>
+            <h1>ðŸ› ï¸ Admin Paneli</h1>
+            <button class="logout-btn" onclick="logout()">Ã‡Ä±kÄ±ÅŸ Yap</button>
         </div>
 
         <div class="add-user-card">
-            <h2>➕ Yeni Kullanıcı Ekle</h2>
+            <h2>âž• Yeni KullanÄ±cÄ± Ekle</h2>
             <div class="success-message" id="successMessage"></div>
             <div class="error-message" id="errorMessage"></div>
             
             <form id="addUserForm">
                 <div class="form-grid">
                     <div class="form-group">
-                        <label>Kullanıcı Adı</label>
+                        <label>KullanÄ±cÄ± AdÄ±</label>
                         <input type="text" id="newUsername" required>
                     </div>
                     <div class="form-group">
@@ -333,37 +333,33 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label>Şifre</label>
+                    <label>Åžifre</label>
                     <input type="text" id="newPassword" required minlength="6">
                 </div>
-                <button type="submit" class="add-btn">Kullanıcı Ekle</button>
+                <button type="submit" class="add-btn">KullanÄ±cÄ± Ekle</button>
             </form>
         </div>
         <div class="users-card" style="margin-bottom: 2rem;">
-            <h2>🔔 Presenter Talepleri</h2>
-            <div id="presenterRequestsList">
-                <p style="text-align: center; color: #64748b; padding: 2rem;">Yükleniyor...</p>
-            </div>
-            <h2>⏳ Onay Bekleyen Talepler</h2>
+            <h2>â³ Onay Bekleyen Talepler</h2>
             <div id="approvalRequestsList">
-                <p style="text-align: center; color: #64748b; padding: 2rem;">Yükleniyor...</p>
+                <p style="text-align: center; color: #64748b; padding: 2rem;">YÃ¼kleniyor...</p>
             </div>
         </div>
         <div class="users-card">
-            <h2>👥 Kullanıcı Listesi</h2>
+            <h2>ðŸ‘¥ KullanÄ±cÄ± Listesi</h2>
             <table class="users-table">
                 <thead>
                     <tr>
-                        <th>Kullanıcı Adı</th>
+                        <th>KullanÄ±cÄ± AdÄ±</th>
                         <th>Ad Soyad</th>
                         <th>Email</th>
-                        <th>Kayıt Tarihi</th>
-                        <th>İşlem</th>
+                        <th>KayÄ±t Tarihi</th>
+                        <th>Ä°ÅŸlem</th>
                     </tr>
                 </thead>
                 <tbody id="usersTableBody">
                     <tr>
-                        <td colspan="5" style="text-align: center; color: #64748b;">Yükleniyor...</td>
+                        <td colspan="5" style="text-align: center; color: #64748b;">YÃ¼kleniyor...</td>
                     </tr>
                 </tbody>
             </table>
@@ -380,28 +376,29 @@
         const errorMessage = document.getElementById('errorMessage');
         const usersTableBody = document.getElementById('usersTableBody');
 
-        // Admin kontrolü
+        // Admin kontrolÃ¼
         auth.onAuthStateChanged(async (user) => {
             if (!user) {
                 window.location.href = 'login.html';
                 return;
             }
         
+            // Admin mi kontrol et
             const userDoc = await db.collection('users').where('email', '==', user.email).get();
             if (userDoc.empty || !userDoc.docs[0].data().isAdmin) {
-                alert('Bu sayfaya erişim yetkiniz yok!');
+                alert('Bu sayfaya eriÅŸim yetkiniz yok!');
                 window.location.href = 'index.html';
                 return;
             }
         
+            // Admin ise devam et
             loadUsers();
             loadApprovalRequests();
-            loadPresenterRequests(); // 👈 BUNU EKLE
         });
 
 
 
-        // Kullanıcı ekleme (Sadece Firestore - İlk giriş sırasında Auth'a eklenecek)
+        // KullanÄ±cÄ± ekleme (Sadece Firestore - Ä°lk giriÅŸ sÄ±rasÄ±nda Auth'a eklenecek)
         addUserForm.addEventListener('submit', async (e) => {
             e.preventDefault();
         
@@ -413,40 +410,39 @@
             errorMessage.classList.remove('show');
         
             try {
-                // Kullanıcı zaten var mı kontrol et
+                // KullanÄ±cÄ± zaten var mÄ± kontrol et
                 const existingUser = await db.collection('users').doc(username).get();
                 if (existingUser.exists) {
-                    throw new Error('Bu kullanıcı adı zaten kullanılıyor!');
+                    throw new Error('Bu kullanÄ±cÄ± adÄ± zaten kullanÄ±lÄ±yor!');
                 }
         
                 const email = `${username}@mat.local`;
         
-                // 🔹 1. Firebase Auth’a kullanıcı ekle
-                // 🔹 1. Secondary Firebase instance oluştur (admin çıkmadan kullanıcı yaratmak için)
+                // ðŸ”¹ 1. Firebase Authâ€™a kullanÄ±cÄ± ekle
+                // ðŸ”¹ 1. Secondary Firebase instance oluÅŸtur (admin Ã§Ä±kmadan kullanÄ±cÄ± yaratmak iÃ§in)
                 const secondaryApp = firebase.initializeApp(firebaseConfig, "Secondary");
                 
-                // 🔹 2. Yeni kullanıcıyı Auth’a ekle
+                // ðŸ”¹ 2. Yeni kullanÄ±cÄ±yÄ± Authâ€™a ekle
                 const userCredential = await secondaryApp.auth().createUserWithEmailAndPassword(email, password);
                 const createdUser = userCredential.user;
-                console.log('Auth’a eklendi:', createdUser.uid);
+                console.log('Authâ€™a eklendi:', createdUser.uid);
                 
-                // 🔹 3. Secondary app'i kapat (gereksiz oturumları temizler)
+                // ðŸ”¹ 3. Secondary app'i kapat (gereksiz oturumlarÄ± temizler)
                 await secondaryApp.delete();
                 
-                // 🔹 4. Firestore’a kaydet
+                // ðŸ”¹ 4. Firestoreâ€™a kaydet
                 await db.collection('users').doc(username).set({
                     username,
                     fullname,
                     email,
                     isAdmin: false,
-                    isPresenter: false,
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
 
 
 
         
-                successMessage.textContent = `✅ ${fullname} başarıyla eklendi!`;
+                successMessage.textContent = `âœ… ${fullname} baÅŸarÄ±yla eklendi!`;
                 successMessage.classList.add('show');
                 addUserForm.reset();
                 loadUsers();
@@ -457,18 +453,18 @@
         
             } catch (error) {
                 console.error('Hata:', error);
-                errorMessage.textContent = `❌ Hata: ${error.message}`;
+                errorMessage.textContent = `âŒ Hata: ${error.message}`;
                 errorMessage.classList.add('show');
             }
         });
 
-        // Kullanıcıları yükle
+        // KullanÄ±cÄ±larÄ± yÃ¼kle
         async function loadUsers() {
             try {
                 const snapshot = await db.collection('users').orderBy('createdAt', 'desc').get();
                 
                 if (snapshot.empty) {
-                    usersTableBody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #64748b;">Henüz kullanıcı yok</td></tr>';
+                    usersTableBody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #64748b;">HenÃ¼z kullanÄ±cÄ± yok</td></tr>';
                     return;
                 }
 
@@ -493,8 +489,8 @@
                 usersTableBody.innerHTML = html;
 
             } catch (error) {
-                console.error('Kullanıcılar yüklenirken hata:', error);
-                usersTableBody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #ef4444;">Yükleme hatası</td></tr>';
+                console.error('KullanÄ±cÄ±lar yÃ¼klenirken hata:', error);
+                usersTableBody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #ef4444;">YÃ¼kleme hatasÄ±</td></tr>';
             }
         }
         async function loadApprovalRequests() {
@@ -507,7 +503,7 @@
                     .get();
                 
                 if (snapshot.empty) {
-                    container.innerHTML = '<p class="no-requests">✅ Onay bekleyen talep yok</p>';
+                    container.innerHTML = '<p class="no-requests">âœ… Onay bekleyen talep yok</p>';
                     return;
                 }
         
@@ -515,7 +511,7 @@
                 snapshot.forEach(doc => {
                     const request = doc.data();
         
-                    // 🩹 Firestore'dan string olarak geldiyse parse et
+                    // ðŸ©¹ Firestore'dan string olarak geldiyse parse et
                     if (typeof request.surveyAnswers === 'string') {
                         try { request.surveyAnswers = JSON.parse(request.surveyAnswers); } catch (e) {}
                     }
@@ -532,28 +528,28 @@
                             <div class="approval-header">
                                 <div>
                                     <div class="approval-user">${request.fullname} (@${request.username})</div>
-                                    <div class="approval-stage">📚 ${request.stageTitle} - Aşama ${request.stageId}</div>
-                                    <div style="font-size: 12px; color: #64748b; margin-top: 0.25rem;">🕐 ${date}</div>
+                                    <div class="approval-stage">ðŸ“š ${request.stageTitle} - AÅŸama ${request.stageId}</div>
+                                    <div style="font-size: 12px; color: #64748b; margin-top: 0.25rem;">ðŸ• ${date}</div>
                                 </div>
-                                <div class="approval-badge">⏳ ONAY BEKLİYOR</div>
+                                <div class="approval-badge">â³ ONAY BEKLÄ°YOR</div>
                             </div>
                             
                             <div class="approval-details">
                                 ${Array.isArray(request.surveyAnswers) && request.surveyAnswers.length > 0 
                                     ? renderSurveyAnswers(request.surveyAnswers) 
-                                    : '<p style="color:#64748b;font-size:13px;">📋 Anket yanıtı yok.</p>'}
+                                    : '<p style="color:#64748b;font-size:13px;">ðŸ“‹ Anket yanÄ±tÄ± yok.</p>'}
                             
                                 ${request.quizResults && request.quizResults.quizTitle 
                                     ? renderQuizResults(request.quizResults) 
-                                    : '<p style="color:#64748b;font-size:13px;">❓ Test sonucu bulunamadı.</p>'}
+                                    : '<p style="color:#64748b;font-size:13px;">â“ Test sonucu bulunamadÄ±.</p>'}
                             </div>
         
                             <div class="approval-actions">
                                 <button class="approve-btn" onclick="approveRequest('${doc.id}', '${request.username}', ${request.stageId})">
-                                    ✅ Onayla
+                                    âœ… Onayla
                                 </button>
                                 <button class="reject-btn" onclick="rejectRequest('${doc.id}', '${request.username}')">
-                                    ❌ Reddet
+                                    âŒ Reddet
                                 </button>
                             </div>
                         </div>
@@ -563,156 +559,17 @@
                 container.innerHTML = html;
         
             } catch (error) {
-                console.error('Onay talepleri yüklenirken hata:', error);
-                container.innerHTML = '<p style="text-align: center; color: #ef4444;">Yükleme hatası</p>';
+                console.error('Onay talepleri yÃ¼klenirken hata:', error);
+                container.innerHTML = '<p style="text-align: center; color: #ef4444;">YÃ¼kleme hatasÄ±</p>';
             }
         }
 
-        // Presenter taleplerini yükle
-        async function loadPresenterRequests() {
-            const container = document.getElementById('presenterRequestsList');
-            
-            try {
-                // Tüm stage'leri tamamlamış beginner'ları bul
-                const usersSnapshot = await db.collection('users')
-                    .where('isPresenter', '==', false)
-                    .where('isAdmin', '==', false)
-                    .get();
-                
-                let eligibleUsers = [];
-                
-                for (const userDoc of usersSnapshot.docs) {
-                    const username = userDoc.id;
-                    const userData = userDoc.data();
-                    
-                    // userProgress'i kontrol et
-                    const progressDoc = await db.collection('userProgress').doc(username).get();
-                    if (!progressDoc.exists) continue;
-                    
-                    const progressData = progressDoc.data();
-                    const completedStages = progressData.completedStages || {};
-                    
-                    // Kaç stage tamamlanmış ve onaylanmış kontrol et
-                    let approvedCount = 0;
-                    for (let stageId = 1; stageId <= 11; stageId++) {
-                        if (completedStages[stageId] && completedStages[stageId].approved === true) {
-                            approvedCount++;
-                        }
-                    }
-                    
-                    // 11 stage'i de tamamlamışsa listeye ekle
-                    if (approvedCount === 11) {
-                        eligibleUsers.push({
-                            username,
-                            fullname: userData.fullname,
-                            email: userData.email
-                        });
-                    }
-                }
-                
-                if (eligibleUsers.length === 0) {
-                    container.innerHTML = '<p class="no-requests">✅ Presenter olmak isteyen kullanıcı yok</p>';
-                    return;
-                }
-                
-                let html = '';
-                eligibleUsers.forEach(user => {
-                    html += `
-                        <div class="approval-card">
-                            <div class="approval-header">
-                                <div>
-                                    <div class="approval-user">${user.fullname} (@${user.username})</div>
-                                    <div style="font-size: 12px; color: #64748b; margin-top: 0.25rem;">📧 ${user.email}</div>
-                                </div>
-                                <div class="approval-badge">⏳ PRESENTER TALEBİ</div>
-                            </div>
-                            
-                            <div style="padding: 1rem; background: rgba(15,23,42,0.5); border-radius: 6px; margin: 1rem 0;">
-                                <p style="color: #22c55e; font-size: 14px;">✅ Tüm 11 aşamayı başarıyla tamamladı!</p>
-                            </div>
-        
-                            <div class="approval-actions">
-                                <button class="approve-btn" onclick="approvePresenter('${user.username}')">
-                                    ✅ Presenter Yap
-                                </button>
-                                <button class="reject-btn" onclick="rejectPresenter('${user.username}')">
-                                    ❌ Reddet
-                                </button>
-                            </div>
-                        </div>
-                    `;
-                });
-                
-                container.innerHTML = html;
-                
-            } catch (error) {
-                console.error('Presenter talepleri yüklenirken hata:', error);
-                container.innerHTML = '<p style="text-align: center; color: #ef4444;">Yükleme hatası</p>';
-            }
-        }
-        
-        // Presenter onaylama
-        async function approvePresenter(username) {
-            if (!confirm(`${username} kullanıcısını Presenter yapmak istediğinize emin misiniz?`)) {
-                return;
-            }
-            
-            try {
-                await db.collection('users').doc(username).update({
-                    isPresenter: true,
-                    presenterSince: firebase.firestore.FieldValue.serverTimestamp()
-                });
-                
-                successMessage.textContent = `✅ ${username} artık Presenter!`;
-                successMessage.classList.add('show');
-                
-                loadPresenterRequests();
-                
-                setTimeout(() => {
-                    successMessage.classList.remove('show');
-                }, 3000);
-                
-            } catch (error) {
-                console.error('Presenter yapma hatası:', error);
-                errorMessage.textContent = `❌ Hata: ${error.message}`;
-                errorMessage.classList.add('show');
-            }
-        }
-        
-        // Presenter reddedilmesi
-        async function rejectPresenter(username) {
-            const reason = prompt('Red nedeni (opsiyonel):');
-            if (reason === null) return;
-            
-            try {
-                // İsteğe bağlı: Reddetme kaydı tutmak istersen
-                await db.collection('presenterRejections').add({
-                    username,
-                    rejectedAt: firebase.firestore.FieldValue.serverTimestamp(),
-                    rejectedBy: auth.currentUser.email.split('@')[0],
-                    reason: reason || 'Belirtilmedi'
-                });
-                
-                successMessage.textContent = `✅ ${username} presenter talebi reddedildi.`;
-                successMessage.classList.add('show');
-                
-                loadPresenterRequests();
-                
-                setTimeout(() => {
-                    successMessage.classList.remove('show');
-                }, 3000);
-                
-            } catch (error) {
-                console.error('Red hatası:', error);
-                errorMessage.textContent = `❌ Hata: ${error.message}`;
-                errorMessage.classList.add('show');
-            }
-        }
-        // Anket cevaplarını render et
+
+        // Anket cevaplarÄ±nÄ± render et
         function renderSurveyAnswers(answers) {
             if (!answers || answers.length === 0) return '';
             
-            let html = '<div class="approval-section"><h4>📋 Anket Cevapları</h4>';
+            let html = '<div class="approval-section"><h4>ðŸ“‹ Anket CevaplarÄ±</h4>';
             answers.forEach((item, idx) => {
                 html += `
                     <div class="answer-item">
@@ -725,17 +582,17 @@
             return html;
         }
 
-        // Quiz sonuçlarını render et
+        // Quiz sonuÃ§larÄ±nÄ± render et
         function renderQuizResults(results) {
             if (!results) return '';
             
             return `
                 <div class="approval-section">
-                    <h4>❓ ${results.quizTitle}</h4>
+                    <h4>â“ ${results.quizTitle}</h4>
                     <div class="quiz-result">
-                        <strong>${results.correctAnswers}/${results.totalQuestions}</strong> doğru cevap 
+                        <strong>${results.correctAnswers}/${results.totalQuestions}</strong> doÄŸru cevap 
                         <strong>(${results.percentage}%)</strong>
-                        ${results.passed ? ' - ✅ Başarılı' : ' - ❌ Başarısız'}
+                        ${results.passed ? ' - âœ… BaÅŸarÄ±lÄ±' : ' - âŒ BaÅŸarÄ±sÄ±z'}
                     </div>
                 </div>
             `;
@@ -743,26 +600,26 @@
 
         // Talebi onayla
         async function approveRequest(requestId, username, stageId) {
-            if (!confirm('Bu talebi onaylamak istediğinize emin misiniz?')) {
+            if (!confirm('Bu talebi onaylamak istediÄŸinize emin misiniz?')) {
                 return;
             }
 
             try {
-                // Talebi güncelle
+                // Talebi gÃ¼ncelle
                 await db.collection('approvalRequests').doc(requestId).update({
                     status: 'approved',
                     approvedAt: firebase.firestore.FieldValue.serverTimestamp(),
                     approvedBy: auth.currentUser.email.split('@')[0]
                 });
 
-                // Kullanıcının ilerlemesini güncelle (bir sonraki aşamaya geç)
+                // KullanÄ±cÄ±nÄ±n ilerlemesini gÃ¼ncelle (bir sonraki aÅŸamaya geÃ§)
                 await db.collection('userProgress').doc(username).update({
                     currentStage: stageId + 1,
                     [`completedStages.${stageId}.approved`]: true,
                     [`completedStages.${stageId}.approvedAt`]: firebase.firestore.FieldValue.serverTimestamp()
                 });
 
-                successMessage.textContent = `✅ ${username} kullanıcısının talebi onaylandı!`;
+                successMessage.textContent = `âœ… ${username} kullanÄ±cÄ±sÄ±nÄ±n talebi onaylandÄ±!`;
                 successMessage.classList.add('show');
 
                 // Listeyi yenile
@@ -773,8 +630,8 @@
                 }, 3000);
 
             } catch (error) {
-                console.error('Onaylama hatası:', error);
-                errorMessage.textContent = `❌ Onaylama hatası: ${error.message}`;
+                console.error('Onaylama hatasÄ±:', error);
+                errorMessage.textContent = `âŒ Onaylama hatasÄ±: ${error.message}`;
                 errorMessage.classList.add('show');
             }
         }
@@ -783,7 +640,7 @@
         async function rejectRequest(requestId, username) {
             const reason = prompt('Red nedeni (opsiyonel):');
             
-            if (reason === null) return; // İptal edildi
+            if (reason === null) return; // Ä°ptal edildi
         
             try {
                 // Talep belgesini al
@@ -791,7 +648,7 @@
                 const requestData = requestDoc.data();
                 const stageId = requestData.stageId;
         
-                // 1️⃣ Talebi reddedilmiş olarak işaretle
+                // 1ï¸âƒ£ Talebi reddedilmiÅŸ olarak iÅŸaretle
                 await db.collection('approvalRequests').doc(requestId).update({
                     status: 'rejected',
                     rejectedAt: firebase.firestore.FieldValue.serverTimestamp(),
@@ -799,14 +656,14 @@
                     adminNote: reason || 'Red nedeni belirtilmedi'
                 });
         
-                // 2️⃣ Kullanıcının ilerleme verisini sıfırla (o aşamayı tamamen sil)
+                // 2ï¸âƒ£ KullanÄ±cÄ±nÄ±n ilerleme verisini sÄ±fÄ±rla (o aÅŸamayÄ± tamamen sil)
                 await db.collection('userProgress').doc(username).update({
                     [`completedStages.${stageId}`]: firebase.firestore.FieldValue.delete(),
-                    currentStage: stageId // aynı aşamada kalsın
+                    currentStage: stageId // aynÄ± aÅŸamada kalsÄ±n
                 });
         
-                // 3️⃣ Bildirim göster ve listeyi yenile
-                successMessage.textContent = `✅ ${username} kullanıcısının ${stageId}. aşama ilerlemesi sıfırlandı ve reddedildi.`;
+                // 3ï¸âƒ£ Bildirim gÃ¶ster ve listeyi yenile
+                successMessage.textContent = `âœ… ${username} kullanÄ±cÄ±sÄ±nÄ±n ${stageId}. aÅŸama ilerlemesi sÄ±fÄ±rlandÄ± ve reddedildi.`;
                 successMessage.classList.add('show');
         
                 loadApprovalRequests();
@@ -816,31 +673,31 @@
                 }, 3000);
         
             } catch (error) {
-                console.error('Reddetme hatası:', error);
-                errorMessage.textContent = `❌ Reddetme hatası: ${error.message}`;
+                console.error('Reddetme hatasÄ±:', error);
+                errorMessage.textContent = `âŒ Reddetme hatasÄ±: ${error.message}`;
                 errorMessage.classList.add('show');
             }
         }
 
-        // Kullanıcı silme
-        // Kullanıcı silme (ilişkili tüm verilerle birlikte)
+        // KullanÄ±cÄ± silme
+        // KullanÄ±cÄ± silme (iliÅŸkili tÃ¼m verilerle birlikte)
         async function deleteUser(username, email) {
-            if (!confirm(`${username} kullanıcısını ve tüm verilerini silmek istediğinize emin misiniz? Bu işlem geri alınamaz!`)) {
+            if (!confirm(`${username} kullanÄ±cÄ±sÄ±nÄ± ve tÃ¼m verilerini silmek istediÄŸinize emin misiniz? Bu iÅŸlem geri alÄ±namaz!`)) {
                 return;
             }
         
             try {
-                // 1️⃣ users koleksiyonundan kullanıcıyı sil
+                // 1ï¸âƒ£ users koleksiyonundan kullanÄ±cÄ±yÄ± sil
                 await db.collection('users').doc(username).delete();
         
-                // 2️⃣ userProgress verisini sil (varsa)
+                // 2ï¸âƒ£ userProgress verisini sil (varsa)
                 const progressDoc = await db.collection('userProgress').doc(username).get();
                 if (progressDoc.exists) {
                     await db.collection('userProgress').doc(username).delete();
-                    console.log(`🧹 ${username} userProgress verisi silindi.`);
+                    console.log(`ðŸ§¹ ${username} userProgress verisi silindi.`);
                 }
         
-                // 3️⃣ approvalRequests içinde o kullanıcıya ait tüm belgeleri sil
+                // 3ï¸âƒ£ approvalRequests iÃ§inde o kullanÄ±cÄ±ya ait tÃ¼m belgeleri sil
                 const approvalsSnapshot = await db.collection('approvalRequests')
                     .where('username', '==', username)
                     .get();
@@ -850,13 +707,13 @@
                     batch.delete(doc.ref);
                 });
                 await batch.commit();
-                console.log(`🧹 ${username} kullanıcısına ait ${approvalsSnapshot.size} onay talebi silindi.`);
+                console.log(`ðŸ§¹ ${username} kullanÄ±cÄ±sÄ±na ait ${approvalsSnapshot.size} onay talebi silindi.`);
         
-                // 4️⃣ Başarı mesajı
-                successMessage.textContent = `✅ ${username} ve tüm verileri başarıyla silindi!`;
+                // 4ï¸âƒ£ BaÅŸarÄ± mesajÄ±
+                successMessage.textContent = `âœ… ${username} ve tÃ¼m verileri baÅŸarÄ±yla silindi!`;
                 successMessage.classList.add('show');
         
-                // 5️⃣ Listeyi yenile
+                // 5ï¸âƒ£ Listeyi yenile
                 loadUsers();
                 loadApprovalRequests();
         
@@ -865,21 +722,21 @@
                 }, 3000);
         
             } catch (error) {
-                console.error('Silme hatası:', error);
-                errorMessage.textContent = `❌ Silme hatası: ${error.message}`;
+                console.error('Silme hatasÄ±:', error);
+                errorMessage.textContent = `âŒ Silme hatasÄ±: ${error.message}`;
                 errorMessage.classList.add('show');
             }
         }
 
 
-        // Çıkış yap
+        // Ã‡Ä±kÄ±ÅŸ yap
         function logout() {
             auth.signOut().then(() => {
                 window.location.href = 'login.html';
             });
         }
 
-        console.log("✅ Admin panel script başarıyla yüklendi.");
+        console.log("âœ… Admin panel script baÅŸarÄ±yla yÃ¼klendi.");
     </script>
 </body>
 </html>
