@@ -330,6 +330,268 @@
             color: #64748b;
             padding: 2rem;
         }
+        /* Mevcut stillerin sonuna ekleyin: */
+
+@media (max-width: 1024px) {
+    body {
+        padding: 1rem;
+    }
+    
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .users-table {
+        font-size: 14px;
+    }
+    
+    .users-table th,
+    .users-table td {
+        padding: 0.75rem 0.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    body {
+        padding: 0.75rem;
+    }
+    
+    .header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+    
+    .header h1 {
+        font-size: 24px;
+    }
+    
+    .logout-btn {
+        width: 100%;
+        text-align: center;
+    }
+    
+    .add-user-card,
+    .users-card {
+        padding: 1.5rem;
+    }
+    
+    .add-user-card h2,
+    .users-card h2 {
+        font-size: 20px;
+        margin-bottom: 1rem;
+    }
+    
+    .form-grid {
+        gap: 0.75rem;
+    }
+    
+    .form-group {
+        margin-bottom: 0.75rem;
+    }
+    
+    .form-group label {
+        font-size: 13px;
+    }
+    
+    .form-group input {
+        padding: 0.65rem;
+        font-size: 14px;
+    }
+    
+    .add-btn {
+        width: 100%;
+        padding: 0.75rem;
+        font-size: 15px;
+    }
+    
+    /* Tablo responsive */
+    .users-table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    .users-table thead {
+        display: none;
+    }
+    
+    .users-table tbody {
+        display: block;
+    }
+    
+    .users-table tr {
+        display: block;
+        margin-bottom: 1rem;
+        background: rgba(15, 23, 42, 0.5);
+        border: 1px solid #334155;
+        border-radius: 8px;
+        padding: 1rem;
+    }
+    
+    .users-table td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.5rem 0;
+        border-bottom: 1px solid #334155;
+        white-space: normal;
+    }
+    
+    .users-table td:last-child {
+        border-bottom: none;
+    }
+    
+    .users-table td:before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: #94a3b8;
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-right: 1rem;
+    }
+    
+    /* Onay kartları */
+    .approval-card {
+        padding: 1rem;
+    }
+    
+    .approval-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.75rem;
+    }
+    
+    .approval-user {
+        font-size: 16px;
+    }
+    
+    .approval-actions {
+        flex-direction: column;
+    }
+    
+    .approve-btn,
+    .reject-btn {
+        width: 100%;
+    }
+    
+    .answer-item {
+        padding: 0.75rem;
+    }
+    
+    .delete-btn,
+    .toggle-presenter-btn {
+        font-size: 13px;
+        padding: 0.4rem 0.75rem;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        padding: 0.5rem;
+    }
+    
+    .container {
+        padding: 0;
+    }
+    
+    .header h1 {
+        font-size: 20px;
+    }
+    
+    .logout-btn {
+        padding: 0.6rem 1rem;
+        font-size: 14px;
+    }
+    
+    .add-user-card,
+    .users-card {
+        padding: 1rem;
+        border-radius: 8px;
+    }
+    
+    .add-user-card h2,
+    .users-card h2 {
+        font-size: 18px;
+    }
+    
+    .form-group input {
+        padding: 0.6rem;
+        font-size: 14px;
+    }
+    
+    .add-btn {
+        padding: 0.7rem;
+        font-size: 14px;
+    }
+    
+    .success-message,
+    .error-message {
+        padding: 0.75rem;
+        font-size: 13px;
+    }
+    
+    .approval-card {
+        padding: 0.75rem;
+    }
+    
+    .approval-user {
+        font-size: 15px;
+    }
+    
+    .approval-stage {
+        font-size: 12px;
+    }
+    
+    .approval-section h4 {
+        font-size: 13px;
+    }
+    
+    .answer-question {
+        font-size: 12px;
+    }
+    
+    .answer-text {
+        font-size: 13px;
+    }
+    
+    .approve-btn,
+    .reject-btn {
+        padding: 0.65rem;
+        font-size: 13px;
+    }
+    
+    .users-table tr {
+        padding: 0.75rem;
+    }
+    
+    .users-table td {
+        font-size: 13px;
+        padding: 0.4rem 0;
+    }
+    
+    .users-table td:before {
+        font-size: 11px;
+    }
+}
+
+@media (max-width: 360px) {
+    .header h1 {
+        font-size: 18px;
+    }
+    
+    .add-user-card h2,
+    .users-card h2 {
+        font-size: 16px;
+    }
+    
+    .approval-badge {
+        font-size: 10px;
+        padding: 0.4rem 0.75rem;
+    }
+}
     </style>
 </head>
 <body>
