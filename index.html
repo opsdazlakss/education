@@ -1102,6 +1102,35 @@
             const isCompleted = isStageFullyCompleted(currentStage);
             nextBtn.disabled = !isCompleted || currentStage === 9;
             nextBtn.textContent = currentStage === 9 ? 'TamamlandÄ±! ðŸŽ‰' : 'Sonraki AÅŸama â†’';
+            // 🔹 Tüm aşamalar tamamlanmış mı kontrol et
+            (async () => {
+                if (userProgress && userProgress.completedStages) {
+                    const allCompleted = stages.every(s => isStageFullyCompleted(s.id));
+                    if (allCompleted) {
+                        // 🔸 Admin'e bildirim gönder
+                        const notifRef = db.collection('notifications');
+                        const existing = await notifRef
+                            .where('username', '==', currentUsername)
+                            .where('type', '==', 'presenter_request')
+                            .where('status', '==', 'pending')
+                            .get();
+            
+                        // Aynı istek zaten varsa tekrar oluşturmasın
+                        if (existing.empty) {
+                            await notifRef.add({
+                                username: currentUsername,
+                                fullname: currentFullname,
+                                message: `${currentFullname} (@${currentUsername}) tüm aşamaları tamamladı.`,
+                                type: 'presenter_request',
+                                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                                status: 'pending'
+                            });
+                            console.log('✅ Presenter olma isteği admin paneline gönderildi.');
+                        }
+                    }
+                }
+            })();
+
         }
 
         function getRandomQuestions(stageId, count) {
