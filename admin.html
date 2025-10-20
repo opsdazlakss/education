@@ -417,7 +417,6 @@
             }
         
             // Admin ise devam et
-            await getTotalStagesCount();  // 🔹 Önce aşama sayısını çek
             loadUsers();
             loadApprovalRequests();
         });
@@ -500,10 +499,8 @@
         // Kullanıcıları yükle
         async function loadUsers() {
     try {
+        const totalStagesCount = stages.length;
         // Önce toplam stage sayısını çek
-        if (totalStagesCount === 0) {
-            await getTotalStagesCount();
-        }
 
         const snapshot = await db.collection('users').orderBy('createdAt', 'desc').get();
 
@@ -545,7 +542,8 @@
                         }
                     }
 
-                    progressInfo = `📍 Aşama ${currentStage}/${totalStagesCount} - ${stageStatus}`;
+                    progressInfo = `📍 Aşama ${currentStage}/${stages.length} - ${stageStatus}`;
+
 
                     // 🔹 Kaç aşama tamamen bitmiş?
                     const completedStageCount = Object.keys(completedStages).filter(stageId => {
