@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MAT - GiriÅŸ</title>
+    <title>MAT - Giriş</title>
     <style>
         * {
             margin: 0;
@@ -150,23 +150,23 @@
         <div class="logo">
             <div class="logo-icon">M</div>
             <h1>MAT</h1>
-            <p>EÄŸitim Sistemi</p>
+            <p>Eğitim Sistemi</p>
         </div>
 
         <div class="error-message" id="errorMessage"></div>
 
         <form id="loginForm">
             <div class="form-group">
-                <label for="username">KullanÄ±cÄ± AdÄ±</label>
+                <label for="username">Kullanıcı Adı</label>
                 <input type="text" id="username" required autocomplete="username">
             </div>
 
             <div class="form-group">
-                <label for="password">Åžifre</label>
+                <label for="password">Şifre</label>
                 <input type="password" id="password" required autocomplete="current-password">
             </div>
 
-            <button type="submit" class="login-btn" id="loginBtn">GiriÅŸ Yap</button>
+            <button type="submit" class="login-btn" id="loginBtn">Giriş Yap</button>
         </form>
     </div>
 
@@ -178,17 +178,10 @@
         const loginForm = document.getElementById('loginForm');
         const errorMessage = document.getElementById('errorMessage');
         const loginBtn = document.getElementById('loginBtn');
-        // Zaten giriÅŸ yapmÄ±ÅŸ mÄ± kontrol et
+        // Zaten giriş yapmış mı kontrol et
         auth.onAuthStateChanged(user => {
             if (user) {
-                const userSnap = await db.collection('users').doc(username).get();
-                const userData = userSnap.data();
-                
-                if (userData.isPresenter) {
-                    window.location.href = 'presenter.html'; // presenter sayfan
-                } else {
-                    window.location.href = 'index.html'; // beginner sayfan
-                }
+                window.location.href = 'index.html';
             }
         });
 
@@ -201,67 +194,60 @@
     
             errorMessage.classList.remove('show');
             loginBtn.disabled = true;
-            loginBtn.textContent = 'GiriÅŸ yapÄ±lÄ±yor...';
+            loginBtn.textContent = 'Giriş yapılıyor...';
     
             try {
-                // Firestore'dan kullanÄ±cÄ±yÄ± bul
+                // Firestore'dan kullanıcıyı bul
                 const userDoc = await db.collection('users').doc(username).get();
     
                 if (!userDoc.exists) {
-                    throw new Error('KullanÄ±cÄ± bulunamadÄ±');
+                    throw new Error('Kullanıcı bulunamadı');
                 }
     
                 const userData = userDoc.data();
                 const email = userData.email;
         
-                // EÄŸer kullanÄ±cÄ±da password field'i varsa, henÃ¼z Auth'a eklenmemiÅŸ demektir
+                // Eğer kullanıcıda password field'i varsa, henüz Auth'a eklenmemiş demektir
                 if (userData.password) {
-    // Åžifreyi kontrol et
+    // Şifreyi kontrol et
                 const hashedPassword = btoa(password);
                 if (hashedPassword !== userData.password) {
-                    throw new Error('Åžifre hatalÄ±');
+                    throw new Error('Şifre hatalı');
                 }
             
                 try {
-                    // Ã–nce giriÅŸ yapmayÄ± dene
+                    // Önce giriş yapmayı dene
                     await auth.signInWithEmailAndPassword(email, password);
                 } catch (error) {
-                    // EÄŸer kullanÄ±cÄ± Authâ€™ta yoksa (ilk giriÅŸ), oluÅŸtur
+                    // Eğer kullanıcı Auth’ta yoksa (ilk giriş), oluştur
                     if (error.code === 'auth/user-not-found') {
                         await auth.createUserWithEmailAndPassword(email, password);
-                        console.log('KullanÄ±cÄ± ilk kez Authâ€™a eklendi:', email);
+                        console.log('Kullanıcı ilk kez Auth’a eklendi:', email);
                     } else {
                         throw error;
                     }
                 }
             
-                // Firestore'dan password alanÄ±nÄ± kaldÄ±r (artÄ±k Auth kontrol edecek)
+                // Firestore'dan password alanını kaldır (artık Auth kontrol edecek)
                 await db.collection('users').doc(username).update({
                     password: firebase.firestore.FieldValue.delete()
                 });
                 
-                console.log('Åžifre Firestoreâ€™dan kaldÄ±rÄ±ldÄ±, Auth devreye alÄ±ndÄ±.');
+                console.log('Şifre Firestore’dan kaldırıldı, Auth devreye alındı.');
             } else {
-                // Normal giriÅŸ (kullanÄ±cÄ± zaten Auth'da var)
+                // Normal giriş (kullanıcı zaten Auth'da var)
                 await auth.signInWithEmailAndPassword(email, password);
             }
 
 
-                const userSnap = await db.collection('users').doc(username).get();
-                const userData = userSnap.data();
-                
-                if (userData.isPresenter) {
-                    window.location.href = 'presenter.html'; // presenter sayfan
-                } else {
-                    window.location.href = 'index.html'; // beginner sayfan
-                }
+                window.location.href = 'index.html';
     
             } catch (error) {
-                console.error('GiriÅŸ hatasÄ±:', error);
-                errorMessage.textContent = 'KullanÄ±cÄ± adÄ± veya ÅŸifre hatalÄ±!';
+                console.error('Giriş hatası:', error);
+                errorMessage.textContent = 'Kullanıcı adı veya şifre hatalı!';
                 errorMessage.classList.add('show');
                 loginBtn.disabled = false;
-                loginBtn.textContent = 'GiriÅŸ Yap';
+                loginBtn.textContent = 'Giriş Yap';
             }
         });
     </script>
