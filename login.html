@@ -179,9 +179,21 @@
         const errorMessage = document.getElementById('errorMessage');
         const loginBtn = document.getElementById('loginBtn');
         // Zaten giriş yapmış mı kontrol et
-        auth.onAuthStateChanged(user => {
+        auth.onAuthStateChanged(async user => {
             if (user) {
-                window.location.href = 'index.html';
+                // Kullanıcının isPresenter durumunu kontrol et
+                const username = user.email.split('@')[0];
+                const userDoc = await db.collection('users').doc(username).get();
+                
+                if (userDoc.exists) {
+                    const userData = userDoc.data();
+                    // Presenter ise presenter sayfasına, değilse beginner sayfasına yönlendir
+                    if (userData.isPresenter) {
+                        window.location.href = 'presenter.html';
+                    } else {
+                        window.location.href = 'index.html'; // beginner sayfası
+                    }
+                }
             }
         });
 
@@ -240,7 +252,15 @@
             }
 
 
-                window.location.href = 'index.html';
+                // Başarılı girişten sonra yönlendirme
+                const userDocAfterLogin = await db.collection('users').doc(username).get();
+                const userDataAfterLogin = userDocAfterLogin.data();
+                
+                if (userDataAfterLogin.isPresenter) {
+                    window.location.href = 'presenter.html';
+                } else {
+                    window.location.href = 'index.html';
+                }
     
             } catch (error) {
                 console.error('Giriş hatası:', error);
