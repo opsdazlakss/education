@@ -336,13 +336,6 @@
                     <label>Şifre</label>
                     <input type="text" id="newPassword" required minlength="6">
                 </div>
-                
-                <!-- ✅ YENİ: Presenter Checkbox -->
-                <div class="form-group" style="display: flex; align-items: center; gap: 0.5rem;">
-                    <input type="checkbox" id="newIsPresenter" style="width: auto; cursor: pointer;">
-                    <label for="newIsPresenter" style="margin: 0; cursor: pointer;">Bu kullanıcı sunucu (presenter) olsun</label>
-                </div>
-                
                 <button type="submit" class="add-btn">Kullanıcı Ekle</button>
             </form>
         </div>
@@ -412,12 +405,12 @@
             const username = document.getElementById('newUsername').value.trim();
             const fullname = document.getElementById('newFullname').value.trim();
             const password = document.getElementById('newPassword').value;
-            const isPresenter = document.getElementById('newIsPresenter').checked; // ✅ Yeni alan
         
             successMessage.classList.remove('show');
             errorMessage.classList.remove('show');
         
             try {
+                // Kullanıcı zaten var mı kontrol et
                 const existingUser = await db.collection('users').doc(username).get();
                 if (existingUser.exists) {
                     throw new Error('Bu kullanıcı adı zaten kullanılıyor!');
@@ -425,22 +418,29 @@
         
                 const email = `${username}@mat.local`;
         
+                // 🔹 1. Firebase Auth’a kullanıcı ekle
+                // 🔹 1. Secondary Firebase instance oluştur (admin çıkmadan kullanıcı yaratmak için)
                 const secondaryApp = firebase.initializeApp(firebaseConfig, "Secondary");
+                
+                // 🔹 2. Yeni kullanıcıyı Auth’a ekle
                 const userCredential = await secondaryApp.auth().createUserWithEmailAndPassword(email, password);
                 const createdUser = userCredential.user;
-                console.log('Auth'a eklendi:', createdUser.uid);
+                console.log('Auth’a eklendi:', createdUser.uid);
                 
+                // 🔹 3. Secondary app'i kapat (gereksiz oturumları temizler)
                 await secondaryApp.delete();
                 
-                // ✅ Firestore'a kaydederken isPresenter ekle
+                // 🔹 4. Firestore’a kaydet
                 await db.collection('users').doc(username).set({
                     username,
                     fullname,
                     email,
                     isAdmin: false,
-                    isPresenter: isPresenter, // ✅ Yeni alan
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
+
+
+
         
                 successMessage.textContent = `✅ ${fullname} başarıyla eklendi!`;
                 successMessage.classList.add('show');
