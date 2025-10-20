@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MAT - EÄŸitim Sistemi</title>
+    <title>MAT - Eğitim Sistemi</title>
     <!-- Firebase CDN Scripts -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
@@ -664,21 +664,19 @@
         <div class="logo-icon">M</div>
         <div class="logo-text">
             <h1>MAT</h1>
-            <p>EÄŸitim Sistemi</p>
+            <p>Eğitim Sistemi</p>
         </div>
     </div>
     <div style="display: flex; gap: 1rem; align-items: center;">
         <div class="progress-section">
-            <p>AÅŸama <span id="currentStageDisplay">1</span>/<span id="totalStageDisplay">9</span></p>
+            <p>Aşama <span id="currentStageDisplay">1</span>/<span id="totalStageDisplay">9</span></p>
             <div class="progress-bar">
                 <div class="progress-fill" id="headerProgressFill" style="width: 11.11%"></div>
             </div>
         </div>
-        <!-- Admin butonu (sadece adminlere gÃ¶ster) -->
-        <a href="admin.html" id="adminButton" style="display: none; padding: 0.5rem 1rem; background: rgba(59, 130, 246, 0.2); border: 1px solid rgba(59, 130, 246, 0.4); color: #3b82f6; border-radius: 6px; text-decoration: none; font-weight: 500; font-size: 14px;">ðŸ› ï¸ Admin</a>
-        <button onclick="userLogout()" style="padding: 0.5rem 1rem; background: rgba(239, 68, 68, 0.2); border: 1px solid rgba(239, 68, 68, 0.4); color: #ef4444; border-radius: 6px; cursor: pointer; font-weight: 500; font-size: 14px;">Ã‡Ä±kÄ±ÅŸ</button>
-        <button id="modeSwitchBtn"
-    style="padding: 0.5rem 1rem; background: rgba(59,130,246,0.2); border: 1px solid rgba(59,130,246,0.4); color: #3b82f6; border-radius: 6px; cursor: pointer; font-weight: 500; font-size: 14px;">↔ Mod Değiştir</button>
+        <!-- Admin butonu (sadece adminlere göster) -->
+        <a href="admin.html" id="adminButton" style="display: none; padding: 0.5rem 1rem; background: rgba(59, 130, 246, 0.2); border: 1px solid rgba(59, 130, 246, 0.4); color: #3b82f6; border-radius: 6px; text-decoration: none; font-weight: 500; font-size: 14px;">🛠️ Admin</a>
+        <button onclick="userLogout()" style="padding: 0.5rem 1rem; background: rgba(239, 68, 68, 0.2); border: 1px solid rgba(239, 68, 68, 0.4); color: #ef4444; border-radius: 6px; cursor: pointer; font-weight: 500; font-size: 14px;">Çıkış</button>
     </div>
 </div>
     </header>
@@ -688,7 +686,7 @@
         <div class="main-grid">
             <!-- Sidebar -->
             <div class="sidebar">
-                <h2>AÅŸamalar</h2>
+                <h2>Aşamalar</h2>
                 <div class="stages-list" id="stagesList"></div>
             </div>
 
@@ -697,22 +695,22 @@
                 <div class="content-card">
                     <div class="card-header">
                         <div class="card-header-top">
-                            <div class="stage-badge">AÅŸama <span id="stageId">1</span></div>
+                            <div class="stage-badge">Aşama <span id="stageId">1</span></div>
                             <span id="stageTypeLabel">Konferans</span>
                         </div>
-                        <h2 id="stageTitle">Proje TanÄ±tÄ±mÄ±</h2>
+                        <h2 id="stageTitle">Proje Tanıtımı</h2>
                         <p id="stageDescription">MAT projesinin temel bilgileri ve hedefleri</p>
                     </div>
 
                     <div class="card-body">
                         <div class="content-section">
-                            <h3>AÅŸama Ä°Ã§eriÄŸi</h3>
+                            <h3>Aşama İçeriği</h3>
                             <div class="content-list" id="contentList"></div>
                         </div>
 
                         <div class="progress-section-card">
                             <div class="progress-header">
-                                <p>Bu AÅŸamayÄ± Tamamlama Ä°lerlemesi</p>
+                                <p>Bu Aşamayı Tamamlama İlerlemesi</p>
                                 <span class="progress-count"><span id="completedCount">0</span>/<span id="totalCount">4</span></span>
                             </div>
                             <div class="progress-bar-full">
@@ -721,14 +719,14 @@
                         </div>
 
                         <div class="action-buttons">
-                            <button class="btn btn-secondary" id="prevBtn" style="display: none;">â† Ã–nceki</button>
-                            <button class="btn btn-primary" id="nextBtn">Sonraki AÅŸama â†’</button>
+                            <button class="btn btn-secondary" id="prevBtn" style="display: none;">← Önceki</button>
+                            <button class="btn btn-primary" id="nextBtn">Sonraki Aşama →</button>
                         </div>
                     </div>
                 </div>
 
                 <div class="info-card">
-                    <p>ðŸ’¡ <span>Ä°pucu:</span> Bu aÅŸamadaki tÃ¼m iÃ§eriÄŸi tamamladÄ±ktan sonra sonraki aÅŸamaya geÃ§ebilirsiniz.</p>
+                    <p>💡 <span>İpucu:</span> Bu aşamadaki tüm içeriği tamamladıktan sonra sonraki aşamaya geçebilirsiniz.</p>
                 </div>
             </div>
         </div>
@@ -740,7 +738,7 @@
             <div class="modal-header">
                 <div class="modal-title-section">
                     <div class="modal-type" id="modalType">Metin</div>
-                    <h3 id="modalTitle">Ä°Ã§erik BaÅŸlÄ±ÄŸÄ±</h3>
+                    <h3 id="modalTitle">İçerik Başlığı</h3>
                 </div>
                 <button class="close-btn" onclick="closeModal()">&times;</button>
             </div>
@@ -750,39 +748,39 @@
 
     <script>
         const quizQuestionPools = {
-            1: [ // Stage 1 iÃ§in soru havuzu
+            1: [ // Stage 1 için soru havuzu
                 {
-                    question: 'MAT projesi hangi ilkelere dayanmaktadÄ±r?',
-                    options: ['KapalÄ± kaynak', 'AÃ§Ä±k kaynak', 'Ticari Ã¼rÃ¼n'],
-                    correctAnswer: 'AÃ§Ä±k kaynak'
+                    question: 'MAT projesi hangi ilkelere dayanmaktadır?',
+                    options: ['Kapalı kaynak', 'Açık kaynak', 'Ticari ürün'],
+                    correctAnswer: 'Açık kaynak'
                 },
                 {
                     question: 'MAT hangi platformdur?',
-                    options: ['EÄŸitim platformu', 'Oyun platformu', 'AlÄ±ÅŸveriÅŸ sitesi'],
-                    correctAnswer: 'EÄŸitim platformu'
+                    options: ['Eğitim platformu', 'Oyun platformu', 'Alışveriş sitesi'],
+                    correctAnswer: 'Eğitim platformu'
                 },
                 {
-                    question: 'Topluluk desteÄŸi var mÄ±?',
-                    options: ['Evet', 'HayÄ±r', 'Bazen'],
+                    question: 'Topluluk desteği var mı?',
+                    options: ['Evet', 'Hayır', 'Bazen'],
                     correctAnswer: 'Evet'
                 },
                 {
-                    question: 'MAT projesi hangi amaÃ§la kurulmuÅŸtur?',
-                    options: ['Kar elde etmek', 'EÄŸitim saÄŸlamak', 'Reklam yapmak'],
-                    correctAnswer: 'EÄŸitim saÄŸlamak'
+                    question: 'MAT projesi hangi amaçla kurulmuştur?',
+                    options: ['Kar elde etmek', 'Eğitim sağlamak', 'Reklam yapmak'],
+                    correctAnswer: 'Eğitim sağlamak'
                 },
                 {
-                    question: 'Proje kaÃ§ katmandan oluÅŸur?',
+                    question: 'Proje kaç katmandan oluşur?',
                     options: ['2', '3', '4'],
                     correctAnswer: '3'
                 },
                 {
-                    question: 'Backend hangi dilde yazÄ±lmÄ±ÅŸtÄ±r?',
+                    question: 'Backend hangi dilde yazılmıştır?',
                     options: ['Python', 'JavaScript', 'Java'],
                     correctAnswer: 'JavaScript'
                 },
                 {
-                    question: 'VeritabanÄ± olarak ne kullanÄ±lÄ±r?',
+                    question: 'Veritabanı olarak ne kullanılır?',
                     options: ['MySQL', 'MongoDB', 'PostgreSQL'],
                     correctAnswer: 'MongoDB'
                 },
@@ -792,7 +790,7 @@
                     correctAnswer: 'REST'
                 },
                 {
-                    question: 'Kimlik doÄŸrulama nasÄ±l yapÄ±lÄ±r?',
+                    question: 'Kimlik doğrulama nasıl yapılır?',
                     options: ['JWT', 'Session', 'Cookie'],
                     correctAnswer: 'JWT'
                 },
@@ -802,75 +800,75 @@
                     correctAnswer: 'React'
                 }
             ],
-            2: [ // Stage 2 iÃ§in soru havuzu (Ã¶rnek)
+            2: [ // Stage 2 için soru havuzu (örnek)
                 {
-                    question: 'MAT projesi kaÃ§ ana katmandan oluÅŸmaktadÄ±r?',
+                    question: 'MAT projesi kaç ana katmandan oluşmaktadır?',
                     options: ['2', '3', '4'],
                     correctAnswer: '3'
                 },
                 {
-                    question: 'MAT projesi kaÃ§ ana katmandan oluÅŸmaktadÄ±r?',
+                    question: 'MAT projesi kaç ana katmandan oluşmaktadır?',
                     options: ['2', '3', '4'],
                     correctAnswer: '3'
                 },
                 {
-                    question: 'MAT projesi kaÃ§ ana katmandan oluÅŸmaktadÄ±r?',
+                    question: 'MAT projesi kaç ana katmandan oluşmaktadır?',
                     options: ['2', '3', '4'],
                     correctAnswer: '3'
                 },
                 {
-                    question: 'MAT projesi kaÃ§ ana katmandan oluÅŸmaktadÄ±r?',
+                    question: 'MAT projesi kaç ana katmandan oluşmaktadır?',
                     options: ['2', '3', '4'],
                     correctAnswer: '3'
                 },
                 {
-                    question: 'MAT projesi kaÃ§ ana katmandan oluÅŸmaktadÄ±r?',
+                    question: 'MAT projesi kaç ana katmandan oluşmaktadır?',
                     options: ['2', '3', '4'],
                     correctAnswer: '3'
                 },
                 {
-                    question: 'MAT projesi kaÃ§ ana katmandan oluÅŸmaktadÄ±r?',
+                    question: 'MAT projesi kaç ana katmandan oluşmaktadır?',
                     options: ['2', '3', '4'],
                     correctAnswer: '3'
                 },
-                // Soru eklemek iÃ§in Ã¼stteki formatta devam keeeee
+                // Soru eklemek için üstteki formatta devam keeeee
             ]
         };
         const stages = [
             {
                 id: 1,
-                title: "Proje TanÄ±tÄ±mÄ±",
+                title: "Proje Tanıtımı",
                 description: "MAT projesinin temel bilgileri ve hedefleri",
                 type: "Konferans",
                 contents: [
-                    { type: 'text', title: 'Proje HakkÄ±nda Bilgi', icon: 'ðŸ“„', data: 'MAT projesi, modern teknoloji ve inovasyon Ã¼zerine kurulan bir platformdur. Proje, topluluk tarafÄ±ndan desteklenen ve aÃ§Ä±k kaynak ilkeleriyle yÃ¶netilen bir sistemdir.' },
-                    { type: 'video', title: 'TanÄ±tÄ±m Videosu', icon: 'ðŸŽ¥', data: 'https://www.youtube.com/embed/jfKfPfyJRdk'},
-                    { type: 'link', title: 'Resmi DokÃ¼mantasyon', icon: 'ðŸ”—', data: 'https://docs.example.com' },
-                    { type: 'survey', title: 'BaÅŸlangÄ±Ã§ Anketi', icon: 'ðŸ“‹', data: ['Projeden haberiniz vardÄ± mÄ±?', 'Hangi alanda kullanmayÄ± planlÄ±yorsunuz?', 'Deneyim seviyeniz nedir?'] },
+                    { type: 'text', title: 'Proje Hakkında Bilgi', icon: '📄', data: 'MAT projesi, modern teknoloji ve inovasyon üzerine kurulan bir platformdur. Proje, topluluk tarafından desteklenen ve açık kaynak ilkeleriyle yönetilen bir sistemdir.' },
+                    { type: 'video', title: 'Tanıtım Videosu', icon: '🎥', data: 'https://www.youtube.com/embed/jfKfPfyJRdk'},
+                    { type: 'link', title: 'Resmi Dokümantasyon', icon: '🔗', data: 'https://docs.example.com' },
+                    { type: 'survey', title: 'Başlangıç Anketi', icon: '📋', data: ['Projeden haberiniz vardı mı?', 'Hangi alanda kullanmayı planlıyorsunuz?', 'Deneyim seviyeniz nedir?'] },
                     {
                         type: 'quiz',
-                        title: 'AÅŸama 1 Testi',
-                        icon: 'â“',
-                        questionCount: 5, // KaÃ§ soru sorulacak
-                        stageId: 1 // Hangi havuzdan soru Ã§ekilecek
+                        title: 'Aşama 1 Testi',
+                        icon: '❓',
+                        questionCount: 5, // Kaç soru sorulacak
+                        stageId: 1 // Hangi havuzdan soru çekilecek
                     }
                 ]
             },
             {
                 id: 2,
-                title: "Genel BakÄ±ÅŸ",
-                description: "Proje yapÄ±sÄ± ve ana bileÅŸenleri hakkÄ±nda bilgi",
+                title: "Genel Bakış",
+                description: "Proje yapısı ve ana bileşenleri hakkında bilgi",
                 type: "Video",
                 contents: [
-                    { type: 'video', title: 'Proje YapÄ±sÄ± Videosu', icon: 'ðŸŽ¥', data: 'https://www.youtube.com/embed/jNQXAC9IVRw' },
-                    { type: 'text', title: 'Mimari Detaylar', icon: 'ðŸ“„', data: 'MAT projesi Ã¼Ã§ ana katmandan oluÅŸur: Frontend, Backend ve Database. Her katman baÄŸÄ±msÄ±z olarak Ã§alÄ±ÅŸabilir ve modÃ¼ler yapÄ±sÄ± sayesinde kolay geniÅŸletilebilir.' },
-                    { type: 'link', title: 'GitHub Deposu', icon: 'ðŸ”—', data: 'https://github.com/mat/project' },
+                    { type: 'video', title: 'Proje Yapısı Videosu', icon: '🎥', data: 'https://www.youtube.com/embed/jNQXAC9IVRw' },
+                    { type: 'text', title: 'Mimari Detaylar', icon: '📄', data: 'MAT projesi üç ana katmandan oluşur: Frontend, Backend ve Database. Her katman bağımsız olarak çalışabilir ve modüler yapısı sayesinde kolay genişletilebilir.' },
+                    { type: 'link', title: 'GitHub Deposu', icon: '🔗', data: 'https://github.com/mat/project' },
                     {
                         type: 'quiz',
-                        title: 'AÅŸama 1 Testi',
-                        icon: 'â“',
-                        questionCount: 5, // KaÃ§ soru sorulacak
-                        stageId: 1 // Hangi havuzdan soru Ã§ekilecek
+                        title: 'Aşama 1 Testi',
+                        icon: '❓',
+                        questionCount: 5, // Kaç soru sorulacak
+                        stageId: 1 // Hangi havuzdan soru çekilecek
                     }
                 ]
             },
@@ -880,75 +878,75 @@
                 description: "Proje vizyonu ve hedeflerimiz",
                 type: "Presentasyon",
                 contents: [
-                    { type: 'text', title: 'Vizyon Metni', icon: 'ðŸ“„', data: 'Vizyonumuz: DÃ¼nyanÄ±n en eriÅŸilebilir ve kullanÄ±cÄ± dostu teknoloji platformu olmak. Misyonumuz: Herkesin teknolojiye eriÅŸebilmesini saÄŸlamak ve aÃ§Ä±k kaynak topluluÄŸunu gÃ¼Ã§lendirmek.' },
-                    { type: 'video', title: 'Vizyon Sunumu', icon: 'ðŸŽ¥', data: 'https://www.youtube.com/embed/9bZkp7q19f0' },
-                    { type: 'survey', title: 'GÃ¶rÃ¼ÅŸ Anketi', icon: 'ðŸ“‹', data: ['Projemizin vizyonu size ne ifade ediyor?', 'Hangi Ã¶zellik en Ã§ok ilginizi Ã§ekti?'] }
+                    { type: 'text', title: 'Vizyon Metni', icon: '📄', data: 'Vizyonumuz: Dünyanın en erişilebilir ve kullanıcı dostu teknoloji platformu olmak. Misyonumuz: Herkesin teknolojiye erişebilmesini sağlamak ve açık kaynak topluluğunu güçlendirmek.' },
+                    { type: 'video', title: 'Vizyon Sunumu', icon: '🎥', data: 'https://www.youtube.com/embed/9bZkp7q19f0' },
+                    { type: 'survey', title: 'Görüş Anketi', icon: '📋', data: ['Projemizin vizyonu size ne ifade ediyor?', 'Hangi özellik en çok ilginizi çekti?'] }
                 ]
             },
             {
                 id: 4,
-                title: "Teknoloji AltyapÄ±sÄ±",
-                description: "Teknik implementasyon ve altyapÄ± detaylarÄ±",
+                title: "Teknoloji Altyapısı",
+                description: "Teknik implementasyon ve altyapı detayları",
                 type: "Video",
                 contents: [
-                    { type: 'video', title: 'Teknik Detaylar', icon: 'ðŸŽ¥', data: 'https://www.youtube.com/embed/tYzMGcUty6s' },
-                    { type: 'text', title: 'API DokÃ¼mantasyonu', icon: 'ðŸ“„', data: 'REST API: TÃ¼m uÃ§ noktalarÄ±mÄ±z RESTful standartlarÄ±nÄ± takip eder. Authentication: JWT tabanlÄ± kimlik doÄŸrulama kullanÄ±lÄ±r. Rate Limiting: API Ã§aÄŸrÄ±larÄ±nda oran sÄ±nÄ±rlandÄ±rmasÄ± uygulanÄ±r.' },
-                    { type: 'link', title: 'Teknik Belgeleri', icon: 'ðŸ”—', data: 'https://tech-docs.example.com' }
+                    { type: 'video', title: 'Teknik Detaylar', icon: '🎥', data: 'https://www.youtube.com/embed/tYzMGcUty6s' },
+                    { type: 'text', title: 'API Dokümantasyonu', icon: '📄', data: 'REST API: Tüm uç noktalarımız RESTful standartlarını takip eder. Authentication: JWT tabanlı kimlik doğrulama kullanılır. Rate Limiting: API çağrılarında oran sınırlandırması uygulanır.' },
+                    { type: 'link', title: 'Teknik Belgeleri', icon: '🔗', data: 'https://tech-docs.example.com' }
                 ]
             },
             {
                 id: 5,
-                title: "Yol HaritasÄ±",
-                description: "Proje yol haritasÄ± ve milestone'lar",
+                title: "Yol Haritası",
+                description: "Proje yol haritası ve milestone'lar",
                 type: "Roadmap",
                 contents: [
-                    { type: 'text', title: 'Yol HaritasÄ± Metni', icon: 'ðŸ“„', data: 'Q1 2024: Temel Ã¶zellikler tamamlanacak. Q2 2024: Entegrasyon ve test aÅŸamasÄ±. Q3 2024: Beta sÃ¼rÃ¼mÃ¼ aÃ§Ä±k olacak. Q4 2024: Resmi 1.0 sÃ¼rÃ¼mÃ¼ piyasaya Ã§Ä±kacak.' },
-                    { type: 'link', title: 'EtkileÅŸimli Roadmap', icon: 'ðŸ”—', data: 'https://roadmap.example.com' },
-                    { type: 'survey', title: 'Ã–ncelik Anketi', icon: 'ðŸ“‹', data: ['Hangi Ã¶zellik Ã¶nce gelmelidir?', 'Neler eksik olduÄŸunu dÃ¼ÅŸÃ¼nÃ¼yorsunuz?'] }
+                    { type: 'text', title: 'Yol Haritası Metni', icon: '📄', data: 'Q1 2024: Temel özellikler tamamlanacak. Q2 2024: Entegrasyon ve test aşaması. Q3 2024: Beta sürümü açık olacak. Q4 2024: Resmi 1.0 sürümü piyasaya çıkacak.' },
+                    { type: 'link', title: 'Etkileşimli Roadmap', icon: '🔗', data: 'https://roadmap.example.com' },
+                    { type: 'survey', title: 'Öncelik Anketi', icon: '📋', data: ['Hangi özellik önce gelmelidir?', 'Neler eksik olduğunu düşünüyorsunuz?'] }
                 ]
             },
             {
                 id: 6,
-                title: "Topluluk KatÄ±lÄ±mÄ±",
-                description: "Komunite ile etkileÅŸim ve geri bildirim",
+                title: "Topluluk Katılımı",
+                description: "Komunite ile etkileşim ve geri bildirim",
                 type: "Anket",
                 contents: [
-                    { type: 'survey', title: 'Topluluk Geri Bildirimi', icon: 'ðŸ“‹', data: ['Projemizi nasÄ±l deÄŸerlendiriyorsunuz?', 'Hangi alanlarda iyileÅŸtirme yapÄ±lmalÄ±?', 'Proje hakkÄ±nda tavsiye ve Ã¶nerileriniz nelerdir?'] },
-                    { type: 'text', title: 'KatÄ±lÄ±m Rehberi', icon: 'ðŸ“„', data: 'Projeye katkÄ± saÄŸlamak iÃ§in GitHub Ã¼zerinden Pull Request aÃ§abilirsiniz. Ã–nce Issues sekmesini kontrol edin, eÄŸer benzer bir sorun varsa ona yorum yapÄ±n. Yeni Ã¶zellik Ã¶nerileri iÃ§in Discussion aÃ§Ä±n.' },
-                    { type: 'link', title: 'Discord Sunucusu', icon: 'ðŸ”—', data: 'https://discord.gg/matproject' }
+                    { type: 'survey', title: 'Topluluk Geri Bildirimi', icon: '📋', data: ['Projemizi nasıl değerlendiriyorsunuz?', 'Hangi alanlarda iyileştirme yapılmalı?', 'Proje hakkında tavsiye ve önerileriniz nelerdir?'] },
+                    { type: 'text', title: 'Katılım Rehberi', icon: '📄', data: 'Projeye katkı sağlamak için GitHub üzerinden Pull Request açabilirsiniz. Önce Issues sekmesini kontrol edin, eğer benzer bir sorun varsa ona yorum yapın. Yeni özellik önerileri için Discussion açın.' },
+                    { type: 'link', title: 'Discord Sunucusu', icon: '🔗', data: 'https://discord.gg/matproject' }
                 ]
             },
             {
                 id: 7,
                 title: "Pratik Uygulamalar",
-                description: "GerÃ§ek dÃ¼nya senaryolarÄ± ve Ã¶rnekler",
+                description: "Gerçek dünya senaryoları ve örnekler",
                 type: "Video",
                 contents: [
-                    { type: 'video', title: 'Pratik Ã–rnekler', icon: 'ðŸŽ¥', data: 'https://www.youtube.com/embed/dQw4w9WgXcQ' },
-                    { type: 'text', title: 'Kod Ã–rnekleri', icon: 'ðŸ“„', data: 'Ã–rnek 1: Basit API Ã§aÄŸrÄ±sÄ±\nconst response = await fetch(\'https://api.mat.com/data\');\n\nÃ–rnek 2: Veri iÅŸleme\nconst data = response.json();\ndata.forEach(item => console.log(item));' },
-                    { type: 'link', title: 'Demo Projeleri', icon: 'ðŸ”—', data: 'https://github.com/mat/examples' }
+                    { type: 'video', title: 'Pratik Örnekler', icon: '🎥', data: 'https://www.youtube.com/embed/dQw4w9WgXcQ' },
+                    { type: 'text', title: 'Kod Örnekleri', icon: '📄', data: 'Örnek 1: Basit API çağrısı\nconst response = await fetch(\'https://api.mat.com/data\');\n\nÖrnek 2: Veri işleme\nconst data = response.json();\ndata.forEach(item => console.log(item));' },
+                    { type: 'link', title: 'Demo Projeleri', icon: '🔗', data: 'https://github.com/mat/examples' }
                 ]
             },
             {
                 id: 8,
-                title: "Ä°leri Konular",
+                title: "İleri Konular",
                 description: "Daha derinlemesine teknik konular",
                 type: "Presentasyon",
                 contents: [
-                    { type: 'video', title: 'Ä°leri Konular Videosu', icon: 'ðŸŽ¥', data: 'https://www.youtube.com/embed/jNQXAC9IVRw' },
-                    { type: 'text', title: 'DetaylÄ± Rehber', icon: 'ðŸ“„', data: 'Scalability: VeritabanÄ± optimizasyonu ve caching stratejileri. Security: Encryption, authentication ve authorization mekanizmalarÄ±. Performance: Load balancing ve CDN kullanÄ±mÄ±.' },
-                    { type: 'survey', title: 'Bilgi Testi', icon: 'ðŸ“‹', data: ['API authentication nasÄ±l yapÄ±lÄ±r?', 'VeritabanÄ± optimizasyonunun Ã¶nemi nedir?', 'Rate limiting neden gereklidir?'] }
+                    { type: 'video', title: 'İleri Konular Videosu', icon: '🎥', data: 'https://www.youtube.com/embed/jNQXAC9IVRw' },
+                    { type: 'text', title: 'Detaylı Rehber', icon: '📄', data: 'Scalability: Veritabanı optimizasyonu ve caching stratejileri. Security: Encryption, authentication ve authorization mekanizmaları. Performance: Load balancing ve CDN kullanımı.' },
+                    { type: 'survey', title: 'Bilgi Testi', icon: '📋', data: ['API authentication nasıl yapılır?', 'Veritabanı optimizasyonunun önemi nedir?', 'Rate limiting neden gereklidir?'] }
                 ]
             },
             {
                 id: 9,
                 title: "Bitirme Projesi",
-                description: "TÃ¼m Ã¶ÄŸrenilenlerin uygulandÄ±ÄŸÄ± final projesi",
+                description: "Tüm öğrenilenlerin uygulandığı final projesi",
                 type: "Proje",
                 contents: [
-                    { type: 'text', title: 'Proje Gereksinimleri', icon: 'ðŸ“„', data: '1. MAT API\'sini kullanarak bir uygulama geliÅŸtirin\n2. Minimum 3 endpoint kullanmalÄ±\n3. Hata yÃ¶netimi ve validasyon gerekli\n4. README dosyasÄ± ile dokÃ¼mantasyon yapÄ±n\n5. GitHub\'da public repository oluÅŸturun' },
-                    { type: 'link', title: 'BaÅŸlangÄ±Ã§ Åžablonu', icon: 'ðŸ”—', data: 'https://github.com/mat/starter-template' },
-                    { type: 'survey', title: 'Final DeÄŸerlendirmesi', icon: 'ðŸ“‹', data: ['Proje tamamlanmÄ±ÅŸ mÄ±?', 'Neler Ã¶ÄŸrendiniz?', 'Geri bildirim ve gelecek planlarÄ±nÄ±z'] }
+                    { type: 'text', title: 'Proje Gereksinimleri', icon: '📄', data: '1. MAT API\'sini kullanarak bir uygulama geliştirin\n2. Minimum 3 endpoint kullanmalı\n3. Hata yönetimi ve validasyon gerekli\n4. README dosyası ile dokümantasyon yapın\n5. GitHub\'da public repository oluşturun' },
+                    { type: 'link', title: 'Başlangıç Şablonu', icon: '🔗', data: 'https://github.com/mat/starter-template' },
+                    { type: 'survey', title: 'Final Değerlendirmesi', icon: '📋', data: ['Proje tamamlanmış mı?', 'Neler öğrendiniz?', 'Geri bildirim ve gelecek planlarınız'] }
                 ]
             },
             {
@@ -957,9 +955,9 @@
                 description: "Daha derinlemesine teknik konular",
                 type: "Presentasyon",
                 contents: [
-                    { type: 'video', title: 'Ä°leri Konular Videosu', icon: 'ðŸŽ¥', data: 'https://www.youtube.com/embed/jNQXAC9IVRw' },
-                    { type: 'text', title: 'DetaylÄ± Rehber', icon: 'ðŸ“„', data: 'Scalability: VeritabanÄ± optimizasyonu ve caching stratejileri. Security: Encryption, authentication ve authorization mekanizmalarÄ±. Performance: Load balancing ve CDN kullanÄ±mÄ±.' },
-                    { type: 'survey', title: 'Bilgi Testi', icon: 'ðŸ“‹', data: ['API authentication nasÄ±l yapÄ±lÄ±r?', 'VeritabanÄ± optimizasyonunun Ã¶nemi nedir?', 'Rate limiting neden gereklidir?'] }
+                    { type: 'video', title: 'İleri Konular Videosu', icon: '🎥', data: 'https://www.youtube.com/embed/jNQXAC9IVRw' },
+                    { type: 'text', title: 'Detaylı Rehber', icon: '📄', data: 'Scalability: Veritabanı optimizasyonu ve caching stratejileri. Security: Encryption, authentication ve authorization mekanizmaları. Performance: Load balancing ve CDN kullanımı.' },
+                    { type: 'survey', title: 'Bilgi Testi', icon: '📋', data: ['API authentication nasıl yapılır?', 'Veritabanı optimizasyonunun önemi nedir?', 'Rate limiting neden gereklidir?'] }
                 ]
             },
             {
@@ -968,9 +966,9 @@
                 description: "Daha derinlemesine teknik konular",
                 type: "Presentasyon",
                 contents: [
-                    { type: 'video', title: 'Ä°leri Konular Videosu', icon: 'ðŸŽ¥', data: 'https://www.youtube.com/embed/jNQXAC9IVRw' },
-                    { type: 'text', title: 'DetaylÄ± Rehber', icon: 'ðŸ“„', data: 'Scalability: VeritabanÄ± optimizasyonu ve caching stratejileri. Security: Encryption, authentication ve authorization mekanizmalarÄ±. Performance: Load balancing ve CDN kullanÄ±mÄ±.' },
-                    { type: 'survey', title: 'Bilgi Testi', icon: 'ðŸ“‹', data: ['API authentication nasÄ±l yapÄ±lÄ±r?', 'VeritabanÄ± optimizasyonunun Ã¶nemi nedir?', 'Rate limiting neden gereklidir?'] }
+                    { type: 'video', title: 'İleri Konular Videosu', icon: '🎥', data: 'https://www.youtube.com/embed/jNQXAC9IVRw' },
+                    { type: 'text', title: 'Detaylı Rehber', icon: '📄', data: 'Scalability: Veritabanı optimizasyonu ve caching stratejileri. Security: Encryption, authentication ve authorization mekanizmaları. Performance: Load balancing ve CDN kullanımı.' },
+                    { type: 'survey', title: 'Bilgi Testi', icon: '📋', data: ['API authentication nasıl yapılır?', 'Veritabanı optimizasyonunun önemi nedir?', 'Rate limiting neden gereklidir?'] }
                 ]
             },
         ];
@@ -985,7 +983,7 @@
             for (const stage of stages) {
                 const isLocked = !(await canAccessStage(stage.id));
                 
-                // Her aÅŸama iÃ§in completedContents'i geÃ§ici olarak yÃ¼kle
+                // Her aşama için completedContents'i geçici olarak yükle
                 let tempCompletedContents = {};
                 if (userProgress.completedStages && 
                     userProgress.completedStages[stage.id] && 
@@ -993,7 +991,7 @@
                     tempCompletedContents = userProgress.completedStages[stage.id].completedContents;
                 }
                 
-                // AÅŸamanÄ±n tamamlanÄ±p tamamlanmadÄ±ÄŸÄ±nÄ± kontrol et
+                // Aşamanın tamamlanıp tamamlanmadığını kontrol et
                 let completedCount = 0;
                 for (let i = 0; i < stage.contents.length; i++) {
                     if (tempCompletedContents[`${stage.id}-${i}`]) {
@@ -1004,10 +1002,10 @@
                 
                 const isActive = currentStage === stage.id;
         
-                let icon = 'â­•';
-                if (isCompleted) icon = 'âœ…';
-                if (isLocked) icon = 'ðŸ”’';
-                if (isActive && !isCompleted && !isLocked) icon = 'ðŸ”µ';
+                let icon = '⭕';
+                if (isCompleted) icon = '✅';
+                if (isLocked) icon = '🔒';
+                if (isActive && !isCompleted && !isLocked) icon = '🔵';
         
                 const btn = document.createElement('button');
                 btn.className = `stage-btn ${isActive ? 'active' : ''}`;
@@ -1063,13 +1061,13 @@
                     <div class="content-details">
                         <div class="content-title">${content.title}</div>
                         <div class="content-type">
-                            ${content.type === 'text' ? 'ðŸ“ Metin Ä°Ã§eriÄŸi' : ''}
-                            ${content.type === 'video' ? 'ðŸŽ¥ Video' : ''}
-                            ${content.type === 'link' ? 'ðŸ”— Harici Link' : ''}
-                            ${content.type === 'survey' ? 'ðŸ“‹ Anket' : ''}
+                            ${content.type === 'text' ? '📝 Metin İçeriği' : ''}
+                            ${content.type === 'video' ? '🎥 Video' : ''}
+                            ${content.type === 'link' ? '🔗 Harici Link' : ''}
+                            ${content.type === 'survey' ? '📋 Anket' : ''}
                         </div>
                     </div>
-                    <span class="content-check">${isCompleted ? 'âœ…' : 'â­•'}</span>
+                    <span class="content-check">${isCompleted ? '✅' : '⭕'}</span>
                 `;
         
                 item.appendChild(itemInner);
@@ -1079,7 +1077,7 @@
                         markContentCompleted(currentStage, idx);
                     }
                     showContentModal(content);
-                    render(); // GÃ¼ncelleme sonrasÄ± UI yenileniyor
+                    render(); // Güncelleme sonrası UI yenileniyor
                 };
         
                 contentList.appendChild(item);
@@ -1103,55 +1101,26 @@
             const nextBtn = document.getElementById('nextBtn');
             const isCompleted = isStageFullyCompleted(currentStage);
             nextBtn.disabled = !isCompleted || currentStage === 9;
-            nextBtn.textContent = currentStage === 9 ? 'TamamlandÄ±! ðŸŽ‰' : 'Sonraki AÅŸama â†’';
-            // 🔹 Tüm aşamalar tamamlanmış mı kontrol et
-            (async () => {
-                if (userProgress && userProgress.completedStages) {
-                    const allCompleted = stages.every(s => isStageFullyCompleted(s.id));
-                    if (allCompleted) {
-                        // 🔸 Admin'e bildirim gönder
-                        const notifRef = db.collection('notifications');
-                        const existing = await notifRef
-                            .where('username', '==', currentUsername)
-                            .where('type', '==', 'presenter_request')
-                            .where('status', '==', 'pending')
-                            .get();
-            
-                        // Aynı istek zaten varsa tekrar oluşturmasın
-                        if (existing.empty) {
-                            await notifRef.add({
-                                username: currentUsername,
-                                fullname: currentFullname,
-                                message: `${currentFullname} (@${currentUsername}) tüm aşamaları tamamladı.`,
-                                type: 'presenter_request',
-                                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                                status: 'pending'
-                            });
-                            console.log('✅ Presenter olma isteği admin paneline gönderildi.');
-                        }
-                    }
-                }
-            })();
-
+            nextBtn.textContent = currentStage === 9 ? 'Tamamlandı! 🎉' : 'Sonraki Aşama →';
         }
 
         function getRandomQuestions(stageId, count) {
             const pool = quizQuestionPools[stageId] || [];
             if (pool.length === 0) return [];
             
-            // Havuzdaki tÃ¼m sorularÄ± kopyala
+            // Havuzdaki tüm soruları kopyala
             const availableQuestions = [...pool];
             const selectedQuestions = [];
             
-            // Ä°stenen sayÄ±da (veya havuzdaki toplam soru sayÄ±sÄ± kadar) soru seÃ§
+            // İstenen sayıda (veya havuzdaki toplam soru sayısı kadar) soru seç
             const questionCount = Math.min(count, availableQuestions.length);
             
             for (let i = 0; i < questionCount; i++) {
-                // Rastgele bir index seÃ§
+                // Rastgele bir index seç
                 const randomIndex = Math.floor(Math.random() * availableQuestions.length);
                 // Soruyu ekle
                 selectedQuestions.push(availableQuestions[randomIndex]);
-                // SeÃ§ilen soruyu havuzdan Ã§Ä±kar (tekrar seÃ§ilmesin)
+                // Seçilen soruyu havuzdan çıkar (tekrar seçilmesin)
                 availableQuestions.splice(randomIndex, 1);
             }
             
@@ -1159,7 +1128,7 @@
         }
 
         async function canAccessStage(stageId) {
-            if (stageId === 1) return true; // ilk aÅŸama her zaman aÃ§Ä±k
+            if (stageId === 1) return true; // ilk aşama her zaman açık
         
             const prevStageId = stageId - 1;
             const progressDoc = await db.collection('userProgress').doc(currentUsername).get();
@@ -1168,16 +1137,16 @@
             const data = progressDoc.data();
             const prevStage = data.completedStages?.[prevStageId];
         
-            // Red edilirse sÄ±fÄ±rla
+            // Red edilirse sıfırla
             if (prevStage && prevStage.approved === false) {
-                console.log(`AÅŸama ${prevStageId} reddedildi, sÄ±fÄ±rlanÄ±yor...`);
+                console.log(`Aşama ${prevStageId} reddedildi, sıfırlanıyor...`);
                 await db.collection('userProgress').doc(currentUsername).update({
                     [`completedStages.${prevStageId}`]: firebase.firestore.FieldValue.delete()
                 });
                 return false;
             }
         
-            // Ã–nceki aÅŸama admin tarafÄ±ndan onaylanmÄ±ÅŸsa eriÅŸim serbest
+            // Önceki aşama admin tarafından onaylanmışsa erişim serbest
             return prevStage && prevStage.approved === true;
         }
 
@@ -1201,27 +1170,27 @@
             const modal = document.getElementById('contentModal');
             const modalBody = document.getElementById('modalBody');
             document.getElementById('modalType').textContent =
-                content.type === 'text' ? 'ðŸ“ METÄ°N' :
-                content.type === 'video' ? 'ðŸŽ¥ VÄ°DEO' :
-                content.type === 'link' ? 'ðŸ”— LÄ°NK' :
-                content.type === 'survey' ? 'ðŸ“‹ ANKET' :
-                'â“ QUIZ';
+                content.type === 'text' ? '📝 METİN' :
+                content.type === 'video' ? '🎥 VİDEO' :
+                content.type === 'link' ? '🔗 LİNK' :
+                content.type === 'survey' ? '📋 ANKET' :
+                '❓ QUIZ';
             document.getElementById('modalTitle').textContent = content.title;
 
             if (content.type === 'quiz') {
-                // Rastgele sorular seÃ§
+                // Rastgele sorular seç
                 const quizQuestions = getRandomQuestions(content.stageId, content.questionCount);
                 
                 if (quizQuestions.length === 0) {
-                    modalBody.innerHTML = '<p style="color: #ef4444; text-align: center;">Soru havuzu boÅŸ!</p>';
+                    modalBody.innerHTML = '<p style="color: #ef4444; text-align: center;">Soru havuzu boş!</p>';
                     modal.classList.add('active');
                     return;
                 }
                 
-                // SeÃ§ilen sorularÄ± content'e ekle
+                // Seçilen soruları content'e ekle
                 content.questions = quizQuestions;
                 
-                // Ä°lk soruyu gÃ¶ster
+                // İlk soruyu göster
                 currentQuizIndex = 0;
                 currentQuizAnswers = new Array(quizQuestions.length).fill(null);
                 
@@ -1237,7 +1206,7 @@
                         <div class="quiz-options" id="quizOptionsContainer">${optionsHTML}</div>
                         <p id="quizResult" class="quiz-result"></p>
                         <div class="quiz-navigation" style="margin-top: 1.5rem; display: none;">
-                            <button class="btn btn-secondary" id="quizNextBtn">Sonraki Soru â†’</button>
+                            <button class="btn btn-secondary" id="quizNextBtn">Sonraki Soru →</button>
                         </div>
                     </div>
                 `;
@@ -1246,13 +1215,13 @@
                     btn.onclick = () => checkMultiQuizAnswer(btn, content);
                 });
             } 
-            // DiÄŸer iÃ§erik tipleri aynÄ± kalacak...
+            // Diğer içerik tipleri aynı kalacak...
             else if (content.type === 'text') {
                 modalBody.innerHTML = `<div class="text-content">${content.data}</div>`;
             } else if (content.type === 'video') {
                 modalBody.innerHTML = `<div class="video-container"><iframe src="${content.data}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`;
             } else if (content.type === 'link') {
-                modalBody.innerHTML = `<div class="link-box"><a href="${content.data}" target="_blank" class="link-btn">Linki AÃ§ â†’</a><div class="link-url">${content.data}</div></div>`;
+                modalBody.innerHTML = `<div class="link-box"><a href="${content.data}" target="_blank" class="link-btn">Linki Aç →</a><div class="link-url">${content.data}</div></div>`;
             } 
             else if (content.type === 'survey') {
                 let questionsHTML = '<div class="survey-questions">';
@@ -1260,15 +1229,15 @@
                     questionsHTML += `
                         <div class="question-box">
                             <div class="question-number">${idx + 1}. ${question}</div>
-                            <textarea class="question-textarea" placeholder="CevabÄ±nÄ±zÄ± yazÄ±n..."></textarea>
+                            <textarea class="question-textarea" placeholder="Cevabınızı yazın..."></textarea>
                         </div>
                     `;
                 });
             
-                // Anket gÃ¶nderim butonunda stageId ve contentIndex parametreleri geÃ§iyoruz
+                // Anket gönderim butonunda stageId ve contentIndex parametreleri geçiyoruz
                 questionsHTML += `
                     <button class="submit-survey-btn" onclick="submitSurvey(${currentStage}, ${stages[currentStage - 1].contents.indexOf(content)})">
-                        Anketi GÃ¶nder
+                        Anketi Gönder
                     </button>
                 `;
                 questionsHTML += '</div>';
@@ -1284,16 +1253,16 @@
 
 
             if (selected === correct) {
-            result.textContent = 'âœ… DoÄŸru cevap!';
+            result.textContent = '✅ Doğru cevap!';
             result.style.color = '#22c55e';
             setTimeout(() => {
             closeModal();
             render();
             }, 1000);
             } else {
-                result.innerHTML = `âŒ YanlÄ±ÅŸ cevap verdiniz.`;
+                result.innerHTML = `❌ Yanlış cevap verdiniz.`;
                 result.style.color = '#ef4444';
-                //result.innerHTML = `âŒ YanlÄ±ÅŸ cevap. DoÄŸru cevap: <b>${correct}</b>`; bu kÄ±sÄ±m test kÄ±smÄ±nda eÄŸer doÄŸru cevabÄ± da gÃ¶stermek istersek olacak ÅŸu anlÄ±k doÄŸru cevap gÃ¶sterme yoks
+                //result.innerHTML = `❌ Yanlış cevap. Doğru cevap: <b>${correct}</b>`; bu kısım test kısmında eğer doğru cevabı da göstermek istersek olacak şu anlık doğru cevap gösterme yoks
             }
         }
         let currentQuizIndex = 0;
@@ -1308,23 +1277,23 @@
             
             buttons.forEach(b => b.disabled = true);
 
-            // CevabÄ± kaydet
+            // Cevabı kaydet
             currentQuizAnswers[currentQuizIndex] = selected;
 
             if (selected === currentQ.correctAnswer) {
                 button.style.background = 'rgba(34, 197, 94, 0.3)';
                 button.style.borderColor = '#22c55e';
-                result.textContent = 'âœ… DoÄŸru cevap!';
+                result.textContent = '✅ Doğru cevap!';
                 result.style.color = '#22c55e';
             } else {
                 button.style.background = 'rgba(239, 68, 68, 0.3)';
                 button.style.borderColor = '#ef4444';
-                result.innerHTML = `âŒ YanlÄ±ÅŸ cevap verdiniz.`;
+                result.innerHTML = `❌ Yanlış cevap verdiniz.`;
                 result.style.color = '#ef4444';
-                //result.innerHTML = `âŒ YanlÄ±ÅŸ cevap. DoÄŸru cevap: <b>${currentQ.correctAnswer}</b>`; //doÄŸru cevabÄ± gÃ¶steren kod
+                //result.innerHTML = `❌ Yanlış cevap. Doğru cevap: <b>${currentQ.correctAnswer}</b>`; //doğru cevabı gösteren kod
             }
 
-            // Son soru deÄŸilse "Sonraki Soru" butonunu gÃ¶ster
+            // Son soru değilse "Sonraki Soru" butonunu göster
             if (currentQuizIndex < content.questions.length - 1) {
                 document.querySelector('.quiz-navigation').style.display = 'block';
                 document.getElementById('quizNextBtn').onclick = () => showNextQuestion(content);
@@ -1352,7 +1321,7 @@
                     <div class="quiz-options">${optionsHTML}</div>
                     <p id="quizResult" class="quiz-result"></p>
                     <div class="quiz-navigation" style="margin-top: 1.5rem; display: none;">
-                        <button class="btn btn-secondary" id="quizNextBtn">Sonraki Soru â†’</button>
+                        <button class="btn btn-secondary" id="quizNextBtn">Sonraki Soru →</button>
                     </div>
                 </div>
             `;
@@ -1371,7 +1340,7 @@
             const percentage = Math.round((correctCount / content.questions.length) * 100);
             const passed = correctCount === content.questions.length;
         
-            // Quiz sonuÃ§larÄ±nÄ± kaydet
+            // Quiz sonuçlarını kaydet
             if (passed) {
                 const stageData = stages[currentStage - 1];
                 stageData.contents.forEach((c, idx) => {
@@ -1380,7 +1349,7 @@
                         completedContents[contentId] = true;
                         markContentCompleted(currentStage, idx);
                         
-                        // Quiz sonuÃ§larÄ±nÄ± Firestore'a kaydet
+                        // Quiz sonuçlarını Firestore'a kaydet
                         saveQuizResults(currentStage, {
                             quizTitle: content.title,
                             correctAnswers: correctCount,
@@ -1396,14 +1365,14 @@
             const modalBody = document.getElementById('modalBody');
             modalBody.innerHTML = `
                 <div class="quiz-box" style="text-align: center;">
-                    <div style="font-size: 64px; margin-bottom: 1rem;">${passed ? 'ðŸŽ‰' : 'ðŸ“š'}</div>
+                    <div style="font-size: 64px; margin-bottom: 1rem;">${passed ? '🎉' : '📚'}</div>
                     <h2 style="font-size: 28px; color: ${passed ? '#22c55e' : '#ef4444'}; margin-bottom: 1rem;">
-                        ${passed ? 'Tebrikler! TÃ¼m SorularÄ± DoÄŸru CevapladÄ±nÄ±z!' : 'TÃ¼m SorularÄ± DoÄŸru CevaplamalÄ±sÄ±nÄ±z'}
+                        ${passed ? 'Tebrikler! Tüm Soruları Doğru Cevapladınız!' : 'Tüm Soruları Doğru Cevaplamalısınız'}
                     </h2>
                     <p style="font-size: 18px; margin-bottom: 2rem;">
-                        ${correctCount} / ${content.questions.length} doÄŸru cevap
+                        ${correctCount} / ${content.questions.length} doğru cevap
                     </p>
-                    ${!passed ? '<p style="color: #94a3b8; margin-bottom: 1rem;">LÃ¼tfen testi tekrar deneyin ve tÃ¼m sorularÄ± doÄŸru cevaplayÄ±n.</p>' : ''}
+                    ${!passed ? '<p style="color: #94a3b8; margin-bottom: 1rem;">Lütfen testi tekrar deneyin ve tüm soruları doğru cevaplayın.</p>' : ''}
                     <button class="btn btn-primary" onclick="closeModal(); render();">Kapat</button>
                 </div>
             `;
@@ -1426,47 +1395,26 @@
                 });
             });
         
-            // Firestoreâ€™a kaydet
+            // Firestore’a kaydet
             await saveSurveyAnswers(stageId, answers);
         
-            // âœ… ArtÄ±k burada tamamlandÄ± sayÄ±yoruz
+            // ✅ Artık burada tamamlandı sayıyoruz
             completedContents[`${stageId}-${contentIndex}`] = true;
             await markContentCompleted(stageId, contentIndex);
         
-            alert('ðŸ“‹ Anket baÅŸarÄ±yla gÃ¶nderildi!');
+            alert('📋 Anket başarıyla gönderildi!');
             closeModal();
             render();
         }
-        document.getElementById('modeSwitchBtn').addEventListener('click', async () => {
-            try {
-                const user = auth.currentUser;
-                if (!user) return;
-        
-                // Kullanıcının verisini çek
-                const snap = await db.collection('users').where('email', '==', user.email).get();
-                if (snap.empty) return;
-                const docRef = snap.docs[0].ref;
-                const userData = snap.docs[0].data();
-        
-                // isPresenter tersine çevrilir
-                const newState = !userData.isPresenter;
-                await docRef.update({ isPresenter: newState });
-        
-                alert(`Mod değiştirildi! Şu an: ${newState ? 'Presenter' : 'Beginner'}`);
-                window.location.href = newState ? 'presenter.html' : 'index.html';
-            } catch (err) {
-                console.error('Mod değiştirme hatası:', err);
-            }
-        });
 
-        // KullanÄ±cÄ± ilerlemesini yÃ¼kle
+        // Kullanıcı ilerlemesini yükle
         async function loadUserProgress() {
             try {
                 const progressDoc = await db.collection('userProgress').doc(currentUsername).get();
         
                 if (progressDoc.exists) {
                     userProgress = progressDoc.data();
-                    console.log('Ä°lerleme yÃ¼klendi:', userProgress);
+                    console.log('İlerleme yüklendi:', userProgress);
                 } else {
                     userProgress = {
                         completedStages: {},
@@ -1476,11 +1424,11 @@
                     await db.collection('userProgress').doc(currentUsername).set(userProgress);
                 }
         
-                // Åžu anki aÅŸamanÄ±n tamamlanma durumunu gÃ¼ncelle
+                // Şu anki aşamanın tamamlanma durumunu güncelle
                 updateCompletedContentsForStage(currentStage);
         
             } catch (error) {
-                console.error('Ä°lerleme yÃ¼klenirken hata:', error);
+                console.error('İlerleme yüklenirken hata:', error);
                 userProgress = { completedStages: {}, currentStage: 1 };
             }
         }
@@ -1498,7 +1446,7 @@
 
 
         
-        // Ä°Ã§erik tamamlandÄ±ÄŸÄ±nda kaydet
+        // İçerik tamamlandığında kaydet
         async function markContentCompleted(stageId, contentIndex) {
             const contentId = `${stageId}-${contentIndex}`;
             completedContents[contentId] = true;
@@ -1524,11 +1472,11 @@
                 });
                 
             } catch (error) {
-                console.error('Ä°lerleme kaydedilirken hata:', error);
+                console.error('İlerleme kaydedilirken hata:', error);
             }
         }
         
-        // Anket cevaplarÄ±nÄ± kaydet
+        // Anket cevaplarını kaydet
         async function saveSurveyAnswers(stageId, answers) {
             try {
                 await db.collection('userProgress').doc(currentUsername).update({
@@ -1536,11 +1484,11 @@
                     lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
                 });
             } catch (error) {
-                console.error('Anket cevaplarÄ± kaydedilirken hata:', error);
+                console.error('Anket cevapları kaydedilirken hata:', error);
             }
         }
         
-        // Quiz sonuÃ§larÄ±nÄ± kaydet
+        // Quiz sonuçlarını kaydet
         async function saveQuizResults(stageId, results) {
             try {
                 await db.collection('userProgress').doc(currentUsername).update({
@@ -1548,14 +1496,14 @@
                     lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
                 });
             } catch (error) {
-                console.error('Quiz sonuÃ§larÄ± kaydedilirken hata:', error);
+                console.error('Quiz sonuçları kaydedilirken hata:', error);
             }
         }
         
-        // AÅŸama onay talebi gÃ¶nder
+        // Aşama onay talebi gönder
         async function requestStageApproval(stageId) {
             try {
-                // ðŸ”¹ 1. Ã–nce mevcut onay talebi var mÄ± kontrol et
+                // 🔹 1. Önce mevcut onay talebi var mı kontrol et
                 const existingRequests = await db.collection('approvalRequests')
                     .where('username', '==', currentUsername)
                     .where('stageId', '==', stageId)
@@ -1563,28 +1511,28 @@
                     .get();
         
                 if (!existingRequests.empty) {
-                    alert('â— Bu aÅŸama iÃ§in zaten onay talebi gÃ¶nderilmiÅŸ veya onaylanmÄ±ÅŸ.');
+                    alert('❗ Bu aşama için zaten onay talebi gönderilmiş veya onaylanmış.');
                     return;
                 }
         
-                // ðŸ”¹ 2. KullanÄ±cÄ±nÄ±n userProgress belgesini al
+                // 🔹 2. Kullanıcının userProgress belgesini al
                 const progressDoc = await db.collection('userProgress').doc(currentUsername).get();
                 if (!progressDoc.exists) {
-                    alert('âŒ Ä°lerleme verisi bulunamadÄ±!');
+                    alert('❌ İlerleme verisi bulunamadı!');
                     return;
                 }
         
                 const progressData = progressDoc.data();
-                const stageProgress = progressData.completedStages?.[String(stageId)] || {}; // ðŸ”§ Fix burada
+                const stageProgress = progressData.completedStages?.[String(stageId)] || {}; // 🔧 Fix burada
         
-                // ðŸ”¹ 3. KullanÄ±cÄ± bilgilerini al
+                // 🔹 3. Kullanıcı bilgilerini al
                 const userDoc = await db.collection('users').doc(currentUsername).get();
                 const userData = userDoc.data();
         
-                // ðŸ”¹ 4. AÅŸama bilgisini al
+                // 🔹 4. Aşama bilgisini al
                 const stageData = stages[stageId - 1];
         
-                // ðŸ”¹ 5. Onay talebini Firestoreâ€™a kaydet
+                // 🔹 5. Onay talebini Firestore’a kaydet
                 await db.collection('approvalRequests').add({
                     username: currentUsername,
                     fullname: userData.fullname,
@@ -1598,10 +1546,10 @@
                     adminNote: null
                 });
         
-                alert('âœ… Onay talebi gÃ¶nderildi! Admin onayÄ±ndan sonra devam edebilirsiniz.');
+                alert('✅ Onay talebi gönderildi! Admin onayından sonra devam edebilirsiniz.');
             } catch (error) {
-                console.error('Onay talebi gÃ¶nderilirken hata:', error);
-                alert('âŒ Onay talebi gÃ¶nderilemedi!');
+                console.error('Onay talebi gönderilirken hata:', error);
+                alert('❌ Onay talebi gönderilemedi!');
             }
         }
 
@@ -1677,36 +1625,36 @@
     </script>
     <script src="firebase-config.js"></script>
     <script>
-        // Global deÄŸiÅŸkenler
+        // Global değişkenler
         let currentUser = null;
         let currentUsername = null;
         let userProgress = null;
         
-        // KullanÄ±cÄ± giriÅŸ kontrolÃ¼
+        // Kullanıcı giriş kontrolü
         auth.onAuthStateChanged(async (user) => {
             if (!user) {
-                // KullanÄ±cÄ± Ã§Ä±kÄ±ÅŸ yaptÄ±ysa login sayfasÄ±na yÃ¶nlendir
+                // Kullanıcı çıkış yaptıysa login sayfasına yönlendir
                 window.location.href = 'login.html';
                 return;
             }
         
-            // Aktif kullanÄ±cÄ± bilgilerini ayarla
+            // Aktif kullanıcı bilgilerini ayarla
             currentUser = user;
             currentUsername = user.email.split('@')[0];
         
             try {
-                // Firestore'dan kullanÄ±cÄ± bilgilerini al
+                // Firestore'dan kullanıcı bilgilerini al
                 const userDoc = await db.collection('users').doc(currentUsername).get();
         
                 if (!userDoc.exists) {
-                    console.error('KullanÄ±cÄ± Firestoreâ€™da bulunamadÄ±.');
+                    console.error('Kullanıcı Firestore’da bulunamadı.');
                     await auth.signOut();
                     window.location.href = 'login.html';
                     return;
                 }
         
                 const userData = userDoc.data();
-                console.log(`HoÅŸgeldin: ${userData.fullname}`);
+                console.log(`Hoşgeldin: ${userData.fullname}`);
         
                 await loadUserProgress();
         
@@ -1719,13 +1667,13 @@
                     if (adminBtn) adminBtn.style.display = 'block';
                 }
         
-                console.log('KullanÄ±cÄ± verileri ve aÅŸamalar baÅŸarÄ±yla yÃ¼klendi.');
+                console.log('Kullanıcı verileri ve aşamalar başarıyla yüklendi.');
         
             } catch (error) {
-                console.error('KullanÄ±cÄ± bilgisi alÄ±namadÄ±:', error);
+                console.error('Kullanıcı bilgisi alınamadı:', error);
                 const errorMessage = document.getElementById('errorMessage');
                 if (errorMessage) {
-                    errorMessage.textContent = 'KullanÄ±cÄ± bilgileri yÃ¼klenemedi. LÃ¼tfen tekrar giriÅŸ yapÄ±n.';
+                    errorMessage.textContent = 'Kullanıcı bilgileri yüklenemedi. Lütfen tekrar giriş yapın.';
                     errorMessage.classList.add('show');
                 }
             }
@@ -1733,9 +1681,9 @@
 
 
 
-        // Ã‡Ä±kÄ±ÅŸ fonksiyonu
+        // Çıkış fonksiyonu
         function userLogout() {
-            if (confirm('Ã‡Ä±kÄ±ÅŸ yapmak istediÄŸinize emin misiniz?')) {
+            if (confirm('Çıkış yapmak istediğinize emin misiniz?')) {
                 auth.signOut().then(() => {
                     window.location.href = 'login.html';
                 });
