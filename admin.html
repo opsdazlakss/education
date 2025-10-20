@@ -340,6 +340,10 @@
             </form>
         </div>
         <div class="users-card" style="margin-bottom: 2rem;">
+            <h2>🔔 Presenter Talepleri</h2>
+            <div id="presenterRequestsList">
+                <p style="text-align: center; color: #64748b; padding: 2rem;">Yükleniyor...</p>
+            </div>
             <h2>⏳ Onay Bekleyen Talepler</h2>
             <div id="approvalRequestsList">
                 <p style="text-align: center; color: #64748b; padding: 2rem;">Yükleniyor...</p>
@@ -383,7 +387,6 @@
                 return;
             }
         
-            // Admin mi kontrol et
             const userDoc = await db.collection('users').where('email', '==', user.email).get();
             if (userDoc.empty || !userDoc.docs[0].data().isAdmin) {
                 alert('Bu sayfaya erişim yetkiniz yok!');
@@ -391,9 +394,9 @@
                 return;
             }
         
-            // Admin ise devam et
             loadUsers();
             loadApprovalRequests();
+            loadPresenterRequests(); // 👈 BUNU EKLE
         });
 
 
@@ -436,6 +439,7 @@
                     fullname,
                     email,
                     isAdmin: false,
+                    isPresenter: false,
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
 
@@ -564,7 +568,146 @@
             }
         }
 
-
+        // Presenter taleplerini yükle
+        async function loadPresenterRequests() {
+            const container = document.getElementById('presenterRequestsList');
+            
+            try {
+                // Tüm stage'leri tamamlamış beginner'ları bul
+                const usersSnapshot = await db.collection('users')
+                    .where('isPresenter', '==', false)
+                    .where('isAdmin', '==', false)
+                    .get();
+                
+                let eligibleUsers = [];
+                
+                for (const userDoc of usersSnapshot.docs) {
+                    const username = userDoc.id;
+                    const userData = userDoc.data();
+                    
+                    // userProgress'i kontrol et
+                    const progressDoc = await db.collection('userProgress').doc(username).get();
+                    if (!progressDoc.exists) continue;
+                    
+                    const progressData = progressDoc.data();
+                    const completedStages = progressData.completedStages || {};
+                    
+                    // Kaç stage tamamlanmış ve onaylanmış kontrol et
+                    let approvedCount = 0;
+                    for (let stageId = 1; stageId <= 11; stageId++) {
+                        if (completedStages[stageId] && completedStages[stageId].approved === true) {
+                            approvedCount++;
+                        }
+                    }
+                    
+                    // 11 stage'i de tamamlamışsa listeye ekle
+                    if (approvedCount === 11) {
+                        eligibleUsers.push({
+                            username,
+                            fullname: userData.fullname,
+                            email: userData.email
+                        });
+                    }
+                }
+                
+                if (eligibleUsers.length === 0) {
+                    container.innerHTML = '<p class="no-requests">✅ Presenter olmak isteyen kullanıcı yok</p>';
+                    return;
+                }
+                
+                let html = '';
+                eligibleUsers.forEach(user => {
+                    html += `
+                        <div class="approval-card">
+                            <div class="approval-header">
+                                <div>
+                                    <div class="approval-user">${user.fullname} (@${user.username})</div>
+                                    <div style="font-size: 12px; color: #64748b; margin-top: 0.25rem;">📧 ${user.email}</div>
+                                </div>
+                                <div class="approval-badge">⏳ PRESENTER TALEBİ</div>
+                            </div>
+                            
+                            <div style="padding: 1rem; background: rgba(15,23,42,0.5); border-radius: 6px; margin: 1rem 0;">
+                                <p style="color: #22c55e; font-size: 14px;">✅ Tüm 11 aşamayı başarıyla tamamladı!</p>
+                            </div>
+        
+                            <div class="approval-actions">
+                                <button class="approve-btn" onclick="approvePresenter('${user.username}')">
+                                    ✅ Presenter Yap
+                                </button>
+                                <button class="reject-btn" onclick="rejectPresenter('${user.username}')">
+                                    ❌ Reddet
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                container.innerHTML = html;
+                
+            } catch (error) {
+                console.error('Presenter talepleri yüklenirken hata:', error);
+                container.innerHTML = '<p style="text-align: center; color: #ef4444;">Yükleme hatası</p>';
+            }
+        }
+        
+        // Presenter onaylama
+        async function approvePresenter(username) {
+            if (!confirm(`${username} kullanıcısını Presenter yapmak istediğinize emin misiniz?`)) {
+                return;
+            }
+            
+            try {
+                await db.collection('users').doc(username).update({
+                    isPresenter: true,
+                    presenterSince: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                
+                successMessage.textContent = `✅ ${username} artık Presenter!`;
+                successMessage.classList.add('show');
+                
+                loadPresenterRequests();
+                
+                setTimeout(() => {
+                    successMessage.classList.remove('show');
+                }, 3000);
+                
+            } catch (error) {
+                console.error('Presenter yapma hatası:', error);
+                errorMessage.textContent = `❌ Hata: ${error.message}`;
+                errorMessage.classList.add('show');
+            }
+        }
+        
+        // Presenter reddedilmesi
+        async function rejectPresenter(username) {
+            const reason = prompt('Red nedeni (opsiyonel):');
+            if (reason === null) return;
+            
+            try {
+                // İsteğe bağlı: Reddetme kaydı tutmak istersen
+                await db.collection('presenterRejections').add({
+                    username,
+                    rejectedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    rejectedBy: auth.currentUser.email.split('@')[0],
+                    reason: reason || 'Belirtilmedi'
+                });
+                
+                successMessage.textContent = `✅ ${username} presenter talebi reddedildi.`;
+                successMessage.classList.add('show');
+                
+                loadPresenterRequests();
+                
+                setTimeout(() => {
+                    successMessage.classList.remove('show');
+                }, 3000);
+                
+            } catch (error) {
+                console.error('Red hatası:', error);
+                errorMessage.textContent = `❌ Hata: ${error.message}`;
+                errorMessage.classList.add('show');
+            }
+        }
         // Anket cevaplarını render et
         function renderSurveyAnswers(answers) {
             if (!answers || answers.length === 0) return '';
