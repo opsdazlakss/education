@@ -494,6 +494,80 @@
                 usersTableBody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #ef4444;">YÃ¼kleme hatasÄ±</td></tr>';
             }
         }
+        async function loadNotifications() {
+            const container = document.getElementById('approvalRequestsList'); // istersen ayrı bir listeye koyabilirsin
+            try {
+                const snapshot = await db.collection('notifications')
+                    .where('type', '==', 'presenter_request')
+                    .where('status', '==', 'pending')
+                    .orderBy('createdAt', 'desc')
+                    .get();
+        
+                if (snapshot.empty) {
+                    container.innerHTML += '<p class="no-requests">🎓 Presenter olma isteği yok</p>';
+                    return;
+                }
+        
+                let html = '<h2>🎓 Presenter Olma Talepleri</h2>';
+                snapshot.forEach(doc => {
+                    const notif = doc.data();
+                    const date = notif.createdAt ? notif.createdAt.toDate().toLocaleString('tr-TR') : 'Bilinmiyor';
+        
+                    html += `
+                        <div class="approval-card">
+                            <div class="approval-header">
+                                <div>
+                                    <div class="approval-user">${notif.fullname} (@${notif.username})</div>
+                                    <div style="font-size: 12px; color: #64748b;">🕐 ${date}</div>
+                                </div>
+                                <div class="approval-badge">⏳ Onay Bekliyor</div>
+                            </div>
+                            <div class="approval-details">
+                                <p>${notif.message}</p>
+                            </div>
+                            <div class="approval-actions">
+                                <button class="approve-btn" onclick="approvePresenter('${doc.id}', '${notif.username}')">✅ Onayla</button>
+                                <button class="reject-btn" onclick="rejectPresenter('${doc.id}')">❌ Reddet</button>
+                            </div>
+                        </div>
+                    `;
+                });
+        
+                container.innerHTML += html;
+        
+            } catch (error) {
+                console.error('Bildirimler yüklenirken hata:', error);
+            }
+        }
+        
+        // Presenter isteğini onayla
+        async function approvePresenter(docId, username) {
+            try {
+                await db.collection('users').doc(username).update({
+                    isPresenter: true
+                });
+                await db.collection('notifications').doc(docId).update({
+                    status: 'approved'
+                });
+                alert('✅ Kullanıcı presenter olarak onaylandı!');
+                loadNotifications();
+            } catch (err) {
+                console.error('Onay hatası:', err);
+            }
+        }
+        
+        // Presenter isteğini reddet
+        async function rejectPresenter(docId) {
+            try {
+                await db.collection('notifications').doc(docId).update({
+                    status: 'rejected'
+                });
+                alert('❌ İstek reddedildi.');
+                loadNotifications();
+            } catch (err) {
+                console.error('Red hatası:', err);
+            }
+        }
         async function loadApprovalRequests() {
             const container = document.getElementById('approvalRequestsList');
             
@@ -564,7 +638,7 @@
                 container.innerHTML = '<p style="text-align: center; color: #ef4444;">YÃ¼kleme hatasÄ±</p>';
             }
         }
-
+        window.addEventListener('load', loadNotifications);
 
         // Anket cevaplarÄ±nÄ± render et
         function renderSurveyAnswers(answers) {
