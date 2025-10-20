@@ -111,6 +111,15 @@
                 gap: 1rem;
                 align-items: flex-start;
             }
+            .stages-list {
+                max-height: 300px; /* Daha da küçült */
+            }
+            
+            /* İçerik kartını üste çıkar */
+            .content-card {
+                position: relative;
+                z-index: 1;
+            }
             
             .header-content > div:last-child {
                 width: 100%;
@@ -229,23 +238,17 @@
             }
             
             .sidebar {
-                position: static;
-                max-height: none;
+                position: static; /* sticky'den static'e çevir */
+                max-height: none; /* max-height sınırlamasını kaldır */
                 margin-bottom: 2rem;
             }
             
             .stages-list {
                 max-height: 400px;
+                overflow-y: auto;
             }
         }
 
-        .sidebar {
-            position: sticky;
-            top: 100px;
-            height: fit-content;
-            max-height: calc(100vh - 120px);
-            overflow: hidden;
-        }
 
         .sidebar h2 {
             font-size: 12px;
