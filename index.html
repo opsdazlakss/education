@@ -1631,39 +1631,35 @@
         let userProgress = null;
         
         // Kullanıcı giriş kontrolü
-        // index.html içindeki auth.onAuthStateChanged fonksiyonunu güncelle
-
         auth.onAuthStateChanged(async (user) => {
             if (!user) {
+                // Kullanıcı çıkış yaptıysa login sayfasına yönlendir
                 window.location.href = 'login.html';
                 return;
             }
         
+            // Aktif kullanıcı bilgilerini ayarla
             currentUser = user;
             currentUsername = user.email.split('@')[0];
         
             try {
+                // Firestore'dan kullanıcı bilgilerini al
                 const userDoc = await db.collection('users').doc(currentUsername).get();
         
                 if (!userDoc.exists) {
-                    console.error('Kullanıcı Firestore'da bulunamadı.');
+                    console.error('Kullanıcı Firestore’da bulunamadı.');
                     await auth.signOut();
                     window.location.href = 'login.html';
                     return;
                 }
         
                 const userData = userDoc.data();
-                
-                // ✅ Eğer presenter ise presenter.html'e yönlendir
-                if (userData.isPresenter === true) {
-                    window.location.href = 'presenter.html';
-                    return;
-                }
-        
                 console.log(`Hoşgeldin: ${userData.fullname}`);
         
                 await loadUserProgress();
+        
                 await renderStages();
+        
                 renderContent();
         
                 if (userData.isAdmin) {
