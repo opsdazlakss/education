@@ -668,6 +668,9 @@
         </div>
     </div>
     <div style="display: flex; gap: 1rem; align-items: center;">
+        <button id="modeSwitcher" style="display: none; padding: 0.5rem 1rem; background: rgba(59, 130, 246, 0.2); border: 1px solid rgba(59, 130, 246, 0.4); color: #3b82f6; border-radius: 6px; cursor: pointer; font-weight: 500; font-size: 14px;">
+            🎓 Presenter Moduna Geç
+        </button>
         <div class="progress-section">
             <p>Aşama <span id="currentStageDisplay">1</span>/<span id="totalStageDisplay">9</span></p>
             <div class="progress-bar">
@@ -1632,44 +1635,46 @@
         
         // Kullanıcı giriş kontrolü
         auth.onAuthStateChanged(async (user) => {
-            if (!user) {
-                // Kullanıcı çıkış yaptıysa login sayfasına yönlendir
-                window.location.href = 'login.html';
-                return;
+    if (!user) {
+        window.location.href = 'login.html';
+        return;
+    }
+
+    currentUser = user;
+    currentUsername = user.email.split('@')[0];
+
+    try {
+        const userDoc = await db.collection('users').doc(currentUsername).get();
+
+        if (!userDoc.exists) {
+            console.error('Kullanıcı Firestore'da bulunamadı.');
+            await auth.signOut();
+            window.location.href = 'login.html';
+            return;
+        }
+
+        const userData = userDoc.data();
+        console.log(`Hoşgeldin: ${userData.fullname}`);
+
+        await loadUserProgress();
+        await renderStages();
+        renderContent();
+
+        if (userData.isAdmin) {
+            const adminBtn = document.getElementById('adminButton');
+            if (adminBtn) adminBtn.style.display = 'block';
+        }
+
+        // 👇 BUNU EKLE
+        if (userData.isPresenter) {
+            const modeSwitcher = document.getElementById('modeSwitcher');
+            if (modeSwitcher) {
+                modeSwitcher.style.display = 'block';
+                modeSwitcher.onclick = () => {
+                    window.location.href = 'presenter.html';
+                };
             }
-        
-            // Aktif kullanıcı bilgilerini ayarla
-            currentUser = user;
-            currentUsername = user.email.split('@')[0];
-        
-            try {
-                // Firestore'dan kullanıcı bilgilerini al
-                const userDoc = await db.collection('users').doc(currentUsername).get();
-        
-                if (!userDoc.exists) {
-                    console.error('Kullanıcı Firestore’da bulunamadı.');
-                    await auth.signOut();
-                    window.location.href = 'login.html';
-                    return;
-                }
-        
-                const userData = userDoc.data();
-                console.log(`Hoşgeldin: ${userData.fullname}`);
-        
-                await loadUserProgress();
-        
-                await renderStages();
-        
-                renderContent();
-        
-                if (userData.isAdmin) {
-                    const adminBtn = document.getElementById('adminButton');
-                    if (adminBtn) adminBtn.style.display = 'block';
-                }
-        
-                console.log('Kullanıcı verileri ve aşamalar başarıyla yüklendi.');
-        
-            } catch (error) {
+        } catch (error) {
                 console.error('Kullanıcı bilgisi alınamadı:', error);
                 const errorMessage = document.getElementById('errorMessage');
                 if (errorMessage) {
