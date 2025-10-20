@@ -173,7 +173,30 @@
             border: 1px solid rgba(34, 197, 94, 0.3);
             color: #22c55e;
         }
-
+        .toggle-presenter-btn {
+            padding: 0.5rem 1rem;
+            background: rgba(100, 116, 139, 0.2);
+            border: 1px solid rgba(100, 116, 139, 0.4);
+            color: #64748b;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+        
+        .toggle-presenter-btn:hover {
+            background: rgba(100, 116, 139, 0.3);
+        }
+        
+        .toggle-presenter-btn.active {
+            background: rgba(34, 197, 94, 0.2);
+            border-color: rgba(34, 197, 94, 0.4);
+            color: #22c55e;
+        }
+        
+        .toggle-presenter-btn.active:hover {
+            background: rgba(34, 197, 94, 0.3);
+        }
         .error-message {
             background: rgba(239, 68, 68, 0.1);
             border: 1px solid rgba(239, 68, 68, 0.3);
@@ -353,6 +376,8 @@
                         <th>Kullanıcı Adı</th>
                         <th>Ad Soyad</th>
                         <th>Email</th>
+                        <th>İlerleme</th>
+                        <th>Presenter</th>
                         <th>Kayıt Tarihi</th>
                         <th>İşlem</th>
                     </tr>
@@ -465,33 +490,97 @@
                 const snapshot = await db.collection('users').orderBy('createdAt', 'desc').get();
                 
                 if (snapshot.empty) {
-                    usersTableBody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #64748b;">Henüz kullanıcı yok</td></tr>';
+                    usersTableBody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: #64748b;">Henüz kullanıcı yok</td></tr>';
                     return;
                 }
-
+        
                 let html = '';
-                snapshot.forEach(doc => {
+                
+                // Her kullanıcı için ilerleme bilgisini de al
+                for (const doc of snapshot.docs) {
                     const user = doc.data();
                     const date = user.createdAt ? user.createdAt.toDate().toLocaleDateString('tr-TR') : 'Bilinmiyor';
+                    
+                    // Kullanıcının ilerleme durumunu al
+                    let progressInfo = '📊 0/0 - Başlangıç';
+                    try {
+                        const progressDoc = await db.collection('userProgress').doc(doc.id).get();
+                        if (progressDoc.exists) {
+                            const progressData = progressDoc.data();
+                            const currentStage = progressData.currentStage || 1;
+                            const completedStages = progressData.completedStages || {};
+                            
+                            // Mevcut aşamanın tamamlanma durumu
+                            const currentStageData = completedStages[currentStage];
+                            let stageStatus = '⏳ Devam ediyor';
+                            
+                            if (currentStageData && currentStageData.completedContents) {
+                                const completedCount = Object.keys(currentStageData.completedContents).length;
+                                // Aşama içerik sayısını stages dizisinden al (varsayılan 5)
+                                const totalCount = 5; // Bu değer dinamik olarak alınabilir
+                                
+                                if (completedCount === totalCount) {
+                                    stageStatus = '✅ Tamamlandı';
+                                } else {
+                                    stageStatus = `📝 ${completedCount}/${totalCount}`;
+                                }
+                            }
+                            
+                            progressInfo = `📍 Aşama ${currentStage} - ${stageStatus}`;
+                        }
+                    } catch (progressError) {
+                        console.error('İlerleme bilgisi alınamadı:', progressError);
+                    }
+                    
+                    // Presenter toggle butonu
+                    const presenterBtn = user.isAdmin 
+                        ? '<span style="color: #64748b;">Admin</span>'
+                        : `<button class="toggle-presenter-btn ${user.isPresenter ? 'active' : ''}" 
+                                onclick="togglePresenter('${doc.id}', ${!user.isPresenter})">
+                                ${user.isPresenter ? '✅ Presenter' : '👤 Normal'}
+                            </button>`;
                     
                     html += `
                         <tr>
                             <td>${user.username}</td>
                             <td>${user.fullname}</td>
                             <td>${user.email}</td>
+                            <td style="font-size: 13px; color: #94a3b8;">${progressInfo}</td>
+                            <td>${presenterBtn}</td>
                             <td>${date}</td>
                             <td>
                                 ${!user.isAdmin ? `<button class="delete-btn" onclick="deleteUser('${doc.id}', '${user.email}')">Sil</button>` : '<span style="color: #64748b;">Admin</span>'}
                             </td>
                         </tr>
                     `;
-                });
-
+                }
+        
                 usersTableBody.innerHTML = html;
-
+        
             } catch (error) {
                 console.error('Kullanıcılar yüklenirken hata:', error);
-                usersTableBody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #ef4444;">Yükleme hatası</td></tr>';
+                usersTableBody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: #ef4444;">Yükleme hatası</td></tr>';
+            }
+        }
+        async function togglePresenter(username, setAsPresenter) {
+            try {
+                await db.collection('users').doc(username).update({
+                    isPresenter: setAsPresenter
+                });
+        
+                successMessage.textContent = `✅ ${username} kullanıcısı ${setAsPresenter ? 'presenter yapıldı' : 'normal kullanıcı yapıldı'}!`;
+                successMessage.classList.add('show');
+        
+                loadUsers();
+        
+                setTimeout(() => {
+                    successMessage.classList.remove('show');
+                }, 3000);
+        
+            } catch (error) {
+                console.error('Presenter yetkisi değiştirilirken hata:', error);
+                errorMessage.textContent = `❌ Hata: ${error.message}`;
+                errorMessage.classList.add('show');
             }
         }
         async function loadApprovalRequests() {
