@@ -1631,51 +1631,44 @@
         let userProgress = null;
         
         // Kullanıcı giriş kontrolü
+        // presenter.html içine eklenecek auth kontrolü
+
         auth.onAuthStateChanged(async (user) => {
             if (!user) {
-                // Kullanıcı çıkış yaptıysa login sayfasına yönlendir
                 window.location.href = 'login.html';
                 return;
             }
         
-            // Aktif kullanıcı bilgilerini ayarla
-            currentUser = user;
-            currentUsername = user.email.split('@')[0];
+            const currentUsername = user.email.split('@')[0];
         
             try {
-                // Firestore'dan kullanıcı bilgilerini al
                 const userDoc = await db.collection('users').doc(currentUsername).get();
         
                 if (!userDoc.exists) {
-                    console.error('Kullanıcı Firestore’da bulunamadı.');
+                    console.error('Kullanıcı Firestore'da bulunamadı.');
                     await auth.signOut();
                     window.location.href = 'login.html';
                     return;
                 }
         
                 const userData = userDoc.data();
-                console.log(`Hoşgeldin: ${userData.fullname}`);
         
-                await loadUserProgress();
-        
-                await renderStages();
-        
-                renderContent();
-        
-                if (userData.isAdmin) {
-                    const adminBtn = document.getElementById('adminButton');
-                    if (adminBtn) adminBtn.style.display = 'block';
+                // ✅ Eğer presenter değilse index.html'e yönlendir
+                if (userData.isPresenter !== true) {
+                    alert('Bu sayfaya erişim yetkiniz yok!');
+                    window.location.href = 'index.html';
+                    return;
                 }
         
-                console.log('Kullanıcı verileri ve aşamalar başarıyla yüklendi.');
+                console.log(`Presenter girişi başarılı: ${userData.fullname}`);
+                
+                // Presenter sayfası için gerekli fonksiyonları çalıştır
+                // initPresenterPage();
         
             } catch (error) {
-                console.error('Kullanıcı bilgisi alınamadı:', error);
-                const errorMessage = document.getElementById('errorMessage');
-                if (errorMessage) {
-                    errorMessage.textContent = 'Kullanıcı bilgileri yüklenemedi. Lütfen tekrar giriş yapın.';
-                    errorMessage.classList.add('show');
-                }
+                console.error('Presenter kontrolü hatası:', error);
+                await auth.signOut();
+                window.location.href = 'login.html';
             }
         });
 
