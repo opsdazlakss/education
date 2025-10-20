@@ -234,6 +234,14 @@
             .progress-bar {
                 width: 100%;
             }
+            .stages-list {
+                max-height: 300px;
+            }
+            
+            .content-card {
+                position: relative;
+                z-index: 1;
+            }
         }
         
         @media (max-width: 480px) {
@@ -290,22 +298,15 @@
             }
             
             .sidebar {
-                position: static;
+                position: static; /* sticky'den static'e çevir */
                 max-height: none;
                 margin-bottom: 2rem;
             }
             
             .stages-list {
                 max-height: 400px;
+                overflow-y: auto;
             }
-        }
-
-        .sidebar {
-            position: sticky;
-            top: 100px;
-            height: fit-content;
-            max-height: calc(100vh - 120px);
-            overflow: hidden;
         }
 
         .sidebar h2 {
