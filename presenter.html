@@ -1406,7 +1406,22 @@
         }
 
         function closeModal() {
-            document.getElementById('contentModal').classList.remove('active');
+            const modal = document.getElementById('contentModal');
+            const modalBody = document.getElementById('modalBody');
+            
+            // Video iframe'lerini durdur
+            const iframes = modalBody.querySelectorAll('iframe');
+            iframes.forEach(iframe => {
+                iframe.src = iframe.src; // Reload ederek durdur
+            });
+            
+            // Modal'ı kapat
+            modal.classList.remove('active');
+            
+            // 300ms sonra içeriği tamamen temizle (animasyon bitince)
+            setTimeout(() => {
+                modalBody.innerHTML = '';
+            }, 300);
         }
 
         async function submitSurvey(stageId, contentIndex) {
