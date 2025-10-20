@@ -676,6 +676,7 @@
         </div>
         <!-- Admin butonu (sadece adminlere göster) -->
         <a href="admin.html" id="adminButton" style="display: none; padding: 0.5rem 1rem; background: rgba(59, 130, 246, 0.2); border: 1px solid rgba(59, 130, 246, 0.4); color: #3b82f6; border-radius: 6px; text-decoration: none; font-weight: 500; font-size: 14px;">🛠️ Admin</a>
+        <a href="presenter.html" id="presenterButton"style="display: none; padding: 0.5rem 1rem; background: rgba(34, 197, 94, 0.2);border: 1px solid rgba(34, 197, 94, 0.4); color: #22c55e; border-radius: 6px;text-decoration: none; font-weight: 500; font-size: 14px;">🎤 Presenter</a>
         <button onclick="userLogout()" style="padding: 0.5rem 1rem; background: rgba(239, 68, 68, 0.2); border: 1px solid rgba(239, 68, 68, 0.4); color: #ef4444; border-radius: 6px; cursor: pointer; font-weight: 500; font-size: 14px;">Çıkış</button>
     </div>
 </div>
@@ -745,7 +746,32 @@
             <div class="modal-body" id="modalBody"></div>
         </div>
     </div>
+    
+    <script src="firebase-config.js"></script>
+    <script>
+    auth.onAuthStateChanged(async (user) => {
+      if (!user) {
+        window.location.href = 'login.html';
+        return;
+      }
 
+      const userDoc = await db.collection('users').where('email', '==', user.email).get();
+      if (!userDoc.empty) {
+        const data = userDoc.docs[0].data();
+
+        // Admin butonunu göster
+        if (data.isAdmin) {
+          document.getElementById('adminButton').style.display = 'inline-block';
+        }
+
+        // Presenter butonunu göster
+        if (data.isPresenter) {
+          document.getElementById('presenterButton').style.display = 'inline-block';
+        }
+      }
+    });
+    </script>
+    
     <script>
         const quizQuestionPools = {
             1: [ // Stage 1 için soru havuzu
@@ -1678,6 +1704,7 @@
                 }
             }
         });
+        
 
 
 
