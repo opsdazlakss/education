@@ -417,6 +417,7 @@
             }
         
             // Admin ise devam et
+            await getTotalStagesCount();  // 🔹 Önce aşama sayısını çek
             loadUsers();
             loadApprovalRequests();
         });
@@ -483,85 +484,124 @@
                 errorMessage.classList.add('show');
             }
         });
+        let totalStagesCount = 0;
 
-        // Kullanıcıları yükle
-        async function loadUsers() {
+        // 🔹 Firestore'dan toplam aşama sayısını dinamik çek
+        async function getTotalStagesCount() {
             try {
-                const snapshot = await db.collection('users').orderBy('createdAt', 'desc').get();
-                
-                if (snapshot.empty) {
-                    usersTableBody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: #64748b;">Henüz kullanıcı yok</td></tr>';
-                    return;
-                }
-        
-                let html = '';
-                
-                // Her kullanıcı için ilerleme bilgisini de al
-                for (const doc of snapshot.docs) {
-                    const user = doc.data();
-                    const date = user.createdAt ? user.createdAt.toDate().toLocaleDateString('tr-TR') : 'Bilinmiyor';
-                    
-                    // Kullanıcının ilerleme durumunu al
-                    let progressInfo = '📊 0/0 - Başlangıç';
-                    try {
-                        const progressDoc = await db.collection('userProgress').doc(doc.id).get();
-                        if (progressDoc.exists) {
-                            const progressData = progressDoc.data();
-                            const currentStage = progressData.currentStage || 1;
-                            const completedStages = progressData.completedStages || {};
-                            
-                            // Mevcut aşamanın tamamlanma durumu
-                            const currentStageData = completedStages[currentStage];
-                            let stageStatus = '⏳ Devam ediyor';
-                            
-                            if (currentStageData && currentStageData.completedContents) {
-                                const completedCount = Object.keys(currentStageData.completedContents).length;
-                                // Aşama içerik sayısını stages dizisinden al (varsayılan 5)
-                                const totalCount = 5; // Bu değer dinamik olarak alınabilir
-                                
-                                if (completedCount === totalCount) {
-                                    stageStatus = '✅ Tamamlandı';
-                                } else {
-                                    stageStatus = `📝 ${completedCount}/${totalCount}`;
-                                }
-                            }
-                            
-                            progressInfo = `📍 Aşama ${currentStage} - ${stageStatus}`;
-                        }
-                    } catch (progressError) {
-                        console.error('İlerleme bilgisi alınamadı:', progressError);
-                    }
-                    
-                    // Presenter toggle butonu
-                    const presenterBtn = user.isAdmin 
-                        ? '<span style="color: #64748b;">Admin</span>'
-                        : `<button class="toggle-presenter-btn ${user.isPresenter ? 'active' : ''}" 
-                                onclick="togglePresenter('${doc.id}', ${!user.isPresenter})">
-                                ${user.isPresenter ? '✅ Presenter' : '👤 Normal'}
-                            </button>`;
-                    
-                    html += `
-                        <tr>
-                            <td>${user.username}</td>
-                            <td>${user.fullname}</td>
-                            <td>${user.email}</td>
-                            <td style="font-size: 13px; color: #94a3b8;">${progressInfo}</td>
-                            <td>${presenterBtn}</td>
-                            <td>${date}</td>
-                            <td>
-                                ${!user.isAdmin ? `<button class="delete-btn" onclick="deleteUser('${doc.id}', '${user.email}')">Sil</button>` : '<span style="color: #64748b;">Admin</span>'}
-                            </td>
-                        </tr>
-                    `;
-                }
-        
-                usersTableBody.innerHTML = html;
-        
+                const stagesSnapshot = await db.collection('stages').get();
+                totalStagesCount = stagesSnapshot.size; // 🔸 aşama sayısı
+                console.log(`📘 Toplam aşama sayısı: ${totalStagesCount}`);
             } catch (error) {
-                console.error('Kullanıcılar yüklenirken hata:', error);
-                usersTableBody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: #ef4444;">Yükleme hatası</td></tr>';
+                console.error('Toplam aşama sayısı alınamadı:', error);
+                totalStagesCount = 0;
             }
         }
+        // Kullanıcıları yükle
+        async function loadUsers() {
+    try {
+        // Önce toplam stage sayısını çek
+        if (totalStagesCount === 0) {
+            await getTotalStagesCount();
+        }
+
+        const snapshot = await db.collection('users').orderBy('createdAt', 'desc').get();
+
+        if (snapshot.empty) {
+            usersTableBody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: #64748b;">Henüz kullanıcı yok</td></tr>';
+            return;
+        }
+
+        let html = '';
+
+        // Her kullanıcı için ilerleme bilgisini de al
+        for (const doc of snapshot.docs) {
+            const user = doc.data();
+            const date = user.createdAt ? user.createdAt.toDate().toLocaleDateString('tr-TR') : 'Bilinmiyor';
+
+            // Kullanıcının ilerleme durumunu al
+            let progressInfo = '📊 0/0 - Başlangıç';
+            let allCompleted = false; // 🔸 Presenter olma kontrolü
+
+            try {
+                const progressDoc = await db.collection('userProgress').doc(doc.id).get();
+                if (progressDoc.exists) {
+                    const progressData = progressDoc.data();
+                    const currentStage = progressData.currentStage || 1;
+                    const completedStages = progressData.completedStages || {};
+
+                    // Mevcut aşamanın tamamlanma durumu
+                    const currentStageData = completedStages[currentStage];
+                    let stageStatus = '⏳ Devam ediyor';
+
+                    if (currentStageData && currentStageData.completedContents) {
+                        const completedCount = Object.keys(currentStageData.completedContents).length;
+                        const totalCount = 5; // 🔹 Her aşamada varsayılan 5 içerik (istersen bu da dinamik olabilir)
+
+                        if (completedCount === totalCount) {
+                            stageStatus = '✅ Tamamlandı';
+                        } else {
+                            stageStatus = `📝 ${completedCount}/${totalCount}`;
+                        }
+                    }
+
+                    progressInfo = `📍 Aşama ${currentStage}/${totalStagesCount} - ${stageStatus}`;
+
+                    // 🔹 Kaç aşama tamamen bitmiş?
+                    const completedStageCount = Object.keys(completedStages).filter(stageId => {
+                        const stage = completedStages[stageId];
+                        return stage && stage.completedContents && Object.keys(stage.completedContents).length > 0;
+                    }).length;
+
+                    // 🔹 Tüm aşamalar tamamlanmış mı?
+                    allCompleted = completedStageCount >= totalStagesCount;
+                }
+            } catch (progressError) {
+                console.error('İlerleme bilgisi alınamadı:', progressError);
+            }
+
+            // 🔹 Presenter toggle butonu
+            let presenterBtn = '';
+
+            if (user.isAdmin) {
+                presenterBtn = '<span style="color: #64748b;">Admin</span>';
+            } else if (allCompleted) {
+                presenterBtn = `
+                    <button class="toggle-presenter-btn ${user.isPresenter ? 'active' : ''}" 
+                        onclick="togglePresenter('${doc.id}', ${!user.isPresenter})">
+                        ${user.isPresenter ? '✅ Presenter' : '👤 Normal'}
+                    </button>`;
+            } else {
+                presenterBtn = `
+                    <button class="toggle-presenter-btn" disabled title="Tüm aşamalar tamamlanmadan Presenter olunamaz" 
+                        style="opacity: 0.5; cursor: not-allowed;">
+                        👤 Normal
+                    </button>`;
+            }
+
+            // 🔹 Tablo satırını oluştur
+            html += `
+                <tr>
+                    <td>${user.username}</td>
+                    <td>${user.fullname}</td>
+                    <td>${user.email}</td>
+                    <td style="font-size: 13px; color: #94a3b8;">${progressInfo}</td>
+                    <td>${presenterBtn}</td>
+                    <td>${date}</td>
+                    <td>
+                        ${!user.isAdmin ? `<button class="delete-btn" onclick="deleteUser('${doc.id}', '${user.email}')">Sil</button>` : '<span style="color: #64748b;">Admin</span>'}
+                    </td>
+                </tr>
+            `;
+        }
+
+        usersTableBody.innerHTML = html;
+
+    } catch (error) {
+        console.error('Kullanıcılar yüklenirken hata:', error);
+        usersTableBody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: #ef4444;">Yükleme hatası</td></tr>';
+    }
+}
         async function togglePresenter(username, setAsPresenter) {
             try {
                 await db.collection('users').doc(username).update({
