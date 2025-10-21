@@ -963,9 +963,17 @@
         return;
       }
 
-      const userDoc = await db.collection('users').where('email', '==', user.email).get();
-      if (!userDoc.empty) {
-        const data = userDoc.docs[0].data();
+      const userDoc = await db.collection('users').doc(user.email.split('@')[0]).get();
+    
+        if (!userDoc.exists || !userDoc.data().isPresenter) {
+            alert('⛔ Presenter sayfasına erişim yetkiniz yok!');
+            window.location.href = 'index.html';
+            return;
+        }
+    
+        // Aktif kullanıcı bilgilerini ayarla
+        currentUser = user;
+        currentUsername = user.email.split('@')[0];
 
         // Admin butonunu göster
         if (data.isAdmin) {
@@ -1267,12 +1275,41 @@
 
         function renderContent() {
             const stageData = stages[currentStage - 1];
-            document.getElementById('stageId').textContent = currentStage;
-            document.getElementById('stageTypeLabel').textContent = stageData.type;
-            document.getElementById('stageTitle').textContent = stageData.title;
-            document.getElementById('stageDescription').textContent = stageData.description;
-            document.getElementById('currentStageDisplay').textContent = currentStage;
-            document.getElementById('totalCount').textContent = stageData.contents.length;
+            
+            // 🔒 Presenter için içerikleri gizle
+            const contentList = document.getElementById('contentList');
+            contentList.innerHTML = `
+                <div style="
+                    padding: 3rem; 
+                    text-align: center; 
+                    background: rgba(239, 68, 68, 0.1); 
+                    border: 1px solid rgba(239, 68, 68, 0.3); 
+                    border-radius: 12px;
+                    color: #ef4444;
+                ">
+                    <div style="font-size: 48px; margin-bottom: 1rem;">🔒</div>
+                    <h3 style="font-size: 20px; margin-bottom: 0.5rem;">İçerik Erişimi Kapalı</h3>
+                    <p style="color: #94a3b8; font-size: 14px;">
+                        Presenter hesapları eğitim içeriklerine erişemez.<br>
+                        Sadece sunum yapma yetkisine sahipsiniz.
+                    </p>
+                </div>
+            `;
+            // Tüm içerik verilerini gizle
+            document.getElementById('stageId').textContent = '-';
+            document.getElementById('stageTypeLabel').textContent = 'Erişim Kapalı';
+            document.getElementById('stageTitle').textContent = 'İçerik Yok';
+            document.getElementById('stageDescription').textContent = 'Presenter hesabı ile içeriklere erişemezsiniz';
+            document.getElementById('completedCount').textContent = '0';
+            document.getElementById('totalCount').textContent = '0';
+            document.getElementById('stageProgressFill').style.width = '0%';
+            
+            // Butonları devre dışı bırak
+            document.getElementById('prevBtn').style.display = 'none';
+            document.getElementById('nextBtn').disabled = true;
+            document.getElementById('nextBtn').textContent = 'Erişim Yok';
+            
+            return; // Fonksiyonun geri kalanını çalıştırma
         
             const contentList = document.getElementById('contentList');
             contentList.innerHTML = '';
@@ -1362,27 +1399,9 @@
         }
 
         async function canAccessStage(stageId) {
-            if (stageId === 1) return true; // ilk aşama her zaman açık
-        
-            const prevStageId = stageId - 1;
-            const progressDoc = await db.collection('userProgress').doc(currentUsername).get();
-            if (!progressDoc.exists) return false;
-        
-            const data = progressDoc.data();
-            const prevStage = data.completedStages?.[prevStageId];
-        
-            // Red edilirse sıfırla
-            if (prevStage && prevStage.approved === false) {
-                console.log(`Aşama ${prevStageId} reddedildi, sıfırlanıyor...`);
-                await db.collection('userProgress').doc(currentUsername).update({
-                    [`completedStages.${prevStageId}`]: firebase.firestore.FieldValue.delete()
-                });
-                return false;
-            }
-        
-            // Önceki aşama admin tarafından onaylanmışsa erişim serbest
-            return prevStage && prevStage.approved === true;
-        }
+    // 🔒 Presenter için TÜM aşamaları kilitle
+    return false; // Presenter hiçbir aşamayı açamaz
+}
 
 
 
@@ -1401,6 +1420,8 @@
 
         //ben bu fonksiyonun taaa aq
         function showContentModal(content) {
+            alert('⛔ Presenter hesabı ile içeriklere erişemezsiniz!');
+    return;
             const modal = document.getElementById('contentModal');
             const modalBody = document.getElementById('modalBody');
             document.getElementById('modalType').textContent =
