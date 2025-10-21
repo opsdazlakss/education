@@ -908,6 +908,9 @@
     
     <script src="firebase-config.js"></script>
     <script>
+        window.currentUser = null;
+window.currentUsername = null;
+window.userProgress = {};
     auth.onAuthStateChanged(async (user) => {
       if (!user) {
         window.location.href = 'login.html';
@@ -1612,7 +1615,6 @@
             closeModal();
             render();
         }
-        let userProgress = {};
 
         // Kullanıcı ilerlemesini yükle
         async function loadUserProgress() {
@@ -1825,9 +1827,6 @@
     </script>
     <script>
         // Global değişkenler
-        let currentUser = null;
-        let currentUsername = null;
-        let userProgress = null;
         
         // Kullanıcı giriş kontrolü
         auth.onAuthStateChanged(async (user) => {
