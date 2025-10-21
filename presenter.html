@@ -982,10 +982,10 @@
             
             // ✅ PRESENTER KONTROLÜ - Admin değilse ve Presenter değilse index.html'e yönlendir
             if (!userData.isAdmin && !userData.isPresenter) {
-                alert('Bu sayfaya erişim yetkiniz yok!');
                 window.location.href = 'index.html';
                 return;
             }
+            //ne olur ne olmaz diye hocam
             if(userData.isPresenter == false) return;
     
             console.log(`Hoşgeldin: ${userData.fullname}`);
