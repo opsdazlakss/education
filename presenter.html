@@ -1218,59 +1218,35 @@
         let currentStage = 1;
         let completedContents = {};
 
-        async function renderStages() {
-            const stagesList = document.getElementById('stagesList');
-            stagesList.innerHTML = '';
-        
-            for (const stage of stages) {
-                const isLocked = !(await canAccessStage(stage.id));
-                
-                // Her aşama için completedContents'i geçici olarak yükle
-                let tempCompletedContents = {};
-                if (userProgress.completedStages && 
-                    userProgress.completedStages[stage.id] && 
-                    userProgress.completedStages[stage.id].completedContents) {
-                    tempCompletedContents = userProgress.completedStages[stage.id].completedContents;
-                }
-                
-                // Aşamanın tamamlanıp tamamlanmadığını kontrol et
-                let completedCount = 0;
-                for (let i = 0; i < stage.contents.length; i++) {
-                    if (tempCompletedContents[`${stage.id}-${i}`]) {
-                        completedCount++;
-                    }
-                }
-                const isCompleted = completedCount === stage.contents.length;
-                
-                const isActive = currentStage === stage.id;
-        
-                let icon = '⭕';
-                if (isCompleted) icon = '✅';
-                if (isLocked) icon = '🔒';
-                if (isActive && !isCompleted && !isLocked) icon = '🔵';
-        
-                const btn = document.createElement('button');
-                btn.className = `stage-btn ${isActive ? 'active' : ''}`;
-                btn.disabled = isLocked;
-                btn.innerHTML = `
-                    <span class="stage-icon">${icon}</span>
-                    <div class="stage-info">
-                        <span class="stage-title">${stage.title}</span>
-                        <span class="stage-type">${stage.type}</span>
-                    </div>
-                `;
-        
-                btn.onclick = () => {
-                    if (!isLocked) {
-                        currentStage = stage.id;
-                        updateCompletedContentsForStage(currentStage);
-                        render();
-                    }
-                };
-        
-                stagesList.appendChild(btn);
-            }
-        }
+        // renderStages fonksiyonunu BU ŞEKILDE DEĞİŞTİR:
+
+async function renderStages() {
+    const stagesList = document.getElementById('stagesList');
+    stagesList.innerHTML = '';
+
+    for (const stage of stages) {
+        // 🔒 Presenter için tüm aşamalar kilitli
+        const isLocked = true;
+        const isActive = false;
+        const isCompleted = false;
+
+        let icon = '🔒'; // Her zaman kilit
+
+        const btn = document.createElement('button');
+        btn.className = 'stage-btn';
+        btn.disabled = true; // Her zaman devre dışı
+        btn.innerHTML = `
+            <span class="stage-icon">${icon}</span>
+            <div class="stage-info">
+                <span class="stage-title">${stage.title}</span>
+                <span class="stage-type" style="color: #ef4444;">Erişim Yok</span>
+            </div>
+        `;
+
+        // Tıklama olayı yok (zaten disabled)
+        stagesList.appendChild(btn);
+    }
+}
 
 
         function renderContent() {
