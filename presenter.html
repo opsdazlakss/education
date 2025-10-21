@@ -958,25 +958,56 @@
     <script src="firebase-config.js"></script>
     <script>
     auth.onAuthStateChanged(async (user) => {
-      if (!user) {
-        window.location.href = 'login.html';
-        return;
-      }
-
-      const userDoc = await db.collection('users').where('email', '==', user.email).get();
-      if (!userDoc.empty) {
-        const data = userDoc.docs[0].data();
-
-        // Admin butonunu göster
-        if (data.isAdmin) {
-          document.getElementById('adminButton').style.display = 'inline-block';
+        if (!user) {
+            window.location.href = 'login.html';
+            return;
         }
-
-        // Presenter butonunu göster
-        if (data.isPresenter) {
-          document.getElementById('presenterButton').style.display = 'inline-block';
+    
+        // Aktif kullanıcı bilgilerini ayarla
+        currentUser = user;
+        currentUsername = user.email.split('@')[0];
+    
+        try {
+            // Firestore'dan kullanıcı bilgilerini al
+            const userDoc = await db.collection('users').doc(currentUsername).get();
+    
+            if (!userDoc.exists) {
+                console.error('Kullanıcı Firestore'da bulunamadı.');
+                await auth.signOut();
+                window.location.href = 'login.html';
+                return;
+            }
+    
+            const userData = userDoc.data();
+            
+            // ✅ PRESENTER KONTROLÜ - Admin değilse ve Presenter değilse index.html'e yönlendir
+            if (!userData.isAdmin && !userData.isPresenter) {
+                alert('Bu sayfaya erişim yetkiniz yok!');
+                window.location.href = 'index.html';
+                return;
+            }
+    
+            console.log(`Hoşgeldin: ${userData.fullname}`);
+    
+            await loadUserProgress();
+            await renderStages();
+            renderContent();
+    
+            if (userData.isAdmin) {
+                const adminBtn = document.getElementById('adminButton');
+                if (adminBtn) adminBtn.style.display = 'block';
+            }
+    
+            console.log('Kullanıcı verileri ve aşamalar başarıyla yüklendi.');
+    
+        } catch (error) {
+            console.error('Kullanıcı bilgisi alınamadı:', error);
+            const errorMessage = document.getElementById('errorMessage');
+            if (errorMessage) {
+                errorMessage.textContent = 'Kullanıcı bilgileri yüklenemedi. Lütfen tekrar giriş yapın.';
+                errorMessage.classList.add('show');
+            }
         }
-      }
     });
     </script>
     
