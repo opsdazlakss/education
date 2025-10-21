@@ -957,6 +957,14 @@
     </div>
     <script src="firebase-config.js"></script>
     <script>
+    let currentUser = null;
+    let currentUsername = null;
+    let userProgress = null;
+    let currentStage = 50;
+    let completedContents = {};
+    let currentQuizIndex = 0;
+    let currentQuizAnswers = [];
+    let currentQuizContent = null;
     auth.onAuthStateChanged(async (user) => {
         if (!user) {
             window.location.href = 'login.html';
@@ -1237,8 +1245,6 @@
             },
         ];
 
-        let currentStage = 1;
-        let completedContents = {};
 
         async function renderStages() {
             const stagesList = document.getElementById('stagesList');
@@ -1529,9 +1535,7 @@
                 //result.innerHTML = `❌ Yanlış cevap. Doğru cevap: <b>${correct}</b>`; bu kısım test kısmında eğer doğru cevabı da göstermek istersek olacak şu anlık doğru cevap gösterme yoks
             }
         }
-        let currentQuizIndex = 0;
-        let currentQuizAnswers = [];
-        let currentQuizContent = null;
+
 
         function checkMultiQuizAnswer(button, content) {
             const selected = button.getAttribute('data-answer');
@@ -1903,9 +1907,6 @@
     document.head.appendChild(quizStyle);
 
         // Global değişkenler
-        let currentUser = null;
-        let currentUsername = null;
-        let userProgress = null;
         
         // Kullanıcı giriş kontrolü
         auth.onAuthStateChanged(async (user) => {
