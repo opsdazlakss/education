@@ -1265,60 +1265,97 @@
         }
 
 
-        function renderContent() {
-            const stageData = stages[currentStage - 1];
-            document.getElementById('stageId').textContent = currentStage;
-            document.getElementById('stageTypeLabel').textContent = stageData.type;
-            document.getElementById('stageTitle').textContent = stageData.title;
-            document.getElementById('stageDescription').textContent = stageData.description;
-            document.getElementById('currentStageDisplay').textContent = currentStage;
-            document.getElementById('totalCount').textContent = stageData.contents.length;
+        // renderContent() fonksiyonunu şu şekilde güncelleyin:
+async function renderContent() {
+    // Önce aşamanın erişilebilir olup olmadığını kontrol et
+    const canAccess = await canAccessStage(currentStage);
+    
+    const stageData = stages[currentStage - 1];
+    document.getElementById('stageId').textContent = currentStage;
+    document.getElementById('stageTypeLabel').textContent = stageData.type;
+    document.getElementById('stageTitle').textContent = stageData.title;
+    document.getElementById('stageDescription').textContent = stageData.description;
+    document.getElementById('currentStageDisplay').textContent = currentStage;
+    document.getElementById('totalCount').textContent = stageData.contents.length;
+    
+    const contentList = document.getElementById('contentList');
+    
+    // Eğer aşama kilitliyse içerik gösterme
+    if (!canAccess) {
+        contentList.innerHTML = `
+            <div style="
+                padding: 3rem 2rem;
+                text-align: center;
+                background: rgba(239, 68, 68, 0.1);
+                border: 2px dashed rgba(239, 68, 68, 0.3);
+                border-radius: 12px;
+                color: #fca5a5;
+            ">
+                <div style="font-size: 64px; margin-bottom: 1rem;">🔒</div>
+                <h3 style="font-size: 24px; margin-bottom: 1rem; color: #ef4444;">Bu Aşama Kilitli</h3>
+                <p style="font-size: 16px; color: #94a3b8; line-height: 1.6;">
+                    Bu aşamaya erişebilmek için önceki aşamayı tamamlamanız ve admin onayı almanız gerekmektedir.
+                </p>
+            </div>
+        `;
         
-            const contentList = document.getElementById('contentList');
-            contentList.innerHTML = '';
+        // İlerleme çubuğunu sıfırla
+        document.getElementById('completedCount').textContent = '0';
+        document.getElementById('stageProgressFill').style.width = '0%';
         
-            stageData.contents.forEach((content, idx) => {
-                const contentId = `${currentStage}-${idx}`;
-                const isCompleted = completedContents[contentId];
+        // Butonları devre dışı bırak
+        document.getElementById('nextBtn').disabled = true;
+        document.getElementById('nextBtn').textContent = 'Aşama Kilitli 🔒';
         
-                const item = document.createElement('button');
-                item.className = `content-item ${isCompleted ? 'completed' : ''}`;
-                item.style.background = 'none';
-                item.style.border = 'none';
-                item.style.padding = '0';
-        
-                const itemInner = document.createElement('div');
-                itemInner.className = 'content-item';
-                itemInner.style.width = '100%';
-                itemInner.innerHTML = `
-                    <span class="content-emoji">${content.icon}</span>
-                    <div class="content-details">
-                        <div class="content-title">${content.title}</div>
-                        <div class="content-type">
-                            ${content.type === 'text' ? '📝 Metin İçeriği' : ''}
-                            ${content.type === 'video' ? '🎥 Video' : ''}
-                            ${content.type === 'link' ? '🔗 Harici Link' : ''}
-                            ${content.type === 'survey' ? '📋 Anket' : ''}
-                        </div>
-                    </div>
-                    <span class="content-check">${isCompleted ? '✅' : '⭕'}</span>
-                `;
-        
-                item.appendChild(itemInner);
-                item.onclick = () => {
-                    if (!completedContents[contentId] && !['quiz', 'survey'].includes(content.type)) {
-                        completedContents[contentId] = true;
-                        markContentCompleted(currentStage, idx);
-                    }
-                    showContentModal(content);
-                    render(); // Güncelleme sonrası UI yenileniyor
-                };
-        
-                contentList.appendChild(item);
-            });
-        
-            updateProgress();
-        }
+        return; // Fonksiyondan çık
+    }
+    
+    // Aşama erişilebilirse normal içerik gösterimi devam eder
+    contentList.innerHTML = '';
+    
+    stageData.contents.forEach((content, idx) => {
+        const contentId = `${currentStage}-${idx}`;
+        const isCompleted = completedContents[contentId];
+
+        const item = document.createElement('button');
+        item.className = `content-item ${isCompleted ? 'completed' : ''}`;
+        item.style.background = 'none';
+        item.style.border = 'none';
+        item.style.padding = '0';
+
+        const itemInner = document.createElement('div');
+        itemInner.className = 'content-item';
+        itemInner.style.width = '100%';
+        itemInner.innerHTML = `
+            <span class="content-emoji">${content.icon}</span>
+            <div class="content-details">
+                <div class="content-title">${content.title}</div>
+                <div class="content-type">
+                    ${content.type === 'text' ? '📝 Metin İçeriği' : ''}
+                    ${content.type === 'video' ? '🎥 Video' : ''}
+                    ${content.type === 'link' ? '🔗 Harici Link' : ''}
+                    ${content.type === 'survey' ? '📋 Anket' : ''}
+                    ${content.type === 'quiz' ? '❓ Quiz' : ''}
+                </div>
+            </div>
+            <span class="content-check">${isCompleted ? '✅' : '⭕'}</span>
+        `;
+
+        item.appendChild(itemInner);
+        item.onclick = () => {
+            if (!completedContents[contentId] && !['quiz', 'survey'].includes(content.type)) {
+                completedContents[contentId] = true;
+                markContentCompleted(currentStage, idx);
+            }
+            showContentModal(content);
+            render();
+        };
+
+        contentList.appendChild(item);
+    });
+
+    updateProgress();
+}
 
 
         function updateProgress() {
@@ -1805,10 +1842,10 @@
 
 
 
-        function render() {
-            renderStages();
-            renderContent();
-        }
+        async function render() {
+    await renderStages();
+    await renderContent(); // async yaptık
+}
 
         document.getElementById('prevBtn').onclick = () => {
             if (currentStage > 1) {
@@ -1881,52 +1918,41 @@
         
         // Kullanıcı giriş kontrolü
         auth.onAuthStateChanged(async (user) => {
-            if (!user) {
-                // Kullanıcı çıkış yaptıysa login sayfasına yönlendir
-                window.location.href = 'login.html';
-                return;
-            }
-        
-            // Aktif kullanıcı bilgilerini ayarla
-            currentUser = user;
-            currentUsername = user.email.split('@')[0];
-        
-            try {
-                // Firestore'dan kullanıcı bilgilerini al
-                const userDoc = await db.collection('users').doc(currentUsername).get();
-        
-                if (!userDoc.exists) {
-                    console.error('Kullanıcı Firestore’da bulunamadı.');
-                    await auth.signOut();
-                    window.location.href = 'login.html';
-                    return;
-                }
-        
-                const userData = userDoc.data();
-                console.log(`Hoşgeldin: ${userData.fullname}`);
-        
-                await loadUserProgress();
-        
-                await renderStages();
-        
-                renderContent();
-        
-                if (userData.isAdmin) {
-                    const adminBtn = document.getElementById('adminButton');
-                    if (adminBtn) adminBtn.style.display = 'block';
-                }
-        
-                console.log('Kullanıcı verileri ve aşamalar başarıyla yüklendi.');
-        
-            } catch (error) {
-                console.error('Kullanıcı bilgisi alınamadı:', error);
-                const errorMessage = document.getElementById('errorMessage');
-                if (errorMessage) {
-                    errorMessage.textContent = 'Kullanıcı bilgileri yüklenemedi. Lütfen tekrar giriş yapın.';
-                    errorMessage.classList.add('show');
-                }
-            }
-        });
+    if (!user) {
+        window.location.href = 'login.html';
+        return;
+    }
+
+    currentUser = user;
+    currentUsername = user.email.split('@')[0];
+
+    try {
+        const userDoc = await db.collection('users').doc(currentUsername).get();
+
+        if (!userDoc.exists) {
+            console.error('Kullanıcı Firestore\'da bulunamadı.');
+            await auth.signOut();
+            window.location.href = 'login.html';
+            return;
+        }
+
+        const userData = userDoc.data();
+        console.log(`Hoşgeldin: ${userData.fullname}`);
+
+        await loadUserProgress();
+        await render(); // async render çağrısı
+
+        if (userData.isAdmin) {
+            const adminBtn = document.getElementById('adminButton');
+            if (adminBtn) adminBtn.style.display = 'block';
+        }
+
+        console.log('Kullanıcı verileri ve aşamalar başarıyla yüklendi.');
+
+    } catch (error) {
+        console.error('Kullanıcı bilgisi alınamadı:', error);
+    }
+});
         
 
 
