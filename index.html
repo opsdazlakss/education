@@ -1168,41 +1168,57 @@
             stagesList.innerHTML = '';
         
             for (const stage of stages) {
+                // Aşamaya erişim kontrolü
                 const isLocked = !(await canAccessStage(stage.id));
                 
-                // Her aşama için completedContents'i geçici olarak yükle
-                let tempCompletedContents = {};
-                /*if (userProgress.completedStages && 
+                // Bu aşamanın tamamlanma durumunu kontrol et
+                let stageCompletedContents = {};
+                if (userProgress && 
+                    userProgress.completedStages && 
                     userProgress.completedStages[stage.id] && 
                     userProgress.completedStages[stage.id].completedContents) {
-                    tempCompletedContents = userProgress.completedStages[stage.id].completedContents;
-                }*/
+                    stageCompletedContents = userProgress.completedStages[stage.id].completedContents;
+                }
                 
-                // Aşamanın tamamlanıp tamamlanmadığını kontrol et
+                // Tamamlanan içerik sayısını hesapla
                 let completedCount = 0;
                 for (let i = 0; i < stage.contents.length; i++) {
-                    if (tempCompletedContents[`${stage.id}-${i}`]) {
+                    const contentId = `${stage.id}-${i}`;
+                    if (stageCompletedContents[contentId]) {
                         completedCount++;
                     }
                 }
+                
+                // Aşama tamamen tamamlanmış mı?
                 const isCompleted = completedCount === stage.contents.length;
                 
+                // Bu aşama şu anda seçili mi?
                 const isActive = currentStage === stage.id;
         
-                let icon = '⭕';
-                if (isCompleted) icon = '✅';
-                if (isLocked) icon = '🔒';
-                if (isActive && !isCompleted && !isLocked) icon = '🔵';
+                // İkon belirleme
+                let icon = '⭕'; // Varsayılan
+                if (isLocked) {
+                    icon = '🔒'; // Kilitli
+                } else if (isCompleted) {
+                    icon = '✅'; // Tamamlanmış
+                } else if (isActive) {
+                    icon = '🔵'; // Aktif/Devam Eden
+                }
         
+                // Buton oluştur
                 const btn = document.createElement('button');
                 btn.className = `stage-btn ${isActive ? 'active' : ''}`;
                 btn.disabled = isLocked;
+                
                 btn.innerHTML = `
-                    <span class="stage-icon">${icon}</span>
-                    <div class="stage-info">
-                        <span class="stage-title">${stage.title}</span>
-                        <span class="stage-type">${stage.type}</span>
+                    <div class="stage-btn-header">
+                        <span class="stage-icon">${icon}</span>
+                        <div class="stage-info">
+                            <span class="stage-title">${stage.title}</span>
+                            <span class="stage-type">${stage.type}</span>
+                        </div>
                     </div>
+                    ${!isLocked ? `<div class="stage-status">${completedCount}/${stage.contents.length} içerik tamamlandı</div>` : '<div class="stage-status">🔒 Kilitli</div>'}
                 `;
         
                 btn.onclick = () => {
@@ -1315,26 +1331,39 @@
         }
 
         async function canAccessStage(stageId) {
-            if (stageId === 1) return true; // ilk aşama her zaman açık
+            if (stageId === 1) return true; // İlk aşama her zaman açık
         
             const prevStageId = stageId - 1;
-            const progressDoc = await db.collection('userProgress').doc(currentUsername).get();
-            if (!progressDoc.exists) return false;
-        
-            const data = progressDoc.data();
-            const prevStage = data.completedStages?.[prevStageId];
-        
-            // Red edilirse sıfırla
-            if (prevStage && prevStage.approved === false) {
-                console.log(`Aşama ${prevStageId} reddedildi, sıfırlanıyor...`);
-                await db.collection('userProgress').doc(currentUsername).update({
-                    [`completedStages.${prevStageId}`]: firebase.firestore.FieldValue.delete()
-                });
+            
+            // userProgress henüz yüklenmediyse false dön
+            if (!userProgress || !userProgress.completedStages) {
                 return false;
             }
         
-            // Önceki aşama admin tarafından onaylanmışsa erişim serbest
-            return prevStage && prevStage.approved === true;
+            const prevStage = userProgress.completedStages[prevStageId];
+            
+            // Önceki aşama yoksa erişim yok
+            if (!prevStage) {
+                return false;
+            }
+        
+            // Reddedilmişse sıfırla
+            if (prevStage.approved === false) {
+                console.log(`Aşama ${prevStageId} reddedildi, sıfırlanıyor...`);
+                try {
+                    await db.collection('userProgress').doc(currentUsername).update({
+                        [`completedStages.${prevStageId}`]: firebase.firestore.FieldValue.delete()
+                    });
+                    // userProgress'i güncelle
+                    delete userProgress.completedStages[prevStageId];
+                } catch (error) {
+                    console.error('Aşama sıfırlama hatası:', error);
+                }
+                return false;
+            }
+        
+            // Önceki aşama onaylanmışsa erişim serbest
+            return prevStage.approved === true;
         }
 
 
