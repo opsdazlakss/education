@@ -239,7 +239,13 @@
                 width: 100%;
             }
             .stages-list {
-                max-height: 300px;
+                display: grid;
+                grid-template-columns: 1fr;
+                gap: 0.75rem;
+                max-height: calc(100vh - 180px); /* Header + padding için boşluk */
+                min-height: 400px; /* Minimum yükseklik */
+                overflow-y: auto;
+                padding-right: 0.5rem;
             }
             
             .content-card {
@@ -279,7 +285,6 @@
             }
             
             .stages-list {
-                max-height: 300px;
             }
             
             .stage-badge {
@@ -302,13 +307,13 @@
             }
             
             .sidebar {
-                position: static; /* sticky'den static'e çevir */
+                position: static;
                 max-height: none;
                 margin-bottom: 2rem;
             }
             
             .stages-list {
-                max-height: 400px;
+                /* max-height: 400px; ← Bu satırı silin veya yorum satırı yapın */
                 overflow-y: auto;
             }
         }
