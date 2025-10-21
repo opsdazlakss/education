@@ -1,4 +1,3 @@
-// Firebase Configuration - Duplicate import kontrolü ile
 if (!window.firebaseInitialized) {
   const firebaseConfig = {
     apiKey: "AIzaSyBHyhf5zLhYpVJ0nvSEv1KP00dHyklXpVA",
