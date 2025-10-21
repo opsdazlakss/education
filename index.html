@@ -928,6 +928,11 @@
           document.getElementById('presenterButton').style.display = 'inline-block';
         }
       }
+        await loadUserProgress();
+
+  // ✅ 4. SONRA render fonksiyonlarını çağır
+  await renderStages();
+  renderContent();
     });
     </script>
     
