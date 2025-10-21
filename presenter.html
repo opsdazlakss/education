@@ -963,17 +963,9 @@
         return;
       }
 
-      const userDoc = await db.collection('users').doc(user.email.split('@')[0]).get();
-    
-        if (!userDoc.exists || !userDoc.data().isPresenter) {
-            alert('⛔ Presenter sayfasına erişim yetkiniz yok!');
-            window.location.href = 'index.html';
-            return;
-        }
-    
-        // Aktif kullanıcı bilgilerini ayarla
-        currentUser = user;
-        currentUsername = user.email.split('@')[0];
+      const userDoc = await db.collection('users').where('email', '==', user.email).get();
+      if (!userDoc.empty) {
+        const data = userDoc.docs[0].data();
 
         // Admin butonunu göster
         if (data.isAdmin) {
@@ -1218,74 +1210,69 @@
         let currentStage = 1;
         let completedContents = {};
 
-        // renderStages fonksiyonunu BU ŞEKILDE DEĞİŞTİR:
-
-async function renderStages() {
-    const stagesList = document.getElementById('stagesList');
-    stagesList.innerHTML = '';
-
-    for (const stage of stages) {
-        // 🔒 Presenter için tüm aşamalar kilitli
-        const isLocked = true;
-        const isActive = false;
-        const isCompleted = false;
-
-        let icon = '🔒'; // Her zaman kilit
-
-        const btn = document.createElement('button');
-        btn.className = 'stage-btn';
-        btn.disabled = true; // Her zaman devre dışı
-        btn.innerHTML = `
-            <span class="stage-icon">${icon}</span>
-            <div class="stage-info">
-                <span class="stage-title">${stage.title}</span>
-                <span class="stage-type" style="color: #ef4444;">Erişim Yok</span>
-            </div>
-        `;
-
-        // Tıklama olayı yok (zaten disabled)
-        stagesList.appendChild(btn);
-    }
-}
+        async function renderStages() {
+            const stagesList = document.getElementById('stagesList');
+            stagesList.innerHTML = '';
+        
+            for (const stage of stages) {
+                const isLocked = !(await canAccessStage(stage.id));
+                
+                // Her aşama için completedContents'i geçici olarak yükle
+                let tempCompletedContents = {};
+                if (userProgress.completedStages && 
+                    userProgress.completedStages[stage.id] && 
+                    userProgress.completedStages[stage.id].completedContents) {
+                    tempCompletedContents = userProgress.completedStages[stage.id].completedContents;
+                }
+                
+                // Aşamanın tamamlanıp tamamlanmadığını kontrol et
+                let completedCount = 0;
+                for (let i = 0; i < stage.contents.length; i++) {
+                    if (tempCompletedContents[`${stage.id}-${i}`]) {
+                        completedCount++;
+                    }
+                }
+                const isCompleted = completedCount === stage.contents.length;
+                
+                const isActive = currentStage === stage.id;
+        
+                let icon = '⭕';
+                if (isCompleted) icon = '✅';
+                if (isLocked) icon = '🔒';
+                if (isActive && !isCompleted && !isLocked) icon = '🔵';
+        
+                const btn = document.createElement('button');
+                btn.className = `stage-btn ${isActive ? 'active' : ''}`;
+                btn.disabled = isLocked;
+                btn.innerHTML = `
+                    <span class="stage-icon">${icon}</span>
+                    <div class="stage-info">
+                        <span class="stage-title">${stage.title}</span>
+                        <span class="stage-type">${stage.type}</span>
+                    </div>
+                `;
+        
+                btn.onclick = () => {
+                    if (!isLocked) {
+                        currentStage = stage.id;
+                        updateCompletedContentsForStage(currentStage);
+                        render();
+                    }
+                };
+        
+                stagesList.appendChild(btn);
+            }
+        }
 
 
         function renderContent() {
             const stageData = stages[currentStage - 1];
-            
-            // 🔒 Presenter için içerikleri gizle
-            const contentList = document.getElementById('contentList');
-            contentList.innerHTML = `
-                <div style="
-                    padding: 3rem; 
-                    text-align: center; 
-                    background: rgba(239, 68, 68, 0.1); 
-                    border: 1px solid rgba(239, 68, 68, 0.3); 
-                    border-radius: 12px;
-                    color: #ef4444;
-                ">
-                    <div style="font-size: 48px; margin-bottom: 1rem;">🔒</div>
-                    <h3 style="font-size: 20px; margin-bottom: 0.5rem;">İçerik Erişimi Kapalı</h3>
-                    <p style="color: #94a3b8; font-size: 14px;">
-                        Presenter hesapları eğitim içeriklerine erişemez.<br>
-                        Sadece sunum yapma yetkisine sahipsiniz.
-                    </p>
-                </div>
-            `;
-            // Tüm içerik verilerini gizle
-            document.getElementById('stageId').textContent = '-';
-            document.getElementById('stageTypeLabel').textContent = 'Erişim Kapalı';
-            document.getElementById('stageTitle').textContent = 'İçerik Yok';
-            document.getElementById('stageDescription').textContent = 'Presenter hesabı ile içeriklere erişemezsiniz';
-            document.getElementById('completedCount').textContent = '0';
-            document.getElementById('totalCount').textContent = '0';
-            document.getElementById('stageProgressFill').style.width = '0%';
-            
-            // Butonları devre dışı bırak
-            document.getElementById('prevBtn').style.display = 'none';
-            document.getElementById('nextBtn').disabled = true;
-            document.getElementById('nextBtn').textContent = 'Erişim Yok';
-            
-            return; // Fonksiyonun geri kalanını çalıştırma
+            document.getElementById('stageId').textContent = currentStage;
+            document.getElementById('stageTypeLabel').textContent = stageData.type;
+            document.getElementById('stageTitle').textContent = stageData.title;
+            document.getElementById('stageDescription').textContent = stageData.description;
+            document.getElementById('currentStageDisplay').textContent = currentStage;
+            document.getElementById('totalCount').textContent = stageData.contents.length;
         
             const contentList = document.getElementById('contentList');
             contentList.innerHTML = '';
@@ -1375,9 +1362,27 @@ async function renderStages() {
         }
 
         async function canAccessStage(stageId) {
-    // 🔒 Presenter için TÜM aşamaları kilitle
-    return false; // Presenter hiçbir aşamayı açamaz
-}
+            if (stageId === 1) return true; // ilk aşama her zaman açık
+        
+            const prevStageId = stageId - 1;
+            const progressDoc = await db.collection('userProgress').doc(currentUsername).get();
+            if (!progressDoc.exists) return false;
+        
+            const data = progressDoc.data();
+            const prevStage = data.completedStages?.[prevStageId];
+        
+            // Red edilirse sıfırla
+            if (prevStage && prevStage.approved === false) {
+                console.log(`Aşama ${prevStageId} reddedildi, sıfırlanıyor...`);
+                await db.collection('userProgress').doc(currentUsername).update({
+                    [`completedStages.${prevStageId}`]: firebase.firestore.FieldValue.delete()
+                });
+                return false;
+            }
+        
+            // Önceki aşama admin tarafından onaylanmışsa erişim serbest
+            return prevStage && prevStage.approved === true;
+        }
 
 
 
@@ -1396,8 +1401,6 @@ async function renderStages() {
 
         //ben bu fonksiyonun taaa aq
         function showContentModal(content) {
-            alert('⛔ Presenter hesabı ile içeriklere erişemezsiniz!');
-    return;
             const modal = document.getElementById('contentModal');
             const modalBody = document.getElementById('modalBody');
             document.getElementById('modalType').textContent =
