@@ -12,7 +12,7 @@ if (!window.firebaseInitialized) {
   firebase.initializeApp(firebaseConfig);
   
   // Auth persistence - kullanıcı oturumunu koru
-  firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+  //firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL);
   
   // Global değişkenleri window nesnesine ekle
   window.auth = firebase.auth();
