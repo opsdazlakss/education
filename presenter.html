@@ -124,17 +124,19 @@
             gap: 2rem;
         }
         @media (max-width: 768px) {
-    .header-content::before {
-        position: static; /* absolute'dan static'e */
-        display: block;
-        margin-bottom: 0.5rem;
-        font-size: 11px;
-    }
-    
-    .header-content {
-        padding-top: 1rem; /* Fazla padding'i kaldır */
-    }
-        }
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: flex-start;
+                padding-top: 3rem; /* Presenter Mode badge için boşluk */
+            }
+            
+            .header-content::before {
+                top: 0.5rem;
+                left: 1rem;
+                transform: none;
+                font-size: 12px;
+            }
             
             .header-content > div:last-child {
                 width: 100%;
