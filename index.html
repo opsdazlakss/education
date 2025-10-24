@@ -1440,7 +1440,7 @@
             } else if (content.type === 'video') {
                 modalBody.innerHTML = `<div class="video-container" oncontextmenu="return false;"><iframe src="${content.data}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`;
             }
-        } else if (content.type === 'link') {
+            } else if (content.type === 'link') {
                 modalBody.innerHTML = `<div class="link-box"><a href="${content.data}" target="_blank" class="link-btn">Linki Aç →</a><div class="link-url">${content.data}</div></div>`;
             } 
             else if (content.type === 'survey') {
