@@ -296,6 +296,17 @@
             padding-right: 0.5rem;
         }
 
+        .sp-embed-player {
+            width: 100%;
+            height: 100%;
+            min-height: 400px;
+        }
+        
+        .sp-embed-player iframe {
+            width: 100%;
+            height: 100%;
+        }
+
         .stages-list::-webkit-scrollbar {
             width: 6px;
         }
@@ -1029,8 +1040,8 @@
                 contents: [
                     { type: 'text', title: 'Proje Hakkında Bilgi', icon: '📄', data: 'MAT projesi, modern teknoloji ve inovasyon üzerine kurulan bir platformdur. Proje, topluluk tarafından desteklenen ve açık kaynak ilkeleriyle yönetilen bir sistemdir.' },
                     { type: 'link', title: 'Resmi Dokümantasyon', icon: '🔗', data: 'https://docs.example.com' },
-                    { type: 'video', title: 'Peynirimi Kim Kaptı - Dr. Spencer Johnson', icon: '🎥', data: 'https://www.youtube.com/embed/ZREtK9HQG88'},
-                    { type: 'video', title: 'Pablo ve Bruno Türkçe Boru Hattı Hikayesi', icon: '🎥', data: 'https://www.youtube.com/embed/st_6oow4cDo'},
+                    { type: 'video', title: 'Peynirimi Kim Kaptı - Dr. Spencer Johnson', icon: '🎥',    data: 'cT6ZqNnbLAf', platform: 'screenpal'},
+                    { type: 'video', title: 'Pablo ve Bruno Türkçe Boru Hattı Hikayesi', icon: '🎥', data: 'https://www.youtube.com/embed/st_6oow4cDo', platform: 'youtube'},
                     { type: 'survey', title: 'Başlangıç Anketi', icon: '📋', data: ['Projeden haberiniz vardı mı?', 'Hangi alanda kullanmayı planlıyorsunuz?', 'Deneyim seviyeniz nedir?'] },
                     {
                         type: 'quiz',
@@ -1437,9 +1448,34 @@
             // Diğer içerik tipleri aynı kalacak...
             else if (content.type === 'text') {
                 modalBody.innerHTML = `<div class="text-content">${content.data}</div>`;
-            } else if (content.type === 'video') {
-                modalBody.innerHTML = `<div class="video-container"><iframe src="${content.data}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`;
-            } else if (content.type === 'link') {
+            } 
+            else if (content.type === 'video') {
+                if (content.platform === 'screenpal') {
+                    // ScreenPal embed kodu
+                    modalBody.innerHTML = `
+                        <div class="video-container">
+                            <div class="sp-embed-player" data-id="${content.data}">
+                                <script src="https://go.screenpal.com/player/appearance/${content.data}"><\/script>
+                                <iframe width="100%" height="100%" style="border:0;" scrolling="no" 
+                                    src="https://go.screenpal.com/player/${content.data}?width=100%&height=100%&ff=1&title=0" 
+                                    allowfullscreen="true">
+                                </iframe>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    // YouTube veya diğer platformlar
+                    modalBody.innerHTML = `
+                        <div class="video-container">
+                            <iframe src="${content.data}" frameborder="0" 
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                allowfullscreen>
+                            </iframe>
+                        </div>
+                    `;
+                }
+            } 
+            else if (content.type === 'link') {
                 modalBody.innerHTML = `<div class="link-box"><a href="${content.data}" target="_blank" class="link-btn">Linki Aç →</a><div class="link-url">${content.data}</div></div>`;
             } 
             else if (content.type === 'survey') {
