@@ -708,16 +708,23 @@
         }
 
         .video-container {
-            aspect-ratio: 16 / 9;
-            background: black;
-            border-radius: 8px;
-            overflow: hidden;
+          position: relative;
+          overflow: hidden;
+          user-select: none;
         }
 
         .video-container iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
+          width: 100%;
+          height: 100%;
+          border: none;
+          pointer-events: auto;
+        }
+        .video-container::after {
+          content: '';
+          position: absolute;
+          inset: 0;
+          z-index: 2;
+          pointer-events: none;
         }
 
         .link-box {
@@ -1438,7 +1445,18 @@
             else if (content.type === 'text') {
                 modalBody.innerHTML = `<div class="text-content">${content.data}</div>`;
             } else if (content.type === 'video') {
-                modalBody.innerHTML = `<div class="video-container"><iframe src="${content.data}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`;
+              modalBody.innerHTML = `
+                <div class="video-container" oncontextmenu="return false;">
+                  <iframe 
+                    src="${content.data
+                      .replace('youtube.com', 'youtube-nocookie.com')}" 
+                    frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen
+                    sandbox="allow-same-origin allow-scripts allow-presentation"
+                    referrerpolicy="no-referrer">
+                  </iframe>
+                </div>`;
             } else if (content.type === 'link') {
                 modalBody.innerHTML = `<div class="link-box"><a href="${content.data}" target="_blank" class="link-btn">Linki Aç →</a><div class="link-url">${content.data}</div></div>`;
             } 
