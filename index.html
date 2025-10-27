@@ -2000,21 +2000,42 @@ Abartısız ve yalansız bir şekilde, hakkını vererek bilinmesini sağlamakt�
 
 
         function updateProgress() {
-            const stageData = stages[currentStage - 1];
-            const completed = getStageCompletedContentsCount(currentStage);
-            document.getElementById('completedCount').textContent = completed;
-            const percentage = (completed / stageData.contents.length) * 100;
-            document.getElementById('stageProgressFill').style.width = percentage + '%';
-            document.getElementById('headerProgressFill').style.width = ((currentStage / stages.length) * 100) + '%';
-            document.getElementById('totalStageDisplay').textContent = stages.length;
+    const stageData = stages[currentStage - 1];
+    const completed = getStageCompletedContentsCount(currentStage);
+    document.getElementById('completedCount').textContent = completed;
+    const percentage = (completed / stageData.contents.length) * 100;
+    document.getElementById('stageProgressFill').style.width = percentage + '%';
+    document.getElementById('headerProgressFill').style.width = ((currentStage / stages.length) * 100) + '%';
+    document.getElementById('totalStageDisplay').textContent = stages.length;
 
-            document.getElementById('prevBtn').style.display = currentStage > 1 ? 'flex' : 'none';
-            
-            const nextBtn = document.getElementById('nextBtn');
-            const isCompleted = isStageFullyCompleted(currentStage);
-            nextBtn.disabled = !isCompleted || currentStage === 9;
-            nextBtn.textContent = currentStage === 9 ? 'Tamamlandı! 🎉' : 'Sonraki Aşama →';
+    document.getElementById('prevBtn').style.display = currentStage > 1 ? 'flex' : 'none';
+    
+    const nextBtn = document.getElementById('nextBtn');
+    const isCompleted = isStageFullyCompleted(currentStage);
+    
+    // Son aşamada butonu aktif tut
+    if (currentStage === stages.length) {
+        nextBtn.disabled = !isCompleted;
+        if (isCompleted) {
+            // Onay durumunu kontrol et
+            if (userProgress.completedStages && 
+                userProgress.completedStages[currentStage] && 
+                userProgress.completedStages[currentStage].approved === true) {
+                nextBtn.textContent = '🎉 Eğitim Tamamlandı!';
+                nextBtn.disabled = true;
+            } else {
+                nextBtn.textContent = '📝 Onay Talebi Gönder';
+                nextBtn.disabled = false;
+            }
+        } else {
+            nextBtn.textContent = 'İçerikleri Tamamlayın';
+            nextBtn.disabled = true;
         }
+    } else {
+        nextBtn.disabled = !isCompleted;
+        nextBtn.textContent = isCompleted ? '📝 Onay Talebi Gönder' : 'Sonraki Aşama →';
+    }
+}
 
         function getRandomQuestions(stageId, count) {
             const pool = quizQuestionPools[stageId] || [];
@@ -2459,56 +2480,76 @@ Abartısız ve yalansız bir şekilde, hakkını vererek bilinmesini sağlamakt�
         
         // Aşama onay talebi gönder
         async function requestStageApproval(stageId) {
-            try {
-                // 🔹 1. Önce mevcut onay talebi var mı kontrol et
-                const existingRequests = await db.collection('approvalRequests')
-                    .where('username', '==', currentUsername)
-                    .where('stageId', '==', stageId)
-                    .where('status', 'in', ['pending', 'approved'])
-                    .get();
-        
-                if (!existingRequests.empty) {
-                    alert('❗ Bu aşama için zaten onay talebi gönderilmiş veya onaylanmış.');
-                    return;
+    try {
+        // 🔹 1. Önce mevcut onay talebi var mı kontrol et
+        const existingRequests = await db.collection('approvalRequests')
+            .where('username', '==', currentUsername)
+            .where('stageId', '==', stageId)
+            .where('status', 'in', ['pending', 'approved'])
+            .get();
+
+        if (!existingRequests.empty) {
+            const requestData = existingRequests.docs[0].data();
+            if (requestData.status === 'pending') {
+                alert('⏳ Bu aşama için onay talebi zaten gönderilmiş. Admin onayı bekleniyor...');
+            } else if (requestData.status === 'approved') {
+                alert('✅ Bu aşama zaten onaylanmış!');
+                // Bir sonraki aşamaya geç
+                if (stageId < stages.length) {
+                    currentStage++;
+                    updateCompletedContentsForStage(currentStage);
+                    render();
                 }
-        
-                // 🔹 2. Kullanıcının userProgress belgesini al
-                const progressDoc = await db.collection('userProgress').doc(currentUsername).get();
-                if (!progressDoc.exists) {
-                    alert('❌ İlerleme verisi bulunamadı!');
-                    return;
-                }
-        
-                const progressData = progressDoc.data();
-                const stageProgress = progressData.completedStages?.[String(stageId)] || {}; // 🔧 Fix burada
-        
-                // 🔹 3. Kullanıcı bilgilerini al
-                const userDoc = await db.collection('users').doc(currentUsername).get();
-                const userData = userDoc.data();
-        
-                // 🔹 4. Aşama bilgisini al
-                const stageData = stages[stageId - 1];
-        
-                // 🔹 5. Onay talebini Firestore’a kaydet
-                await db.collection('approvalRequests').add({
-                    username: currentUsername,
-                    fullname: userData.fullname,
-                    stageId: stageId,
-                    stageTitle: stageData.title,
-                    surveyAnswers: stageProgress.surveyAnswers || [],
-                    quizResults: stageProgress.quizResults || null,
-                    completedContents: stageProgress.completedContents || {},
-                    status: 'pending',
-                    requestedAt: firebase.firestore.FieldValue.serverTimestamp(),
-                    adminNote: null
-                });
-        
-                alert('✅ Onay talebi gönderildi! Admin onayından sonra devam edebilirsiniz.');
-            } catch (error) {
-                console.error('Onay talebi gönderilirken hata:', error);
-                alert('❌ Onay talebi gönderilemedi!');
             }
+            return;
         }
+
+        // 🔹 2. Kullanıcının userProgress belgesini al
+        const progressDoc = await db.collection('userProgress').doc(currentUsername).get();
+        if (!progressDoc.exists) {
+            alert('❌ İlerleme verisi bulunamadı!');
+            return;
+        }
+
+        const progressData = progressDoc.data();
+        const stageProgress = progressData.completedStages?.[String(stageId)] || {};
+
+        // 🔹 3. Kullanıcı bilgilerini al
+        const userDoc = await db.collection('users').doc(currentUsername).get();
+        const userData = userDoc.data();
+
+        // 🔹 4. Aşama bilgisini al
+        const stageData = stages[stageId - 1];
+
+        // 🔹 5. Onay talebini Firestore'a kaydet
+        await db.collection('approvalRequests').add({
+            username: currentUsername,
+            fullname: userData.fullname,
+            stageId: stageId,
+            stageTitle: stageData.title,
+            surveyAnswers: stageProgress.surveyAnswers || [],
+            quizResults: stageProgress.quizResults || null,
+            completedContents: stageProgress.completedContents || {},
+            status: 'pending',
+            requestedAt: firebase.firestore.FieldValue.serverTimestamp(),
+            adminNote: null
+        });
+
+        // Son aşama mı kontrol et
+        if (stageId === stages.length) {
+            alert('🎉 Son aşama için onay talebi gönderildi! Admin onayından sonra eğitiminiz tamamlanacak.');
+        } else {
+            alert('✅ Onay talebi gönderildi! Admin onayından sonra sonraki aşamaya geçebilirsiniz.');
+        }
+        
+        // UI'ı güncelle
+        render();
+        
+    } catch (error) {
+        console.error('Onay talebi gönderilirken hata:', error);
+        alert('❌ Onay talebi gönderilemedi! Lütfen tekrar deneyin.');
+    }
+}
 
 
 
@@ -2527,10 +2568,21 @@ Abartısız ve yalansız bir şekilde, hakkını vererek bilinmesini sağlamakt�
         };
 
         document.getElementById('nextBtn').onclick = async () => {
-            if (isStageFullyCompleted(currentStage) && currentStage < stages.length) {
-                await requestStageApproval(currentStage);
-            }
-        };
+    if (currentStage === stages.length) {
+        // Son aşamadayız
+        if (isStageFullyCompleted(currentStage)) {
+            // Son aşama tamamlanmış, onay talebi gönder
+            await requestStageApproval(currentStage);
+        } else {
+            alert('⚠️ Lütfen önce bu aşamadaki tüm içerikleri tamamlayın!');
+        }
+    } else if (isStageFullyCompleted(currentStage)) {
+        // Aşama tamamlanmış, onay talebi gönder
+        await requestStageApproval(currentStage);
+    } else {
+        alert('⚠️ Lütfen önce bu aşamadaki tüm içerikleri tamamlayın!');
+    }
+};
 
 
         document.getElementById('contentModal').onclick = (e) => {
