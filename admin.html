@@ -1027,85 +1027,80 @@ function startRealtimeApprovalListener() {
         }
 
         // Talebi onayla
-        async function approveRequest(requestId, username, stageId) {
-            if (!confirm('Bu talebi onaylamak istediğinize emin misiniz?')) {
-                return;
-            }
+        // Talebi onayla
+async function approveRequest(requestId, username, stageId) {
+    if (!confirm('Bu talebi onaylamak istediğinize emin misiniz?')) {
+        return;
+    }
 
-            try {
-                // Talebi güncelle
-                await db.collection('approvalRequests').doc(requestId).update({
-                    status: 'approved',
-                    approvedAt: firebase.firestore.FieldValue.serverTimestamp(),
-                    approvedBy: auth.currentUser.email.split('@')[0]
-                });
+    try {
+        // Talebi güncelle
+        await db.collection('approvalRequests').doc(requestId).update({
+            status: 'approved',
+            approvedAt: firebase.firestore.FieldValue.serverTimestamp(),
+            approvedBy: auth.currentUser.email.split('@')[0]
+        });
 
-                // Kullanıcının ilerlemesini güncelle (bir sonraki aşamaya geç)
-                await db.collection('userProgress').doc(username).update({
-                    currentStage: stageId + 1,
-                    [`completedStages.${stageId}.approved`]: true,
-                    [`completedStages.${stageId}.approvedAt`]: firebase.firestore.FieldValue.serverTimestamp()
-                });
+        // Kullanıcının ilerlemesini güncelle (bir sonraki aşamaya geç)
+        await db.collection('userProgress').doc(username).update({
+            currentStage: stageId + 1,
+            [`completedStages.${stageId}.approved`]: true,
+            [`completedStages.${stageId}.approvedAt`]: firebase.firestore.FieldValue.serverTimestamp()
+        });
 
-                successMessage.textContent = `✅ ${username} kullanıcısının talebi onaylandı!`;
-                successMessage.classList.add('show');
+        successMessage.textContent = `✅ ${username} kullanıcısının talebi onaylandı!`;
+        successMessage.classList.add('show');
 
-                // Listeyi yenile
-                startRealtimeApprovalListener();
+        // Real-time olduğu için loadApprovalRequests() çağırmaya gerek yok
 
-                setTimeout(() => {
-                    successMessage.classList.remove('show');
-                }, 3000);
+        setTimeout(() => {
+            successMessage.classList.remove('show');
+        }, 3000);
 
-            } catch (error) {
-                console.error('Onaylama hatası:', error);
-                errorMessage.textContent = `❌ Onaylama hatası: ${error.message}`;
-                errorMessage.classList.add('show');
-            }
-        }
+    } catch (error) {
+        console.error('Onaylama hatası:', error);
+        errorMessage.textContent = `❌ Onaylama hatası: ${error.message}`;
+        errorMessage.classList.add('show');
+    }
+}
 
         // Talebi reddet
-        async function rejectRequest(requestId, username) {
-            const reason = prompt('Red nedeni (opsiyonel):');
-            
-            if (reason === null) return; // İptal edildi
-        
-            try {
-                // Talep belgesini al
-                const requestDoc = await db.collection('approvalRequests').doc(requestId).get();
-                const requestData = requestDoc.data();
-                const stageId = requestData.stageId;
-        
-                // 1️⃣ Talebi reddedilmiş olarak işaretle
-                await db.collection('approvalRequests').doc(requestId).update({
-                    status: 'rejected',
-                    rejectedAt: firebase.firestore.FieldValue.serverTimestamp(),
-                    rejectedBy: auth.currentUser.email.split('@')[0],
-                    adminNote: reason || 'Red nedeni belirtilmedi'
-                });
-        
-                // 2️⃣ Kullanıcının ilerleme verisini sıfırla (o aşamayı tamamen sil)
-                await db.collection('userProgress').doc(username).update({
-                    [`completedStages.${stageId}`]: firebase.firestore.FieldValue.delete(),
-                    currentStage: stageId // aynı aşamada kalsın
-                });
-        
-                // 3️⃣ Bildirim göster ve listeyi yenile
-                successMessage.textContent = `✅ ${username} kullanıcısının ${stageId}. aşama ilerlemesi sıfırlandı ve reddedildi.`;
-                successMessage.classList.add('show');
-        
-                startRealtimeApprovalListener();
-        
-                setTimeout(() => {
-                    successMessage.classList.remove('show');
-                }, 3000);
-        
-            } catch (error) {
-                console.error('Reddetme hatası:', error);
-                errorMessage.textContent = `❌ Reddetme hatası: ${error.message}`;
-                errorMessage.classList.add('show');
-            }
-        }
+        async function rejectRequest(requestId, username, stageId) { // ← stageId parametre olarak eklendi
+    const reason = prompt('Red nedeni (opsiyonel):');
+    
+    if (reason === null) return; // İptal edildi
+
+    try {
+        // 1️⃣ Talebi reddedilmiş olarak işaretle
+        await db.collection('approvalRequests').doc(requestId).update({
+            status: 'rejected',
+            rejectedAt: firebase.firestore.FieldValue.serverTimestamp(),
+            rejectedBy: auth.currentUser.email.split('@')[0],
+            adminNote: reason || 'Red nedeni belirtilmedi'
+        });
+
+        // 2️⃣ Kullanıcının ilerleme verisini sıfırla (o aşamayı tamamen sil)
+        await db.collection('userProgress').doc(username).update({
+            [`completedStages.${stageId}`]: firebase.firestore.FieldValue.delete(),
+            currentStage: stageId // aynı aşamada kalsın
+        });
+
+        // 3️⃣ Bildirim göster
+        successMessage.textContent = `✅ ${username} kullanıcısının ${stageId}. aşama ilerlemesi sıfırlandı ve reddedildi.`;
+        successMessage.classList.add('show');
+
+        // Real-time olduğu için loadApprovalRequests() çağırmaya gerek yok
+
+        setTimeout(() => {
+            successMessage.classList.remove('show');
+        }, 3000);
+
+    } catch (error) {
+        console.error('Reddetme hatası:', error);
+        errorMessage.textContent = `❌ Reddetme hatası: ${error.message}`;
+        errorMessage.classList.add('show');
+    }
+}
 
         // Kullanıcı silme
         // Kullanıcı silme (ilişkili tüm verilerle birlikte)
