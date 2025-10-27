@@ -680,10 +680,86 @@
         
             // Admin ise devam et
             loadUsers();
-            loadApprovalRequests();
+            startRealtimeApprovalListener(); // ← Real-time dinleme
         });
 
+        let approvalUnsubscribe = null;
 
+function startRealtimeApprovalListener() {
+    const container = document.getElementById('approvalRequestsList');
+    
+    // Önceki dinleyiciyi kapat (varsa)
+    if (approvalUnsubscribe) {
+        approvalUnsubscribe();
+    }
+    
+    // Real-time dinleme başlat
+    approvalUnsubscribe = db.collection('approvalRequests')
+        .where('status', '==', 'pending')
+        .orderBy('requestedAt', 'desc')
+        .onSnapshot((snapshot) => {
+            console.log('🔄 Real-time güncelleme:', snapshot.size, 'talep');
+            
+            if (snapshot.empty) {
+                container.innerHTML = '<p class="no-requests">✅ Onay bekleyen talep yok</p>';
+                return;
+            }
+
+            let html = '';
+            snapshot.forEach(doc => {
+                const request = doc.data();
+
+                // 🩹 Firestore'dan string olarak geldiyse parse et
+                if (typeof request.surveyAnswers === 'string') {
+                    try { request.surveyAnswers = JSON.parse(request.surveyAnswers); } catch (e) {}
+                }
+                if (typeof request.quizResults === 'string') {
+                    try { request.quizResults = JSON.parse(request.quizResults); } catch (e) {}
+                }
+
+                const date = request.requestedAt 
+                    ? request.requestedAt.toDate().toLocaleString('tr-TR') 
+                    : 'Bilinmiyor';
+                
+                html += `
+                    <div class="approval-card">
+                        <div class="approval-header">
+                            <div>
+                                <div class="approval-user">${request.fullname} (@${request.username})</div>
+                                <div class="approval-stage">📚 ${request.stageTitle} - Aşama ${request.stageId}</div>
+                                <div style="font-size: 12px; color: #64748b; margin-top: 0.25rem;">🕐 ${date}</div>
+                            </div>
+                            <div class="approval-badge">⏳ ONAY BEKLİYOR</div>
+                        </div>
+                        
+                        <div class="approval-details">
+                            ${Array.isArray(request.surveyAnswers) && request.surveyAnswers.length > 0 
+                                ? renderSurveyAnswers(request.surveyAnswers) 
+                                : '<p style="color:#64748b;font-size:13px;">📋 Anket yanıtı yok.</p>'}
+                        
+                            ${request.quizResults && request.quizResults.quizTitle 
+                                ? renderQuizResults(request.quizResults) 
+                                : '<p style="color:#64748b;font-size:13px;">❓ Test sonucu bulunamadı.</p>'}
+                        </div>
+
+                        <div class="approval-actions">
+                            <button class="approve-btn" onclick="approveRequest('${doc.id}', '${request.username}', ${request.stageId})">
+                                ✅ Onayla
+                            </button>
+                            <button class="reject-btn" onclick="rejectRequest('${doc.id}', '${request.username}', ${request.stageId})">
+                                ❌ Reddet
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }, (error) => {
+            console.error('❌ Real-time dinleme hatası:', error);
+            container.innerHTML = '<p style="text-align: center; color: #ef4444;">Yükleme hatası</p>';
+        });
+}
 
         // Kullanıcı ekleme (Sadece Firestore - İlk giriş sırasında Auth'a eklenecek)
         addUserForm.addEventListener('submit', async (e) => {
@@ -845,7 +921,7 @@
                 errorMessage.classList.add('show');
             }
         }
-        async function loadApprovalRequests() {
+        /*async function loadApprovalRequests() {
             const container = document.getElementById('approvalRequestsList');
             
             try {
@@ -914,7 +990,7 @@
                 console.error('Onay talepleri yüklenirken hata:', error);
                 container.innerHTML = '<p style="text-align: center; color: #ef4444;">Yükleme hatası</p>';
             }
-        }
+        }*/
 
 
         // Anket cevaplarını render et
@@ -975,7 +1051,7 @@
                 successMessage.classList.add('show');
 
                 // Listeyi yenile
-                loadApprovalRequests();
+                startRealtimeApprovalListener();
 
                 setTimeout(() => {
                     successMessage.classList.remove('show');
@@ -1018,7 +1094,7 @@
                 successMessage.textContent = `✅ ${username} kullanıcısının ${stageId}. aşama ilerlemesi sıfırlandı ve reddedildi.`;
                 successMessage.classList.add('show');
         
-                loadApprovalRequests();
+                startRealtimeApprovalListener();
         
                 setTimeout(() => {
                     successMessage.classList.remove('show');
@@ -1067,7 +1143,7 @@
         
                 // 5️⃣ Listeyi yenile
                 loadUsers();
-                loadApprovalRequests();
+                startRealtimeApprovalListener();
         
                 setTimeout(() => {
                     successMessage.classList.remove('show');
