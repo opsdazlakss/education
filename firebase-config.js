@@ -1,22 +1,24 @@
-if (!window.firebaseInitialized) {
-  const firebaseConfig = {
-    apiKey: "AIzaSyBHyhf5zLhYpVJ0nvSEv1KP00dHyklXpVA",
-    authDomain: "mat-egitim-9445e.firebaseapp.com",
-    projectId: "mat-egitim-9445e",
-    storageBucket: "mat-egitim-9445e.firebasestorage.app",
-    messagingSenderId: "311630522097",
-    appId: "1:311630522097:web:4b8d8f9774410dfdd16b50"
-  };
+// Firebase config'i global scope'ta tanımla
+const firebaseConfig = {
+  apiKey: "AIzaSyBHyhf5zLhYpVJ0nvSEv1KP00dHyklXpVA",
+  authDomain: "mat-egitim-9445e.firebaseapp.com",
+  projectId: "mat-egitim-9445e",
+  storageBucket: "mat-egitim-9445e.firebasestorage.app",
+  messagingSenderId: "311630522097",
+  appId: "1:311630522097:web:4b8d8f9774410dfdd16b50"
+};
 
+if (!window.firebaseInitialized) {
   // Initialize Firebase
   firebase.initializeApp(firebaseConfig);
   
   // Auth persistence - kullanıcı oturumunu koru
-  //firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+  firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL);
   
   // Global değişkenleri window nesnesine ekle
   window.auth = firebase.auth();
   window.db = firebase.firestore();
+  window.firebaseConfig = firebaseConfig; // Config'i de window'a ekle
   window.firebaseInitialized = true;
   
   console.log('✅ Firebase başarıyla başlatıldı');
