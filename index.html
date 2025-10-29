@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MAT - Eğitim Sistemi</title>
+    <title>MEYDAN ACADEMY</title>
     <!-- Firebase CDN Scripts -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
@@ -830,10 +830,9 @@
     <header>
         <div class="header-content">
     <a href="index.html" class="logo" style="text-decoration: none;">
-      <div class="logo-icon">M</div>
       <div class="logo-text">
-          <h1>MAT</h1>
-          <p>Eğitim Sistemi</p>
+          <h1>MEYDAN ACADEMY</h1>
+          <p>To The Future</p>
       </div>
     </a>
 
@@ -945,118 +944,1056 @@
     });
 
         const quizQuestionPools = {
-            1: [ // Stage 1 için soru havuzu
+            1: [ 
                 {
-                    question: 'MAT projesi hangi ilkelere dayanmaktadır?',
-                    options: ['Kapalı kaynak', 'Açık kaynak', 'Ticari ürün'],
-                    correctAnswer: 'Açık kaynak'
+                    question: 'Network Marketing’in geleneksel ticaretten farkını en iyi ifade eden seçenek hangisidir?',
+                    options: ['Yüksek sermaye zorunludur.', 'Sadece geniş çevresi olanlar başarılı olabilir.', 'Eğitim ve ekip çalışması üzerine kuruludur.', 'Sadece ürün satışına dayanır.', 'Devlet garantilidir.'],
+                    correctAnswer: 'Eğitim ve ekip çalışması üzerine kuruludur.'
                 },
                 {
-                    question: 'MAT hangi platformdur?',
-                    options: ['Eğitim platformu', 'Oyun platformu', 'Alışveriş sitesi'],
-                    correctAnswer: 'Eğitim platformu'
+                    question: 'Metne göre geniş çevreye sahip kişilerin dezavantajı nedir?',
+                    options: ['Zaman yönetimini iyi bilmeleri', 'Ego nedeniyle öğrenmeye kapalı olmaları', 'Daha fazla sermaye istemeleri', 'Eğitim vermeyi sevmemeleri', 'Teknolojiyi bilmemeleri'],
+                    correctAnswer: 'Ego nedeniyle öğrenmeye kapalı olmaları'
                 },
                 {
-                    question: 'Topluluk desteği var mı?',
-                    options: ['Evet', 'Hayır', 'Bazen'],
-                    correctAnswer: 'Evet'
+                    question: 'Dar çevreye sahip kişilerle ilgili doğru olan hangisidir?',
+                    options: ['Hiç kimseyi sisteme dahil edemezler.', 'Eğitildiklerinde daha iyi sonuç verebilirler.', 'Ego seviyeleri daima yüksektir.', 'Pazarlama bilgileri daha fazladır.', 'Her zaman başarısız olurlar.'],
+                    correctAnswer: 'Eğitildiklerinde daha iyi sonuç verebilirler.'
                 },
                 {
-                    question: 'MAT projesi hangi amaçla kurulmuştur?',
-                    options: ['Kar elde etmek', 'Eğitim sağlamak', 'Reklam yapmak'],
-                    correctAnswer: 'Eğitim sağlamak'
+                    question: 'Geleneksel ticarette başarı için gerekli olan unsurlardan değildir?',
+                    options: ['Sermaye', 'Çevre', 'Bilgi', 'Ekip eğitimi', 'Deneyim'],
+                    correctAnswer: 'Ekip eğitimi'
                 },
                 {
-                    question: 'Proje kaç katmandan oluşur?',
-                    options: ['2', '3', '4'],
-                    correctAnswer: '3'
+                    question: 'Pazarlama işinde çevresi fazla olan kişiler neden daha çok tercih edilir?',
+                    options: ['Daha az çalıştıkları için', 'Ürünü kendileri tükettiği için', 'Kendi çevrelerine daha fazla satış yapabilecekleri için', 'Eğitim vermeyi bildikleri için', 'Ego seviyeleri yüksek olduğu için'],
+                    correctAnswer: 'Kendi çevrelerine daha fazla satış yapabilecekleri için'
                 },
                 {
-                    question: 'Backend hangi dilde yazılmıştır?',
-                    options: ['Python', 'JavaScript', 'Java'],
-                    correctAnswer: 'JavaScript'
+                    question: 'Network’e başlayanların yaptığı temel hata nedir?',
+                    options: ['Ürünleri pahalı bulmaları', 'Klasik pazarlama mantığıyla düşünmeleri', 'Ekip çalışmasını sevmemeleri', 'Çok eğitim almaları', 'İnsanlara yardım etmeleri'],
+                    correctAnswer: 'Klasik pazarlama mantığıyla düşünmeleri'
                 },
                 {
-                    question: 'Veritabanı olarak ne kullanılır?',
-                    options: ['MySQL', 'MongoDB', 'PostgreSQL'],
-                    correctAnswer: 'MongoDB'
+                    question: 'Eğitim zinciri örneğinde ilk getirilen 5 kişi ne yapar?',
+                    options: ['Sadece ürün satışı yapar.', 'Kimseye eğitim vermez.', 'Getirdikleri kişilere eğitim verirler.', 'Sistemi bırakırlar.', 'Süreci yavaşlatırlar.'],
+                    correctAnswer: 'Getirdikleri kişilere eğitim verirler.'
                 },
                 {
-                    question: 'API tipi nedir?',
-                    options: ['REST', 'GraphQL', 'SOAP'],
-                    correctAnswer: 'REST'
+                    question: '“Sayının gücü” ile ilgili verilen örnekte asıl vurgu hangisidir?',
+                    options: ['Herkesin aynı maaşı alması', 'Yükün paylaşılınca azalması', 'Tek kişinin daha güçlü olması', 'Dağınık bir sistem kurulması', 'Masanın ağır olması'],
+                    correctAnswer: 'Yükün paylaşılınca azalması'
                 },
                 {
-                    question: 'Kimlik doğrulama nasıl yapılır?',
-                    options: ['JWT', 'Session', 'Cookie'],
-                    correctAnswer: 'JWT'
+                    question: 'Geleneksel çalışanlar zamanı nasıl görmek ister?',
+                    options: ['Durmasını isterler', 'Daha çok üretmek için kullanırlar', 'Geçip maaş gelsin isterler', 'Sonsuz olduğunu düşünürler', 'Kimse zamanı önemsemez'],
+                    correctAnswer: 'Geçip maaş gelsin isterler'
                 },
                 {
-                    question: 'Frontend framework nedir?',
-                    options: ['React', 'Vue', 'Angular'],
-                    correctAnswer: 'React'
+                    question: 'Network Marketing’de insanların zaman algısı nasıldır?',
+                    options: ['Zaman geçsin isterler', 'Zamanın uzamasını isterler', 'Zamanı umursamazlar', 'Sadece gece çalışırlar', 'Yalnızca hafta sonlarında çalışırlar'],
+                    correctAnswer: 'Zamanın uzamasını isterler'
+                },
+                {
+                    question: 'Aşağıdakilerden hangisi Network Marketing’in temel unsurlarındandır?',
+                    options: ['Tek kişilik bir çaba', 'Ego ile liderlik', 'Bilgi ve ekip çalışması', 'Yüksek kira gideri', 'Maaş beklentisi'],
+                    correctAnswer: 'Bilgi ve ekip çalışması'
+                },
+                {
+                    question: 'Eğitim sisteminde amaç nedir?',
+                    options: ['Herkesin yalnız çalışması', 'Bilinçli bir topluluk oluşturmak', 'Sadece hızlı para kazanmak', 'Kimsenin yükselmemesi', 'Sadece üst kolların kazancı'],
+                    correctAnswer: 'Bilinçli bir topluluk oluşturmak'
+                },
+                {
+                    question: 'Metne göre geniş çevresi olan kişi en fazla kaç kişiyi davet edebilir örnekte?',
+                    options: ['2', '3', '4-5', '10', '100'],
+                    correctAnswer: '4-5'
+                },
+                {
+                    question: '“Geleneksel ticarette zaman hızlı geçsin istenir” neden?',
+                    options: ['Zaman sıkıcı olduğu için', 'Maaşa odaklanıldığı için', 'Tatil gelsin diye', 'Eğitim çok zordur', 'Kimse çalışmak istemez'],
+                    correctAnswer: 'Maaşa odaklanıldığı için'
+                },
+                {
+                    question: 'Network’te zaman neden yavaş geçsin istenir?',
+                    options: ['Daha çok üretim ve büyüme için', 'İşlerin eğlenceli olmaması nedeniyle', 'Daha çok tatil yapmak için', 'Ürün beklemek için', 'Kimse eğitim vermek istemez'],
+                    correctAnswer: 'Daha çok üretim ve büyüme için'
+                },
+                {
+                    question: 'Network Marketing’de başarı hangi düşünceyle mümkündür?',
+                    options: ['Tek başıma yaparım', 'Kimseye bir şey öğretmem gerekmez', 'Ekip eğitimi ve iş yükü paylaşımı', 'Her şeyi başkasına bırakmak', 'Sadece pasif gelir istemek'],
+                    correctAnswer: 'Ekip eğitimi ve iş yükü paylaşımı'
+                },
+                {
+                    question: 'Aşağıdakilerden hangisi Network Marketing için yanlıştır?',
+                    options: ['Sadece çevreye bağlıdır', 'Eğitim gerektirir', 'Uzun vadeli bir yapıdadır', 'Bilinçli ekip çalışması önemlidir', 'Kişisel gelişimi destekler'],
+                    correctAnswer: 'Sadece çevreye bağlıdır'
+                },
+                {
+                    question: 'Metne göre tek başına çaba neden zordur?',
+                    options: ['Liderlik becerisi gerektirdiği için', 'Herkes farklı düşündüğü için', 'İş yükü paylaşılmadığı için', 'Ürün sayısı çok olduğu için', 'İnsan sayısı az olduğu için'],
+                    correctAnswer: 'İş yükü paylaşılmadığı için'
+                },
+                {
+                    question: '“Hayatta telafisi olmayan tek şey” metne göre nedir?',
+                    options: ['Para', 'Eğitim', 'Zaman', 'İnsanlar', 'Sermaye'],
+                    correctAnswer: 'Zaman'
+                },
+                {
+                    question: 'Network Marketing’in hedeflediği kişi profili hangisidir?',
+                    options: ['Ego sahibi kişiler', 'Sadece çevresi geniş olanlar', 'Öğrenmeye açık ve ekip çalışmasına yatkın olanlar', 'Zamanı boşa harcayanlar', 'Yalnız çalışmayı sevenler'],
+                    correctAnswer: 'Öğrenmeye açık ve ekip çalışmasına yatkın olanlar'
                 }
-            ],
-            2: [ // Stage 2 için soru havuzu (örnek)
-                {
-                    question: 'MAT projesi kaç ana katmandan oluşmaktadır?',
-                    options: ['2', '3', '4'],
-                    correctAnswer: '3'
-                },
-                {
-                    question: 'MAT projesi kaç ana katmandan oluşmaktadır?',
-                    options: ['2', '3', '4'],
-                    correctAnswer: '3'
-                },
-                {
-                    question: 'MAT projesi kaç ana katmandan oluşmaktadır?',
-                    options: ['2', '3', '4'],
-                    correctAnswer: '3'
-                },
-                {
-                    question: 'MAT projesi kaç ana katmandan oluşmaktadır?',
-                    options: ['2', '3', '4'],
-                    correctAnswer: '3'
-                },
-                {
-                    question: 'MAT projesi kaç ana katmandan oluşmaktadır?',
-                    options: ['2', '3', '4'],
-                    correctAnswer: '3'
-                },
-                {
-                    question: 'MAT projesi kaç ana katmandan oluşmaktadır?',
-                    options: ['2', '3', '4'],
-                    correctAnswer: '3'
-                },
-                // Soru eklemek için üstteki formatta devam keeeee
             ]
+            ,
+            2: [
+                {
+                    question: 'TOMBUL hedeflerde “T” harfi neyi ifade eder?',
+                    options: ['Tesadüfi olma', 'Tatmin edici olma', 'Tek seferlik olma', 'Tasarruf gerektirmeme', 'Tembellikten kaçınma'],
+                    correctAnswer: 'Tatmin edici olma'
+                },
+                {
+                    question: 'TOMBUL hedeflerde “O” harfi aşağıdakilerden hangisini temsil eder?',
+                    options: ['Organik olma', 'Ortak olma', 'Orantılı olma', 'Oyunlaştırma', 'Olağanüstü olma'],
+                    correctAnswer: 'Ortak olma'
+                },
+                {
+                    question: '“Hedeflerin mantıklı olması” ilkesine göre aşağıdakilerden hangisi uygun değildir?',
+                    options: ['Kişinin mevcut imkanlarına göre plan yapmak', '6 ay içinde gelişim göstererek yeni seviyeye çıkmak', 'Çok küçük adımlarla başlanması', 'Mevcut şartlardan tamamen bağımsız bir hedef koymak', 'Gerektiğinde planı güncellemek'],
+                    correctAnswer: 'Mevcut şartlardan tamamen bağımsız bir hedef koymak'
+                },
+                {
+                    question: '“B: Belirgin olmalı” ilkesinde vurgulanan nokta nedir?',
+                    options: ['Sadece yazılı olmalı', 'Zihinde net bir görsellik oluşturmak', 'Maliyetsiz olmalı', 'Tesadüfen oluşmalı', 'Aileden gizli olmalı'],
+                    correctAnswer: 'Zihinde net bir görsellik oluşturmak'
+                },
+                {
+                    question: 'TOMBUL hedeflerde “Ulaşılabilirlik” hangi duruma örnektir?',
+                    options: ['Şartları imkânsızlaştırmak', 'Bulunulan şehirde mümkün olmayan talepler koymak', 'Hedefi tamamen hayale çevirmek', 'Gerçekçi adımlar üzerinden ilerlemek', 'Sadece başkalarına bağlı olmak'],
+                    correctAnswer: 'Gerçekçi adımlar üzerinden ilerlemek'
+                },
+                {
+                    question: '“L: Limiti belli olmalı” neyi zorunlu kılar?',
+                    options: ['Zaman sınırı koymayı', 'Hiç zaman koymamayı', 'Hedefi gizlemeyi', 'Başkasının belirlemesini', 'Sonsuz şekilde sürmesini'],
+                    correctAnswer: 'Zaman sınırı koymayı'
+                },
+                {
+                    question: 'Limiti olmayan bir hedef için metinde kullanılan ifade hangisidir?',
+                    options: ['Hayal', 'Düşüş', 'İstek', 'Bağlılık', 'Tesadüf'],
+                    correctAnswer: 'İstek'
+                },
+                {
+                    question: 'Hayaller için belirtilen önemli görüş nedir?',
+                    options: ['Sınırlandırılmalıdır', 'Mutlaka kısa vadeli olmalıdır', 'Sahibi Allah olduğu için sınır koyulmamalıdır', 'Her zaman mantıklı olmalıdır', 'Sadece dünyalık olmalıdır'],
+                    correctAnswer: 'Sahibi Allah olduğu için sınır koyulmamalıdır'
+                },
+                {
+                    question: 'Navigasyon örneğinde vurgulanan düşünce şudur:',
+                    options: ['Harita olmadan da gidilir', 'Varış noktası olmadan yön bulmak zordur', 'Yol boyunca durmak gerekir', 'Hız her zaman önemlidir', 'Yollar tesadüfen seçilir'],
+                    correctAnswer: 'Varış noktası olmadan yön bulmak zordur'
+                },
+                {
+                    question: 'Kişinin hedefi olmayan durumu nasıl ifade edilir?',
+                    options: ['Tam istenen yere hızlıca ulaşır', 'Sürekli doğru yerde olur', 'Hedef yakınlarında dolaşsa bile tam bulamaz', 'Hep aynı yoldan gider', 'Zamandan tasarruf eder'],
+                    correctAnswer: 'Hedef yakınlarında dolaşsa bile tam bulamaz'
+                },
+                {
+                    question: '“Rızkın onda dokuzu ticarettedir” hadisinin vurgusu nedir?',
+                    options: ['Ticaret yapılmamalı', 'Para sadece maaştan gelir', 'Rızık çoğunlukla ticaretle kazanılır', 'Sadece memurluk kutsaldır', 'Hedef koymaya gerek yoktur'],
+                    correctAnswer: 'Rızık çoğunlukla ticaretle kazanılır'
+                },
+                {
+                    question: 'Metne göre hedef belirlerken zihnin hangi oranla çalışmalıdır?',
+                    options: ['%90 nasıl, %10 neden', '%80 nasıl, %20 neden', '%20 nasıl, %80 neden', '%50 neden, %50 nasıl', 'Nasıl’a hiç ihtiyaç yok'],
+                    correctAnswer: '%20 nasıl, %80 neden'
+                },
+                {
+                    question: '“Nasıl’lar nedenleri geçmemeli” ifadesinin anlamı nedir?',
+                    options: ['Plan olmadan olmaz', 'Teknik detaylara takılmak motivasyonu düşürür', 'Sebepler önemsizdir', 'Sadece hayal kurmak yeterlidir', 'Kimse plan yapmamalıdır'],
+                    correctAnswer: 'Teknik detaylara takılmak motivasyonu düşürür'
+                },
+                {
+                    question: 'TOMBUL hedeflerde “ortak” olma neyi sağlar?',
+                    options: ['Gizli hedefler kurmayı', 'Ekip desteğiyle ilerlemeyi', 'Hedefin iptal olmasını', 'Sadece bireysel kazanımı', 'Motivasyonun azalmasını'],
+                    correctAnswer: 'Ekip desteğiyle ilerlemeyi'
+                },
+                {
+                    question: '“Belirgin hedef” için örnek hangisidir?',
+                    options: ['Güzel bir araba almak', 'Bir gün zengin olmak', '2026’da lacivert, elektrikli, SUV bir araba almak', 'Hayırlısı olsun demek', 'Bir şeyler almak'],
+                    correctAnswer: '2026’da lacivert, elektrikli, SUV bir araba almak'
+                },
+                {
+                    question: 'Ulaşılabilirlik ilkesine uymayan hedef hangisidir?',
+                    options: ['Kişinin gücü dışındaki coğrafi şartları istemek', 'Kademeli adım planlamak', 'Aşamalı yükselmek', 'Gelir artışına göre plan yapmak', 'Destek alarak büyümek'],
+                    correctAnswer: 'Kişinin gücü dışındaki coğrafi şartları istemek'
+                },
+                {
+                    question: 'Hedefin zaman unsuru neden önemlidir?',
+                    options: ['Plansızlığı artırır', 'Belirsizliği çoğaltır', 'Bittiği an başarı hissi verir', 'Süreci gereksiz kılar', 'Yalnız ilerlemeye zorlar'],
+                    correctAnswer: 'Bittiği an başarı hissi verir'
+                },
+                {
+                    question: 'Metne göre “varış noktası” girilmeyen navigasyon…',
+                    options: ['Yine de en kısa yolu bulur', 'Hiç hareket etmez', 'Yakınlarda dolandırır ama tam götüremez', 'Sürekli uyarı verir', 'Radar yakalatır'],
+                    correctAnswer: 'Yakınlarda dolandırır ama tam götüremez'
+                },
+                {
+                    question: 'Hedefler ve hayaller arasındaki temel fark?',
+                    options: ['İkisi de sınırsızdır', 'Hayaller sınırlıdır, hedefler sınırsızdır', 'Hedeflerin sınırı vardır, hayallerin yoktur', 'Hedefler hayali öldürür', 'Hayaller gereksizdir'],
+                    correctAnswer: 'Hedeflerin sınırı vardır, hayallerin yoktur'
+                },
+                {
+                    question: 'Metne göre zorluk zamanlarında ayakta tutan şey nedir?',
+                    options: ['Tesadüf', 'Paranın gücü', 'Nedenler', 'Başarı ödülleri', 'Sadece plan'],
+                    correctAnswer: 'Nedenler'
+                }
+            ]
+            ,
+            3: [
+    {
+        question: 'Taahhüdün temel amacı nedir?',
+        options: ['Kişiyi baskı altında tutmak', 'Bilgiyi artırmak', 'Harekete geçmeyi sağlamak', 'Eleştiri yapmak', 'Zamanı boşa geçirmek'],
+        correctAnswer: 'Harekete geçmeyi sağlamak'
+    },
+    {
+        question: 'Metne göre taahhüt almak neden önemlidir?',
+        options: ['Kişiyi suçlamak için', 'Kişinin işi bırakmaması için', 'Herkesi yarışa sokmak için', 'Baskı yapmak için', 'Eğitimleri azaltmak için'],
+        correctAnswer: 'Kişinin işi bırakmaması için'
+    },
+    {
+        question: 'Taahhüt almadan sürekli “Eğitimleri bitirdin mi?” diye sormak neye sebep olabilir?',
+        options: ['Kişiyi daha çok motive eder', 'Kişinin güvenini zedeleyebilir', 'Enerjiyi artırır', 'Kişinin saygısını artırır', 'Başarıyı garantiler'],
+        correctAnswer: 'Kişinin güvenini zedeleyebilir'
+    },
+    {
+        question: '“İşi bırakan insanlar genelde taahhütsüz çalışan insanlardır.” sözü hangi düşünceyi destekler?',
+        options: ['Bağımsızlık önemlidir', 'Plan gerekmez', 'Kararlılık ve bağlılık başarı getirir', 'İş yükü azaltılmalı', 'Ürün satmak zorunlu değil'],
+        correctAnswer: 'Kararlılık ve bağlılık başarı getirir'
+    },
+    {
+        question: 'Ahmet ve Mehmet örneğinde başarı nasıl ölçülmüştür?',
+        options: ['Kim daha çok sunum yaparsa', 'Kim daha yaşlıysa', 'Taahhüdünü yerine getirip getirmediğine göre', 'Kimin çevresi daha genişse', 'Kimin lideri daha güçlüyse'],
+        correctAnswer: 'Taahhüdünü yerine getirip getirmediğine göre'
+    },
+    {
+        question: 'Taahhüdün kişiye kattığı önemli özellik hangisidir?',
+        options: ['Sadece rekabet', 'İç disiplin', 'Tembellik', 'Kibir artışı', 'Gizlilik'],
+        correctAnswer: 'İç disiplin'
+    },
+    {
+        question: 'Size verdiğiniz taahhüdü hatırlatan kişi aslında ne yapar?',
+        options: ['Sizi eleştirir', 'Sizinle alay eder', 'Potansiyelinizi ortaya çıkarmaya çalışır', 'İşten uzaklaştırır', 'Mazeret uydurur'],
+        correctAnswer: 'Potansiyelinizi ortaya çıkarmaya çalışır'
+    },
+    {
+        question: 'Sunum, soru-cevap ve eğitim verme ile ilgili metinde belirtilen temel görüş nedir?',
+        options: ['Bunlar özel yetenek ister', 'Bunları yalnızca üst liderler yapar', 'Her biri öğrenilebilir becerilerdir', 'Yapması çok zordur', 'Hiç gerek yoktur'],
+        correctAnswer: 'Her biri öğrenilebilir becerilerdir'
+    },
+    {
+        question: 'Basketbol ve futbol benzetmesinin amacı nedir?',
+        options: ['Spor yapmanın önemini anlatmak', 'Sunumun herkes için zor olduğunu göstermek', 'Zamanla herkesin bu becerileri geliştirebileceğini anlatmak', 'Oyuncuların kazancını övmek', 'Sporcunun ekip lideri olması gerektiği'],
+        correctAnswer: 'Zamanla herkesin bu becerileri geliştirebileceğini anlatmak'
+    },
+    {
+        question: 'Bir kişi “Hayır” dediğinde ne anlamı vardır?',
+        options: ['Sizi sevmedi', 'Sisteme kızdı', 'Kendi hayallerine hayır dedi', 'Sunumu anlamadı', 'Lideri başarısız buldu'],
+        correctAnswer: 'Kendi hayallerine hayır dedi'
+    },
+    {
+        question: '“Hayır cevabı” alındığında nasıl davranmak doğru olur?',
+        options: ['Ağlamak', 'Tartışmak', 'Kişiye yüklenmek', 'Kaybetmeden ders almak', 'Kişiyi zorlamak'],
+        correctAnswer: 'Kaybetmeden ders almak'
+    },
+    {
+        question: 'Taahhüt vermeyen kişi neden işi bırakabilir?',
+        options: ['Aşırı motive olur', 'Yapması gerekenleri bilmez ve sorumluluk hissetmez', 'Çok fazla sunum yapar', 'Yük paylaşımı artar', 'Daha çok para kazanır'],
+        correctAnswer: 'Yapması gerekenleri bilmez ve sorumluluk hissetmez'
+    },
+    {
+        question: 'Taahhüt hangi unsuru güçlendirir?',
+        options: ['Ego', 'Umutsuzluk', 'Sorumluluk duygusu', 'Rekabetsizlik', 'Rahatına düşkünlük'],
+        correctAnswer: 'Sorumluluk duygusu'
+    },
+    {
+        question: 'Lider, taahhüt alırken nasıl bir amaç güder?',
+        options: ['Yapılmayanların hesabını kesmek', 'Kişiyi kontrol etmek', 'Kişiye hedef bilinci kazandırmak', 'Sadece ürün satmak', 'Ekibi küçültmek'],
+        correctAnswer: 'Kişiye hedef bilinci kazandırmak'
+    },
+    {
+        question: 'Taahhüdün yerine getirilmemesi neyi gösterir?',
+        options: ['Kişi daha başarılıdır', 'Taahhüt gereksizdir', 'Hedefin altında kalındığını', 'Lider suçludur', 'Zaman fazladır'],
+        correctAnswer: 'Hedefin altında kalındığını'
+    },
+    {
+        question: 'Aşırı büyük taahhütler neden sakıncalıdır?',
+        options: ['Her zaman başarı getirir', 'Kişiyi zorlamaz', 'Motivasyonu kırabilir', 'Liderin yükünü artırır', 'Ekibi küçültür'],
+        correctAnswer: 'Motivasyonu kırabilir'
+    },
+    {
+        question: '“Her şey öğrenilebilir” mesajı neyi savunur?',
+        options: ['İnsanın sabit yeteneklere sahip olduğu', 'Gelişimin sınırlı olduğu', 'Deneyimle yetenek kazanılabileceği', 'Eğitimlerin gereksiz olduğu', 'Sadece yeteneklilerin başarılı olduğu'],
+        correctAnswer: 'Deneyimle yetenek kazanılabileceği'
+    },
+    {
+        question: '“Hayır cevabı alındığında kendini suçlama” düşüncesinin nedeni nedir?',
+        options: ['Herkes en başta “evet” der', 'Kişi size hayır demiyor', 'Herkes Network yapar', 'Sistem kolaydır', 'Para önemlidir'],
+        correctAnswer: 'Kişi size hayır demiyor'
+    },
+    {
+        question: 'Metne göre odaklanılması gereken kişiler kimlerdir?',
+        options: ['Network’e olumsuz bakanlar', 'Sürekli erteleyenler', 'Kendi iyiliği için harekete geçmek isteyenler', 'Hiç sunuma gelmeyenler', 'İşten kaçanlar'],
+        correctAnswer: 'Kendi iyiliği için harekete geçmek isteyenler'
+    },
+    {
+        question: 'Taahhüdün raporlamadaki rolü nedir?',
+        options: ['Kimin ne kadar iyi çalıştığını göstermek', 'Kimin ne kadar uyuduğunu göstermek', 'Kimin çok konuştuğunu belirlemek', 'Kimin sosyal olup olmadığını ölçmek', 'Kimin ekipten ayrılacağını tahmin etmek'],
+        correctAnswer: 'Kimin ne kadar iyi çalıştığını göstermek'
+    }
+]
+,
+            4: [
+    {
+        question: 'Liste yapmanın türlerinden değildir?',
+        options: ['Hayal listesi', 'Taahhüt listesi', 'Kişi listesi', 'Maliyet listesi', 'İstek listesi'],
+        correctAnswer: 'Maliyet listesi'
+    },
+    {
+        question: 'Kişi listesinin en önemli sermayelerden biri olmasının sebebi nedir?',
+        options: ['Ürün stoklarını belirler', 'İnsanlarla iş yapıldığı için', 'Vergileri azaltır', 'Sadece geniş çevreye dayanır', 'Liste yazmak eğlencelidir'],
+        correctAnswer: 'İnsanlarla iş yapıldığı için'
+    },
+    {
+        question: 'Önyargıyla kişi listesi yapmak neye sebep olabilir?',
+        options: ['Daha hızlı büyümeye', 'Doğru insanları kaçırmaya', 'Harika başarıya', 'Ürün masrafının azalmasına', 'Herkesin kabul etmesine'],
+        correctAnswer: 'Doğru insanları kaçırmaya'
+    },
+    {
+        question: '“İnsanlar adına karar verme hakkınız yoktur” cümlesinin anlamı nedir?',
+        options: ['Herkesin seçimi size bağlıdır', 'Kimseye teklif götürmeyin', 'Kimin neyi isteyeceğine sizin karar veremeyeceğiniz', 'Sadece güçlü insanlara anlatın', 'Kişileri sınıflandırın'],
+        correctAnswer: 'Kimin neyi isteyeceğine sizin karar veremeyeceğiniz'
+    },
+    {
+        question: '200–300 kişilik listeden genelde kaç kişi potansiyel kalabilir?',
+        options: ['2–3', '20–30', '50 civarı', '150', '300’ün tamamı'],
+        correctAnswer: '50 civarı'
+    },
+    {
+        question: 'Listeyi yazdıktan sonra yapılması gereken ilk işlem nedir?',
+        options: ['Listeyi çöpe atmak', 'Kimseye söylememek', 'Liste analizi yapmak', 'Beklemek', 'Rastgele aramak'],
+        correctAnswer: 'Liste analizi yapmak'
+    },
+    {
+        question: 'Liste analizi neyi kapsar?',
+        options: ['Kişilerin maaşlarını öğrenmek', 'Kişilerin size bakış açısını anlamak', 'Kişileri zorla getirmek', 'Kim sevmiyorsa elemek', 'Sadece aile bireylerini eklemek'],
+        correctAnswer: 'Kişilerin size bakış açısını anlamak'
+    },
+    {
+        question: 'Liste neden “duran bir şey” değildir?',
+        options: ['Çünkü arada kaybolur', 'Kişilerin numarası değişir', 'Sürekli gelişip büyümesi gerektiği için', 'Tek seferlik hazırlandığı için', 'Sadece gençlerle güncellenir'],
+        correctAnswer: 'Sürekli gelişip büyümesi gerektiği için'
+    },
+    {
+        question: 'Listesi büyümeyen birinin durumu nedir?',
+        options: ['Gelişim gösteriyor', 'İlerleme kaydedemiyordur', 'Çok para kazanıyordur', 'Geçici duraktır', 'Eğitim alıyordur'],
+        correctAnswer: 'İlerleme kaydedemiyordur'
+    },
+    {
+        question: 'Sunuma gelen bir kişide önemli olan şey nedir?',
+        options: ['Sizin ondan aldığınız enerji', 'Onun sizden aldığı enerji', 'Yüksek sesle konuşması', 'Ürünü o anda alması', 'Ekibine hakaret etmesi'],
+        correctAnswer: 'Onun sizden aldığı enerji'
+    },
+    {
+        question: 'Kişi listesinin genişliği hangi sonuçla ilişkilidir?',
+        options: ['Başarının potansiyeli', 'Ego seviyesinin artması', 'Eğitimlerin azalması', 'Zamanın durması', 'Sadece sunum sayısı'],
+        correctAnswer: 'Başarının potansiyeli'
+    },
+    {
+        question: 'Güvenmediğimiz kişinin daveti kabul etme ihtimalinin nedeni nedir?',
+        options: ['Sizi kıskandığı için', 'Sizden çekindiği için', 'Kendi geleceği için fırsat görmesi', 'Listeyi doldurmak için', 'Sizi meşgul etmek için'],
+        correctAnswer: 'Kendi geleceği için fırsat görmesi'
+    },
+    {
+        question: 'Liste analizi yaparken en çok dikkat edilen şeylerden biri nedir?',
+        options: ['Kişinin ayakkabı markası', 'Kişinin enerjisi ve yaklaşımı', 'Kişinin kilosu', 'Kişinin burcu', 'Kişinin siyasi görüşü'],
+        correctAnswer: 'Kişinin enerjisi ve yaklaşımı'
+    },
+    {
+        question: 'Kişiyi listeye yazmadan önce ne yapılmamalıdır?',
+        options: ['Onu tanımaya çalışmak', 'Ön yargı ile elemek', 'Güçlü yanlarını düşünmek', 'Zayıf yönleri değerlendirmek', 'Geçmişini anlamak'],
+        correctAnswer: 'Ön yargı ile elemek'
+    },
+    {
+        question: 'Kişi listesi hazırlamanın ana amacı hangisidir?',
+        options: ['Sadece arkadaş edinmek', 'İnsanları sınıflandırmak', 'Potansiyel adayları belirlemek', 'Rekabet yaratmak', 'Sunum yapmamak'],
+        correctAnswer: 'Potansiyel adayları belirlemek'
+    },
+    {
+        question: 'Liste yaparken en büyük hata nedir?',
+        options: ['Herkesi yazmak', 'Yardım istemek', 'Önyargı ile insan seçmek', 'Not almak', 'Yedek liste oluşturmak'],
+        correctAnswer: 'Önyargı ile insan seçmek'
+    },
+    {
+        question: 'Liste analizi sonrası yapılacak en doğru hareket hangisidir?',
+        options: ['Kişiye aşırı baskı yapmak', 'Kişinin ilgisine göre iletişimi şekillendirmek', 'Hiç kimseyi aramamak', 'Sadece beklemek', 'Çok hızlı vazgeçmek'],
+        correctAnswer: 'Kişinin ilgisine göre iletişimi şekillendirmek'
+    },
+    {
+        question: 'Listenin sürekli güncellenmesi neyi gösterir?',
+        options: ['Kişinin sabit kaldığını', 'Ekip yönetiminin zayıf olduğunu', 'Gelişim ve hareketlilik olduğunu', 'Sadece yeni numara bulunduğunu', 'İnsanların sizi zorladığını'],
+        correctAnswer: 'Gelişim ve hareketlilik olduğunu'
+    },
+    {
+        question: 'Kişi listesi küçülürse ne olur?',
+        options: ['Sunum sayısı artar', 'Yeni fırsatlar azalır', 'Eğitim ihtiyacı azalır', 'Motivasyon yükselir', 'Kazanç artar'],
+        correctAnswer: 'Yeni fırsatlar azalır'
+    },
+    {
+        question: 'Listeyi büyütmenin altındaki ana düşünce nedir?',
+        options: ['Daha çok reddedilmek', 'Daha çok seçenek ve potansiyel fırsat oluşturmak', 'Akraba ilişkilerini bozmak', 'Kişileri yormak', 'Şans eseri büyümek'],
+        correctAnswer: 'Daha çok seçenek ve potansiyel fırsat oluşturmak'
+    }
+]
+,
+            5: [
+    {
+        question: 'Davet süreci hangi anda başlar?',
+        options: ['İlk sunumla', 'Ürün satışıyla', 'Fiziki olarak davet edildiği anda', 'Eğitim sonunda', 'Kapanış konuşmasında'],
+        correctAnswer: 'Fiziki olarak davet edildiği anda'
+    },
+    {
+        question: 'Davet öncesi hissedilen heyecan ve korku için metinde verilen çözüm nedir?',
+        options: ['Daveti ertelemek', 'Kimseyi davet etmemek', 'Daha önce birçok kez davet yaptığını hatırlamak', 'Yalnızca yazılı mesaj atmak', 'Sunum yapmayı reddetmek'],
+        correctAnswer: 'Daha önce birçok kez davet yaptığını hatırlamak'
+    },
+    {
+        question: 'Yakın görüştüğümüz biri ile ayda bir görüştüğümüz birini nasıl davet ederiz?',
+        options: ['İkisine de aynı şekilde', 'İkisine de resmi', 'Yakına samimi, uzaktakine resmi', 'Yakına resmi, uzaktakine samimi', 'Hiç davet etmeden'],
+        correctAnswer: 'Yakına samimi, uzaktakine resmi'
+    },
+    {
+        question: 'Tanımadığımız kişiye davette ilk adım nedir?',
+        options: ['Soru sormadan davet etmek', 'Direkt üründen bahsetmek', 'Tanışma ve samimiyet kurmak', 'Onun adına karar vermek', 'Fiyat konuşmak'],
+        correctAnswer: 'Tanışma ve samimiyet kurmak'
+    },
+    {
+        question: '“Kalifiye etmek” ne demektir?',
+        options: ['Kişiye ürün satmak', 'Kişiyi zorlamak', 'Fırsata uygunluğunu anlamak', 'Kişi hakkında kötü düşünmek', 'Sadece mesleğini sormak'],
+        correctAnswer: 'Fırsata uygunluğunu anlamak'
+    },
+    {
+        question: 'İtirazları ele alma aşamasının temel amacı nedir?',
+        options: ['Karşı tarafı bastırmak', 'Tartışma yaratmak', 'Empatiyle anlamak ve yönlendirmek', 'Hemen sonlandırmak', 'Kişiyi suçlamak'],
+        correctAnswer: 'Empatiyle anlamak ve yönlendirmek'
+    },
+    {
+        question: '“Harekete davet” aşamasının en kritik unsuru nedir?',
+        options: ['Yeni bir ürün göstermek', 'Tarih ve saat netleştirmek', 'Adaya uzun videolar izletmek', 'Adayı yalnız bırakmak', 'Kararsızlığı uzun süre sürdürmek'],
+        correctAnswer: 'Tarih ve saat netleştirmek'
+    },
+    {
+        question: 'Takip (Follow) neden en önemli aşamalardan biridir?',
+        options: ['İlk heyecan çabuk kaybolduğu için', 'İnsanlar unutkan değildir', 'Eğitim gereksizdir', 'Aday kararsız kalmayı sever', 'Sunuma gerek kalmaz'],
+        correctAnswer: 'İlk heyecan çabuk kaybolduğu için'
+    },
+    {
+        question: 'Davet bittikten sonra “Değerlendir & Geliştir” aşaması ne sağlar?',
+        options: ['Her şeyi unutturmaya yarar', 'Tekrar aynı hatayı yapmamak için gelişmek', 'Adayla ilişkileri koparmak', 'Sunumu küçümsemek', 'Ekibi küçültmek'],
+        correctAnswer: 'Tekrar aynı hatayı yapmamak için gelişmek'
+    },
+    {
+        question: 'Telefonda davet sırasında detay sorulduğunda ne yapılmalıdır?',
+        options: ['Her şeyi telefonda anlatmak', 'Konuyu geçiştirmek', 'Online görüşmeye yönlendirmek', 'Telefonu kapatmak', 'Ürün fiyatlarını sıralamak'],
+        correctAnswer: 'Online görüşmeye yönlendirmek'
+    },
+    {
+        question: 'Telefonda yapılmaması gereken nedir?',
+        options: ['Merak uyandırmak', 'Konuyu kısa tutmak', 'Sunumu telefonda anlatmak', 'Profesyonel davranmak', 'Görüşmeyi netleştirmek'],
+        correctAnswer: 'Sunumu telefonda anlatmak'
+    },
+    {
+        question: 'Aynı ortamdayken davetin ortamdan ayrılırken yapılmasının nedeni nedir?',
+        options: ['Kişi konuyu çok sorgulamasın', 'Kişi sunumdan vazgeçsin', 'Heyecanı yok etmek', 'Daveti gizlemek', 'Süreci uzatmak'],
+        correctAnswer: 'Kişi konuyu çok sorgulamasın'
+    },
+    {
+        question: 'Davetin başarısını en çok etkileyen unsurlardan biri hangisidir?',
+        options: ['Ses tonu', 'Hava durumu', 'Konunun uzunluğu', 'Renkli kıyafet giymek', 'Ortam ışığı'],
+        correctAnswer: 'Ses tonu'
+    },
+    {
+        question: 'Satışın nerede kapandığı ifade edilmiştir?',
+        options: ['Sunum sonunda', 'Davette', 'Eğitimde', 'Ürün tesliminde', 'Takipte'],
+        correctAnswer: 'Davette'
+    },
+    {
+        question: 'Aciliyet duygusunu en iyi veren ifade hangisidir?',
+        options: ['Bir ara konuşuruz.', 'Yarın hallederiz.', 'Bu akşam konuşmalıyız.', 'Bir gün anlatırım.', 'Zaman çok var.'],
+        correctAnswer: 'Bu akşam konuşmalıyız.'
+    },
+    {
+        question: 'Presenter’a haber vermeden davet yapmak neden yanlıştır?',
+        options: ['Presenter sunum yapmazsa süreç aksar', 'Kişi bağımsız olmalı', 'Liderlik zarar görür', 'Davet sayısı azalır', 'Ürün kalitesi düşer'],
+        correctAnswer: 'Presenter sunum yapmazsa süreç aksar'
+    },
+    {
+        question: 'Davette merak duygusunun oluşturulması ne sağlar?',
+        options: ['Kararsızlığı artırır', 'Güvensizliği artırır', 'Adayın ilgisini canlı tutar', 'Süreci uzatır', 'Daveti iptal eder'],
+        correctAnswer: 'Adayın ilgisini canlı tutar'
+    },
+    {
+        question: 'Davet yönteminin kişiye göre değişmesinin sebebi nedir?',
+        options: ['Herkes aynı sosyal çevrede değil', 'Sadece akrabalar davet edilir', 'İnsanlar düşünmez', 'Sunum gereksizdir', 'Eğitim herkese aynı işler'],
+        correctAnswer: 'Herkes aynı sosyal çevrede değil'
+    },
+    {
+        question: 'Davette en çok kaçınılması gereken şeylerden biri nedir?',
+        options: ['Samimiyet', 'Güven ortamı', 'Baskı yapmak', 'Zaman belirlemek', 'Ses tonu kullanmak'],
+        correctAnswer: 'Baskı yapmak'
+    },
+    {
+        question: 'Davet ile ilgili temel düşünceyi en iyi ifade eden seçenek?',
+        options: ['Davet, sadece eğlence planıdır', 'Davet, işin son aşamasıdır', 'Davet, işin başladığı noktadır', 'Davet gerekmez', 'Davet sadece profesyonellere aittir'],
+        correctAnswer: 'Davet, işin başladığı noktadır'
+    }
+]
+,
+            6: [
+    {
+        question: 'Sunum/davet sürecinde önerilen duygu durumu hangisidir?',
+        options: ['Gergin ama hızlı', 'Kaygılı ve mesafeli', 'Heyecanlı ama sakin', 'Umursamaz', 'Agresif'],
+        correctAnswer: 'Heyecanlı ama sakin'
+    },
+    {
+        question: 'Davetçi, davetli ile presenter’ı tanıştırırken hangi etkiyi hedefler?',
+        options: ['Rekabet', 'Merak', 'Güven', 'Şüphe', 'Resmiyet'],
+        correctAnswer: 'Güven'
+    },
+    {
+        question: 'Tanıştırmada önerilen ifade türü nedir?',
+        options: ['Presenter’ı sıradan biri gibi göstermek', 'Presenter’ı abartılı övmek', 'Mentor ve destek rolünü net söylemek', 'Presenter’dan bahsetmemek', 'Sadece ürün anlatmak'],
+        correctAnswer: 'Mentor ve destek rolünü net söylemek'
+    },
+    {
+        question: 'Sunum sırasında davetçinin temel görevi değildir:',
+        options: ['Presenter’ı söz ve baş hareketiyle onaylamak', 'Davetlinin dikkatini toplamak', 'Presenter’ı sık sık sorularla bölmek', 'Gülümsemek ve desteklemek', 'Güven inşasına katkı vermek'],
+        correctAnswer: 'Presenter’ı sık sık sorularla bölmek'
+    },
+    {
+        question: 'Sunum esnasında kim soru sorabilir?',
+        options: ['Sadece davet edilen kişi', 'Sadece davetçi', 'Sadece presenter', 'Herkes', 'Hiç kimse'],
+        correctAnswer: 'Sadece davet edilen kişi'
+    },
+    {
+        question: 'Davetlinin dikkati dağıldığında önerilen yaklaşım nedir?',
+        options: ['Konuyu değiştirmek', '“Bak, burası çok önemli!” diyerek odaklamak', 'Sunumu bırakmak', 'Tartışmaya girmek', 'Telefonuna bakmak'],
+        correctAnswer: '“Bak, burası çok önemli!” diyerek odaklamak'
+    },
+    {
+        question: 'Davetçi onay vermez ve tepkisiz kalırsa olası sonuç?',
+        options: ['Güven artar', 'Satış kendiliğinden kapanır', 'Güven oluşmaz, kapanış zorlaşır', 'Presenter daha güçlü görünür', 'Davetli motive olur'],
+        correctAnswer: 'Güven oluşmaz, kapanış zorlaşır'
+    },
+    {
+        question: '“Presenter’ın sözlerinin altına kaşe basmak” mecazi olarak ne demek?',
+        options: ['Sunumu bitirmek', 'Davetlinin yerine karar vermek', 'Presenter’ın söylediklerini davranışla tasdik etmek', 'Ürün fiyatını indirmek', 'Soruları ertelemek'],
+        correctAnswer: 'Presenter’ın söylediklerini davranışla tasdik etmek'
+    },
+    {
+        question: 'Sunumdan sonra presenter’a uygun davranış nedir?',
+        options: ['Eleştirmek', 'Teşekkür etmek', 'Hemen ayrılmasını istemek', 'Ücret konuşmak', 'Sessiz kalmak'],
+        correctAnswer: 'Teşekkür etmek'
+    },
+    {
+        question: 'Sunumdan sonra davetliye verilecek tavsiyelerden biri:',
+        options: ['Hemen başkalarına sunum yap', 'Hemen ekip kurmaya başla', 'Önce kendi işine odaklan, eğitimleri al', 'Presenter’ı eleştir', 'Dışarıdan fikir topla'],
+        correctAnswer: 'Önce kendi işine odaklan, eğitimleri al'
+    },
+    {
+        question: '“Henüz girmediğin bir işe başkasını davet etme” uyarısının nedeni nedir?',
+        options: ['Zaman kaybı', 'Maliyet', 'Güvensizlik oluşturur', 'Sunum uzar', 'Eğitim azalır'],
+        correctAnswer: 'Güvensizlik oluşturur'
+    },
+    {
+        question: 'Danışmanlık/akıl alırken önerilen kaynak?',
+        options: ['İşi bilmeyen tanıdıklar', 'Sosyal medya yorumları', 'Konuyla ilgisiz meslek grupları', 'İşle ilgilenen ve bilen kişiler', 'Herkesin fikri'],
+        correctAnswer: 'İşle ilgilenen ve bilen kişiler'
+    },
+    {
+        question: '“Presenter kötü anlatmış olsa bile” hangi koşulda satış kapanabilir?',
+        options: ['Agresif baskı yapılırsa', 'Fiyat indirilirse', 'Davet ve follow güçlü yapılırsa', 'Daha uzun slide eklenirse', 'Ortam değiştirilirse'],
+        correctAnswer: 'Davet ve follow güçlü yapılırsa'
+    },
+    {
+        question: 'Presenter’ın sunum yaklaşımındaki ana ilke:',
+        options: ['Karmaşık ve etkileyici anlatım', 'Sadece teknik detay', 'Basit, kolay ve kopyalanabilir anlatım', 'Sır saklayan üslup', 'Stand-up tadında mizah'],
+        correctAnswer: 'Basit, kolay ve kopyalanabilir anlatım'
+    },
+    {
+        question: 'Presenter için dış görünümle ilgili vurgu:',
+        options: ['Rastgele kıyafet yeter', 'Şık ve düzenli görünüm önemli', 'Görünümün önemi yok', 'Sadece pahalı saat takmak', 'Spor kıyafet zorunlu'],
+        correctAnswer: 'Şık ve düzenli görünüm önemli'
+    },
+    {
+        question: 'Zaman yönetimi açısından presenter’dan beklenen:',
+        options: ['Geç kalmaması, dakiklik', 'Gecikmeyi normalleştirmesi', 'Katılımcıları bekletmesi', 'Sunumu uzatması', 'Toplantıyı ertelemesi'],
+        correctAnswer: 'Geç kalmaması, dakiklik'
+    },
+    {
+        question: 'Presenter’ın sahip olması önerilen araç:',
+        options: ['Sadece hafıza', 'Ajanda/planlayıcı', 'Ezberlenen sloganlar', 'Renkli lazer', 'Kulaklık'],
+        correctAnswer: 'Ajanda/planlayıcı'
+    },
+    {
+        question: 'Presenter’ın dinleyiciye aktarması gereken duygu:',
+        options: ['Şüphe', 'Aşırı rahatlık', 'İşine güven ve canlı hitap', 'Kayıtsızlık', 'Kibir'],
+        correctAnswer: 'İşine güven ve canlı hitap'
+    },
+    {
+        question: 'Davetçinin “kös kös oturmaması” neyi hedefler?',
+        options: ['Sessizlik sağlamak', 'Presenter’ı test etmek', 'Davetliye güven ve ciddiyet yansıtmak', 'Sunumu kısaltmak', 'Soruları artırmak'],
+        correctAnswer: 'Davetliye güven ve ciddiyet yansıtmak'
+    },
+    {
+        question: 'Metindeki genel prensip, sunum ve davet ilişkisini nasıl tanımlar?',
+        options: ['Sunum her şeyi çözer, davet önemsizdir', 'Davet güçlü ise satış davette kapanır', 'Sadece presenter önemlidir', 'Sadece davetçi önemlidir', 'Süreç tamamen şansa bağlıdır'],
+        correctAnswer: 'Davet güçlü ise satış davette kapanır'
+    }
+]
+,
+            7: [
+  {
+    question: "Follow en fazla kaç kez yapılabilir?",
+    options: ["3", "5", "12", "20", "Sınırsız"],
+    correctAnswer: "12"
+  },
+  {
+    question: "Follow, sunumdan kaç saat sonra yapılmalıdır?",
+    options: ["1 hafta", "72 saat", "24–48 saat", "Aynı anda", "Zaman fark etmez"],
+    correctAnswer: "24–48 saat"
+  },
+  {
+    question: "Follow’u kim yapar?",
+    options: ["Presenter hatırlatır, davetçi yapar", "Davetçi değil", "Sadece yönetici", "Sunumu yapan", "Kimse yapmaz"],
+    correctAnswer: "Presenter hatırlatır, davetçi yapar"
+  },
+  {
+    question: "Bir kişi Follow’a geliyorsa bu neyi gösterir?",
+    options: ["İşle ilgisiz olduğunu", "Ürünü sevmediğini", "İşe girme yatkınlığı olduğunu", "Zaman kaybı olduğunu", "Sunumu unuttuğunu"],
+    correctAnswer: "İşe girme yatkınlığı olduğunu"
+  },
+  {
+    question: "2. görüşmeye rağmen iş olmazsa sorun nerededir?",
+    options: ["Presenter kötü", "İş kötü", "Takip yapan bizde", "Kişi çok zengin", "Yöntem gereksiz"],
+    correctAnswer: "Takip yapan bizde"
+  },
+  {
+    question: "Satışın kapanma anı genellikle nerededir?",
+    options: ["Eğitimde", "Sunumda", "Follow’da", "Ürün tesliminde", "İlk selamda"],
+    correctAnswer: "Follow’da"
+  },
+  {
+    question: "Follow’un trajikomik tarafı nedir?",
+    options: ["Kimse dinlemez", "İnsanların bahanelerini dinleyip yine de onları hayallerine çağırmaktır", "Sunumdan daha kolay olması", "Hiç soru olmaması", "Eğlenceli olmaması"],
+    correctAnswer: "İnsanların bahanelerini dinleyip yine de onları hayallerine çağırmaktır"
+  },
+  {
+    question: "“Kimi istiyorsanız, onu mutlaka alın” cümlesi Follow’da neyi simgeler?",
+    options: ["Baskıyı", "Kişisel çıkarı", "Sevilen insanların hayallerine destek olmayı", "Zorunluluğu", "Satıcı tavrını"],
+    correctAnswer: "Sevilen insanların hayallerine destek olmayı"
+  },
+  {
+    question: "Güven–kibir dengesi neden önemli?",
+    options: ["İtici ya da muhtaç görünmemek için", "Mizah yapmak için", "Sunumu uzatmak için", "Soru sormak için", "Yorgunluk için"],
+    correctAnswer: "İtici ya da muhtaç görünmemek için"
+  },
+  {
+    question: "“Burnu dik” davranışın sonucu ne olur?",
+    options: ["Aday hemen girer", "Sonsuz güven", "Cephe alır", "Follow kolaylaşır", "Aday sessizleşir"],
+    correctAnswer: "Cephe alır"
+  },
+  {
+    question: "“Muhtaç tavrı” neye yol açar?",
+    options: ["Saygınlık artışı", "İlgi artışı", "Güven kaybı", "Hızlı ekip büyümesi", "Ekstra motivasyon"],
+    correctAnswer: "Güven kaybı"
+  },
+  {
+    question: "Aşağılanan işe karşı nasıl tepki verilmeli?",
+    options: ["Karşı saldırı", "Küsmek", "Kaba davranmak", "Sakin ve empatik olmak", "Tartışmayı büyütmek"],
+    correctAnswer: "Sakin ve empatik olmak"
+  },
+  {
+    question: "Saçma bir soruya nasıl yaklaşılmalıdır?",
+    options: ["Cevaplamak için uğraş", "Azarla", "Görmezden gel", "Soruya karşı soru sor", "Karşı tarafa hak ver"],
+    correctAnswer: "Soruya karşı soru sor"
+  },
+  {
+    question: "Fell–Felt–Found tekniği neyi amaçlar?",
+    options: ["Eleştirmeyi", "Üstünlük kurmayı", "Empati ve örneklemeyle ikna etmeyi", "Baskı kurmayı", "Konuyu uzatmayı"],
+    correctAnswer: "Empati ve örneklemeyle ikna etmeyi"
+  },
+  {
+    question: "“Ben de öyle hissetmiştim” ifadesi Fell–Felt–Found’un hangi kısmıdır?",
+    options: ["Found", "Fell", "Felt", "Fail", "Follow"],
+    correctAnswer: "Felt"
+  },
+  {
+    question: "Follow’da sık sorulan para endişesinde yapılması gereken?",
+    options: ["Umursamamak", "“Herkes buluyor” demek", "Başka birinin hikayesiyle örneklemek", "Sunumu tekrar açmak", "Hemen kredi önermek"],
+    correctAnswer: "Başka birinin hikayesiyle örneklemek"
+  },
+  {
+    question: "Follow’u yapan kişi karşısındakini nasıl görmelidir?",
+    options: ["Rakip", "Sadece müşteri", "Hayalleri olan bir insan", "Deneme tahtası", "Zorunlu hedef"],
+    correctAnswer: "Hayalleri olan bir insan"
+  },
+  {
+    question: "Follow’un Presenter yerine davetçi tarafından yapılmasının ana sebebi:",
+    options: ["Presenter yorulmasın", "Güven ilişkisini davetçi kurmuştur", "Zaman kazanmak", "İtibar kaybı", "Sunum eksikliği"],
+    correctAnswer: "Güven ilişkisini davetçi kurmuştur"
+  },
+  {
+    question: "Aşağıdaki cümlelerden hangisi güven veren tarzdadır?",
+    options: ["“İnanmazsan girme.”", "“Yalvarırım gir.”", "“Sorduğun her şeyi cevaplayacağım, anlamazsam da birlikte öğreniriz.”", "“Sorgulama, gir işte.”", "“Herkes giriyor zaten.”"],
+    correctAnswer: "“Sorduğun her şeyi cevaplayacağım, anlamazsam da birlikte öğreniriz.”"
+  },
+  {
+    question: "Follow’un büyülü etkisi nedir?",
+    options: ["Göz korkutmak", "Bahaneleri yok etmek", "Hayali yeniden alevlendirmek", "Sunumu bozmak", "Sadece satış yapmak"],
+    correctAnswer: "Hayali yeniden alevlendirmek"
+  }
+]
+,
+            8: [
+  {
+    question: "Koordinasyonun en temel mesajı nedir?",
+    options: ["Herkes yalnız çalışabilir", "Lider olmadan başarı olmaz", "Sadece ürün satmak gerekir", "Eğitim gereksizdir", "Sunum yeterlidir"],
+    correctAnswer: "Lider olmadan başarı olmaz"
+  },
+  {
+    question: "“Şirket güçlü, ben yalnız yaparım” düşüncesi neden yanlıştır?",
+    options: ["Şirket ürünü kötü olduğu için", "Kimseye güvenilmediği için", "Tek başına sürdürülebilir olmadığı için", "Sunum gerekmediği için", "Zaman çok olduğu için"],
+    correctAnswer: "Tek başına sürdürülebilir olmadığı için"
+  },
+  {
+    question: "Liderinizin olması ne sağlar?",
+    options: ["Rekabet", "Dışlanma", "Fikir alışverişi ve rehberlik", "Tek yönlü talimatlar", "Yardım almamak"],
+    correctAnswer: "Fikir alışverişi ve rehberlik"
+  },
+  {
+    question: "Liderin kazancı neye bağlıdır?",
+    options: ["Sadece kendi çalışmasına", "Altındaki insanların başarısına", "Şirket puanına", "Hediye programlarına", "Reklam kampanyalarına"],
+    correctAnswer: "Altındaki insanların başarısına"
+  },
+  {
+    question: "Lider altındaki kişileri nasıl görür?",
+    options: ["Rakip", "Külfet", "Başka bir bedendeki kendi", "Müşteri", "Yabancı"],
+    correctAnswer: "Başka bir bedendeki kendi"
+  },
+  {
+    question: "Liderin tecrübesinin değeri nedir?",
+    options: ["Sadece geçmiş hataları bilmesi", "Hataları dilediğince tekrarlaması", "Altındakilerin aynı hatayı yapmasını engellemesi", "Gerekirse görmezden gelmesi", "Danışmadan karar vermesi"],
+    correctAnswer: "Altındakilerin aynı hatayı yapmasını engellemesi"
+  },
+  {
+    question: "“Teslim oldum, sorumluluğum sende” ifadesinin liderde oluşturduğu etki?",
+    options: ["Baskı kurar", "Umursamaz hale getirir", "Daha fazla sorumluluk bilinci", "İşten uzaklaştırır", "Ego artırır"],
+    correctAnswer: "Daha fazla sorumluluk bilinci"
+  },
+  {
+    question: "Öğrenmenin en iyi olduğu yer neresidir?",
+    options: ["Sosyal medya", "Yalnız çalışma", "Koordinasyon", "Ürün kataloğu", "Sessizlik"],
+    correctAnswer: "Koordinasyon"
+  },
+  {
+    question: "Eğitim yeri olarak vurgulanan neresi?",
+    options: ["Ev", "Park", "Toplantı", "Catering salonu", "Araç"],
+    correctAnswer: "Toplantı"
+  },
+  {
+    question: "En önemli öğrenilen yer neresi?",
+    options: ["Slayt dinlemek", "Ürün satın almak", "Liderle birebir oturmak", "Ödül töreni", "Reklam izlemek"],
+    correctAnswer: "Liderle birebir oturmak"
+  },
+  {
+    question: "Liderinize danışmadan iş yapmak hangi sonuca yol açabilir?",
+    options: ["Daha hızlı büyümek", "Doğru karar vermek", "Yanlış strateji ve başarısızlık", "Liderliği geliştirmek", "Hataları azaltmak"],
+    correctAnswer: "Yanlış strateji ve başarısızlık"
+  },
+  {
+    question: "“Önce lokal çalış” önerisinin kaynağı nedir?",
+    options: ["Gizlenmek", "Deneye yanıla kaybolmak", "Güç ve tecrübe kazanmak", "Lideri meşgul etmek", "Üst kolları atlamak"],
+    correctAnswer: "Güç ve tecrübe kazanmak"
+  },
+  {
+    question: "Soru danışırken doğru prosedür nedir?",
+    options: ["Direkt en üst lidere gitmek", "Sosyal medya anketi yapmak", "En yakın üst lidere danışmak", "Kimseye söylemeden yapmak", "Sunumu iptal etmek"],
+    correctAnswer: "En yakın üst lidere danışmak"
+  },
+  {
+    question: "Direkt en üst lidere soru sormanın zararı nedir?",
+    options: ["Zaman kazanır", "Kimse öğrenmez", "Ara liderler süreci öğrenemez", "İş büyür", "Daha hızlı gelişim olur"],
+    correctAnswer: "Ara liderler süreci öğrenemez"
+  },
+  {
+    question: "En üst lidere danışmadan önce kaç üst kola danışılmalı?",
+    options: ["0", "1", "2", "4", "Sınırsız"],
+    correctAnswer: "2"
+  },
+  {
+    question: "Liderinizin kendisinin üstüne saygısı yoksa ne anlaşılır?",
+    options: ["Çok bağımsız", "Güçlü bir karakter", "Yanlış lider modeli", "Herkesi geliştirir", "Eğitimi önemser"],
+    correctAnswer: "Yanlış lider modeli"
+  },
+  {
+    question: "“Maymun görür, maymun yapar” sözü neyi anlatır?",
+    options: ["İnsanlar taklit etmez", "Liderlik sadece doğuştan gelir", "Alt kademe üstünü taklit eder", "Eğitim gereksiz", "Herkes özgün davranır"],
+    correctAnswer: "Alt kademe üstünü taklit eder"
+  },
+  {
+    question: "Lider altındakilere zarar verirse ne olur?",
+    options: ["Hızlı başarı", "Sorun çözülür", "Kendisi de zarar görür", "Sistem güçlenir", "Motivasyon artar"],
+    correctAnswer: "Kendisi de zarar görür"
+  },
+  {
+    question: "Liderin danışılmadan verilen yanlış kararlara karşı uyarısı neye dayanır?",
+    options: ["Korku", "Deneyim", "Rastgelelik", "Önyargı", "Engelleme isteği"],
+    correctAnswer: "Deneyim"
+  },
+  {
+    question: "Koordinasyonun temel çıktısı nedir?",
+    options: ["Komuta zinciri", "Zorunlu disiplin", "Ortak akıl, güven ve düzen", "Tek yönlü talimat", "Özgürlüğün yok olması"],
+    correctAnswer: "Ortak akıl, güven ve düzen"
+  }
+]
+,            
+            9: [
+  {
+    question: "Çoğalmanın temel amacı nedir?",
+    options: ["Tek kişinin daha çok çalışması", "Bilginin saklanması", "Ekibin kendini çoğaltabilmesi", "Sunumları azaltmak", "Sistemi küçültmek"],
+    correctAnswer: "Ekibin kendini çoğaltabilmesi"
+  },
+  {
+    question: "“Eğer sadece siz bilirseniz…” cümlesinin devamındaki sonuç nedir?",
+    options: ["Zengin olursunuz", "Tek başınıza yorulursunuz", "Ekibiniz bağımsız olur", "Sunum gerekmez", "Para önemli değildir"],
+    correctAnswer: "Tek başınıza yorulursunuz"
+  },
+  {
+    question: "“Öğretirsen zengin olursun, öğretmeyi öğretirsen…” hangi sonuç gelir?",
+    options: ["Ürün satarsın", "Servet sahibi olursun", "Herkes seni izler", "Eğitim biter", "İş küçülür"],
+    correctAnswer: "Servet sahibi olursun"
+  },
+  {
+    question: "Başkalarının yapamayacağı kadar zor bir iş modeli, neyi engeller?",
+    options: ["Prestiji", "Kişisel gelişimi", "Çoğalmayı", "Ürün satışını", "Takdir edilmeyi"],
+    correctAnswer: "Çoğalmayı"
+  },
+  {
+    question: "Bir olayı anlatırken nasıl davranılmalı?",
+    options: ["Abartarak", "Çok fazla örnek vererek", "Olduğu gibi ve doğru şekilde", "Karşı tarafı korkutarak", "Sadece ürün üzerinden"],
+    correctAnswer: "Olduğu gibi ve doğru şekilde"
+  },
+  {
+    question: "Alt seviyedeki biri neden anlayamayabilir?",
+    options: ["Farklı şeyler düşünüyor olabilir", "Çok tecrübeli olduğu için", "Lider olduğu için", "Öğrenmek istemediği için", "Her şeyi bildiği için"],
+    correctAnswer: "Farklı şeyler düşünüyor olabilir"
+  },
+  {
+    question: "“Tekrar ve tekrar” yapılması gereken şey nedir?",
+    options: ["Hesap sormak", "Bilgileri eğitmek ve pekiştirmek", "Sunumları azaltmak", "Şikayet etmek", "Ürün değişimi"],
+    correctAnswer: "Bilgileri eğitmek ve pekiştirmek"
+  },
+  {
+    question: "Training ne demektir?",
+    options: ["Öğretmek", "Eğitmek", "Sadece izlemek", "Eleştirmek", "Kopyalamak"],
+    correctAnswer: "Eğitmek"
+  },
+  {
+    question: "Training’in en önemli unsuru nedir?",
+    options: ["Unutmak", "Tekrar", "Yavaşlık", "Karmaşıklaştırmak", "Sadece dinlemek"],
+    correctAnswer: "Tekrar"
+  },
+  {
+    question: "Teaching ne demektir?",
+    options: ["Eğitimi takip etmek", "Eğitim hazırlamak", "Bilgiyi başkasına aktarmak", "Hedef belirlemek", "Para kazanmak"],
+    correctAnswer: "Bilgiyi başkasına aktarmak"
+  },
+  {
+    question: "Duplicate yapılmazsa ne olur?",
+    options: ["Ekibin yükü azalır", "Sunumları herkes yapar", "Tek kişi bütün sunumlara yetişemez", "Tablo mükemmel olur", "Eğitim gerekmez"],
+    correctAnswer: "Tek kişi bütün sunumlara yetişemez"
+  },
+  {
+    question: "Duplicate’in sağladığı temel avantaj?",
+    options: ["Lider yalnız kalır", "Sistem tek kişide kilitlenmez", "Eğitimler uzar", "İnsanlar sıkılır", "Ürün biter"],
+    correctAnswer: "Sistem tek kişide kilitlenmez"
+  },
+  {
+    question: "“Boynuz kulağı geçer” sözü neyi hedefler?",
+    options: ["Üst lideri ezmek", "Rekabeti yok etmek", "Altın daha iyi yetişmesi", "Öğretmemek", "Deneyimi gizlemek"],
+    correctAnswer: "Altın daha iyi yetişmesi"
+  },
+  {
+    question: "“Öğren, öğret, öğretmeyi öğret” cümlesi neyi özetler?",
+    options: ["Pasif gelir", "Duplicating sistemini", "Zaman yönetimini", "Finansal okuryazarlığı", "Kişisel ego yönetimini"],
+    correctAnswer: "Duplicating sistemini"
+  },
+  {
+    question: "Bilgileri bir ajandaya yazmanın nedeni nedir?",
+    options: ["Hatırlamak ve düzenlemek", "Gizlemek", "Sadece lideri etkilemek", "Çalışmamak", "Rastgele yapmak"],
+    correctAnswer: "Hatırlamak ve düzenlemek"
+  },
+  {
+    question: "Birine bir kez anlatınca neden yeterli olmayabilir?",
+    options: ["İnsanlar istemez", "Herkes hemen unutmaz", "O an anlamamış olabilir", "Eğitim gereksizdir", "İnsanlar çok akıllıdır"],
+    correctAnswer: "O an anlamamış olabilir"
+  },
+  {
+    question: "Çoğalma için iletişim tarzı nasıl olmalıdır?",
+    options: ["Karmaşık ve ağır terimler", "Yalnızca teknik anlatım", "Basit, uygulanabilir", "Sadece motive edici", "Sessiz ve pasif"],
+    correctAnswer: "Basit, uygulanabilir"
+  },
+  {
+    question: "Eğitim vermenin asıl amacı nedir?",
+    options: ["Lideri yormak", "Bilgi biriktirmek", "Sistem içinde çoğalmak", "Görevden kaçmak", "Bireysel başarı"],
+    correctAnswer: "Sistem içinde çoğalmak"
+  },
+  {
+    question: "“Tek başına ilerleyen” bir networker’in kaçınılmaz sonu?",
+    options: ["Büyük ekip", "Hızlı başarı", "Tıkanma ve tükenme", "Pasif gelir", "Kolaylık"],
+    correctAnswer: "Tıkanma ve tükenme"
+  },
+  {
+    question: "Bilgileri azaltmadan yaymak neyi sağlar?",
+    options: ["Hız kaybı", "Kişisel ego artışı", "Sürdürülebilir büyüme", "Sadece para kazanma", "Ekip küçülmesi"],
+    correctAnswer: "Sürdürülebilir büyüme"
+  }
+]
+,
+            10: [
+  {
+    question: "Edification’ın amacı nedir?",
+    options: ["Abartılı başarı hikâyeleri yaratmak", "Eksikleri gizlemek", "Doğru bilgiyi güvenle aktarmak", "Ürünü pahalı göstermek", "İnsanları korkutmak"],
+    correctAnswer: "Doğru bilgiyi güvenle aktarmak"
+  },
+  {
+    question: "Şirket Edification’ının temel faydası nedir?",
+    options: ["Şirketi rakiplerden gizlemek", "İnsanları zorlamak", "Şirketin vizyonunu ekibe de aktarmak", "Toplantıları azaltmak", "Ürünü geri plana atmak"],
+    correctAnswer: "Şirketin vizyonunu ekibe de aktarmak"
+  },
+  {
+    question: "Ürün Edification’ında dikkat edilmesi gereken temel prensip:",
+    options: ["Ürünü mucize gibi göstermek", "Bilinmez bırakmak", "Yalansız, abartısız şekilde anlatmak", "Ürünün fiyatını gizlemek", "Sadece sunumda anlatmak"],
+    correctAnswer: "Yalansız, abartısız şekilde anlatmak"
+  },
+  {
+    question: "Ticari plan Edification’ında hangi durum başarı göstergesidir?",
+    options: ["Farkları bilmeden anlatmak", "Diğer planları kötülemek", "Kıyaslayarak neden seçildiğini açıklamak", "Planı paylaşmamak", "Tek kalıp söz ezberlemek"],
+    correctAnswer: "Kıyaslayarak neden seçildiğini açıklamak"
+  },
+  {
+    question: "Üst Kol Edification’ı ne sağlar?",
+    options: ["Üst kolu otoriter hissettirir", "Ekibin üst kola mesafe koymasını sağlar", "Takım bilincini güçlendirir", "Alt kolu küçültür", "Şirketi gizemli kılar"],
+    correctAnswer: "Takım bilincini güçlendirir"
+  },
+  {
+    question: "Üst kolu yanlış anlatmak neye neden olur?",
+    options: ["Bağlılığı artırır", "Sunumu kolaylaştırır", "Önyargı ve güvensizlik", "Follow sayısını artırır", "Kapanış oranını yükseltir"],
+    correctAnswer: "Önyargı ve güvensizlik"
+  },
+  {
+    question: "Alt kol Edification’ı neden gereklidir?",
+    options: ["Sadece liderin çalışması için", "Eğitim alma hakkını azaltmak için", "Güçlü alt ekiple güçlü lider olmak için", "Sorumluluk devretmemek için", "Alt kolu pasifleştirmek için"],
+    correctAnswer: "Güçlü alt ekiple güçlü lider olmak için"
+  },
+  {
+    question: "Alt kola doğru iletişim ne sağlar?",
+    options: ["Bilgi saklanır", "Güvensizlik artar", "Özgüven ve gelişim desteklenir", "Takım küçülür", "Eğitim azalır"],
+    correctAnswer: "Özgüven ve gelişim desteklenir"
+  },
+  {
+    question: "Toplantı Edification’ı hangi etkiyi yaratır?",
+    options: ["Katılımı azaltır", "Gereksiz görülmesine yol açar", "Katılmayan kişinin merakını artırır", "Sadece lider kazanır", "Kimse gelmez"],
+    correctAnswer: "Katılmayan kişinin merakını artırır"
+  },
+  {
+    question: "Seminer Edification’ında hangi duygu öne çıkar?",
+    options: ["Keşke kimse gelmeseydi", "Kimseye anlatma", "Keşke herkes burada olsaydı", "Bunun değeri yok", "Ürün yetiyor"],
+    correctAnswer: "Keşke herkes burada olsaydı"
+  },
+  {
+    question: "Edification’ın temel yapı taşıdır:",
+    options: ["Abartı ve şov", "Sessizlik", "Gerçeklik ve pozitiflik", "Gizlilik", "Tek yönlü konuşma"],
+    correctAnswer: "Gerçeklik ve pozitiflik"
+  },
+  {
+    question: "Ürün Edification’ında yanlış olan hangisi?",
+    options: ["Kıymetini göstermek", "Faydalarını anlatmak", "Yalan katarak cazipleştirmek", "Nasıl kullanıldığını açıklamak", "Deneyim paylaşmak"],
+    correctAnswer: "Yalan katarak cazipleştirmek"
+  },
+  {
+    question: "Üst kolu “şef-müdür” gibi görmek neden hatadır?",
+    options: ["Eğitim veremez", "Sadece para alır", "Aynı safta olduğunuz unutulur", "Sunumu bozmak ister", "İşle ilgisizdir"],
+    correctAnswer: "Aynı safta olduğunuz unutulur"
+  },
+  {
+    question: "Edification yapmamak hangi sonuca yol açabilir?",
+    options: ["Bilgi artar", "Güvensizlik ve ilgisizlik", "Sistem hızlanır", "Eğitim azalır", "Başarı garantilenir"],
+    correctAnswer: "Güvensizlik ve ilgisizlik"
+  },
+  {
+    question: "Alt kol iletişiminde ilk yaklaşım nedir?",
+    options: ["Sert denetim", "Sürekli eleştiri", "Hal-hatır sormak", "Yetki kısıtlamak", "Uzak durmak"],
+    correctAnswer: "Hal-hatır sormak"
+  },
+  {
+    question: "Edification sadece hangi seviyeye yapılmalıdır?",
+    options: ["Üst kola", "Alt kola", "Şirkete", "Her seviyeye", "Yeni gelenlere"],
+    correctAnswer: "Her seviyeye"
+  },
+  {
+    question: "Edification’ın ekipte doğurduğu duygu nedir?",
+    options: ["Kutuplaşma", "Dışlanma", "Bağlılık ve aidiyet", "Kopukluk", "Rekabet"],
+    correctAnswer: "Bağlılık ve aidiyet"
+  },
+  {
+    question: "Edification’ın başarısı nasıl ölçülür?",
+    options: ["Korku artarsa", "İnsanlar uzaklaşırsa", "Güven ve motivasyon artarsa", "Sadece lider kazanırsa", "Eğitim biterse"],
+    correctAnswer: "Güven ve motivasyon artarsa"
+  },
+  {
+    question: "Toplantı ve seminerlerin anlatılması hangi duyguyu uyandırır?",
+    options: ["Gerek yok", "Ben yapamam", "Ben de orada olmalıyım", "Kimse gelmesin", "Lider gelsin yeter"],
+    correctAnswer: "Ben de orada olmalıyım"
+  },
+  {
+    question: "Yüceltmenin karar alma süreçlerine katkısı nedir?",
+    options: ["İnsanları korkutur", "Lideri gereksiz kılar", "Doğru kişi/doğru bilgi eşleşmesini sağlar", "Sadece motivasyon sağlar", "Alt kolu güçsüzleştirir"],
+    correctAnswer: "Doğru kişi/doğru bilgi eşleşmesini sağlar"
+  }
+]
+,
         };
         const stages = [
             {
                 id: 1,
-                title: "Proje Tanıtımı",
-                description: "MAT projesinin temel bilgileri ve hedefleri",
-                type: "Konferans",
+                title: "Başlangıç İçeriği",
+                description: "Haydi başlayalım",
+                type: "Başlangıç İçeriği",
                 contents: [
                     //{ type: 'text', title: "Proje Hakkında Bilgi", icon: '📄', data: '' },                    
                     { type: 'link', title: 'PDF Dosyası - Peynirimi Kim Kaptı', icon: '🔗', data: 'https://raw.githubusercontent.com/opsdazlakss/education/main/peynir.pdf' },
                     { type: 'video', title: 'Peynirimi Kim Kaptı - Dr. Spencer Johnson', icon: '🎥',    data: 'cT6ZqNnbLAf', platform: 'screenpal'},
                     { type: 'video', title: 'Pablo ve Bruno Türkçe Boru Hattı Hikayesi', icon: '🎥', data: 'https://www.youtube.com/embed/st_6oow4cDo', platform: 'youtube'},
-                    { type: 'survey', title: 'Başlangıç Anketi', icon: '📋', data: ['Projeden haberiniz vardı mı?', 'Hangi alanda kullanmayı planlıyorsunuz?', 'Deneyim seviyeniz nedir?'] },
-                    {
-                        type: 'quiz',
-                        title: 'Aşama 1 Testi',
-                        icon: '❓',
-                        questionCount: 5, // Kaç soru sorulacak
-                        stageId: 1 // Hangi havuzdan soru çekilecek
-                    }
+
                 ]
             },
             {
                 id: 2,
                 title: "Düşünce Değişimi",
-                description: "Proje yapısı ve ana bileşenleri hakkında bilgi",
-                type: "Video",
+                description: "Düşünce Değişimi",
+                type: "Düşünce Değişimi",
                 contents: [
                     { type: 'video', title: 'Düşünce Değişimi', icon: '🎥', data: 'https://www.youtube.com/embed/HqEE-lU91eQ?list=PL0Hya99D5Lc74omeWpPF34NYJf0zRJ5nY', platform: 'youtube'},
                     { type: 'text', title: 'Networkde Çevre', icon: '📄', data: `
@@ -1087,10 +2024,10 @@
 <p>Network Marketing, yalnızca satış ya da çevreye bağlı bir sistem değildir. Bilgi, eğitim ve ekip çalışmasının doğru harmanlandığı bir yapıdır.</p>
 <p>Bu anlayışla hareket eden kişiler, uzun vadede hem kendi gelişimlerini hem de ekiplerinin başarısını garanti altına alırlar.</p>
 ` },
-                    { type: 'link', title: 'GitHub Deposu', icon: '🔗', data: 'https://github.com/mat/project' },
+                    { type: 'survey', title: 'Açık Uçlu Sorular', icon: '📋', data: ['Network marketing ile geleneksel pazarlama arasındaki farklardan hangisi seni en çok etkiledi ve neden?', 'Metinde çevresi geniş kişilerin bazen zorluk çıkarabileceği söyleniyor. Sence hangi kişilik özellikleri network sistemine daha uygundur? Kendi yorumunu yaz.', 'Eğitim ve iş gücü paylaşımı konusunda verilen örneği düşünerek, ekip içinde nasıl bir lider olmak istediğini tanımla.'] },                    
                     {
                         type: 'quiz',
-                        title: 'Aşama 1 Testi',
+                        title: 'Aşama Testi',
                         icon: '❓',
                         questionCount: 5, // Kaç soru sorulacak
                         stageId: 1 // Hangi havuzdan soru çekilecek
@@ -1100,8 +2037,8 @@
             {
                 id: 3,
                 title: "9 TEMEL SUTUN",
-                description: "Proje vizyonu ve hedeflerimiz",
-                type: "1",
+                description: "9 TEMEL SUTUN",
+                type: "Temel Sütun - 1",
                 contents: [
                     { type: 'text', title: 'Hayaller, Hedefler ve Nedenleriniz', icon: '📄', data: `
 <h2>Hayaller, Hedefler ve Nedenleriniz</h2>
@@ -1142,14 +2079,21 @@ Eğer çok fazla "Nasıl yapacağım?", "Nasıl edeceğim?" gibi sorulara takıl
 <p><em>"Unutmayın! Nasıl’lar, nedenleri geçmemelidir."</em></p>
 ` },
                     { type: 'video', title: '9 TEMEL SUTUN - 1: HAYAL HEDEF NEDENLERİMİZ', icon: '🎥', data: 'https://www.youtube.com/embed/S7aS6Qdfmuo?list=PL0Hya99D5Lc74omeWpPF34NYJf0zRJ5nY' },
-                    { type: 'survey', title: 'Görüş Anketi', icon: '📋', data: ['Projemizin vizyonu size ne ifade ediyor?', 'Hangi özellik en çok ilginizi çekti?'] }
+                    { type: 'survey', title: 'Açık Uçlu Sorular', icon: '📋', data: [ 'Senin için “TOMBUL hedef” ifadesi ne anlam taşıyor? Kendi hayatından bir örnek vererek açıklayın.','Hayaller sınırsız olmalı deniyor. Senin “sınır koymadığın” bir hayalin nedir ve bu hayal sana ne hissettiriyor?','Hedeflerini belirlerken “nedenlerin” seni nasıl etkiliyor? Zorlandığın bir anda seni ayağa kaldıran neden neydi?']},
+                    {
+                        type: 'quiz',
+                        title: 'Aşama Testi',
+                        icon: '❓',
+                        questionCount: 5, // Kaç soru sorulacak
+                        stageId: 2 // Hangi havuzdan soru çekilecek
+                    }
                 ]
             },
             {
                 id: 4,
                 title: "9 TEMEL SUTUN",
-                description: "Teknik implementasyon ve altyapı detayları",
-                type: "2",
+                description: "9 TEMEL SUTUN",
+                type: "Temel Sütunlar - 2",
                 contents: [
                     { type: 'text', title: 'Taahhüt Almak ve Vermek', icon: '📄', data: `
 <h2>Taahhüt Almak ve Vermek</h2>
@@ -1213,14 +2157,21 @@ Fakat bu işlerle uğraşmayan kişiler için bu basit şeyler bile zor gelebili
 <p>O kişiyle uğraşmayı bırakıp, <strong>"Kendi iyiliğini, hayallerini, isteklerini gerçekleştirmek isteyenlere"</strong> yoğunlaşın.</p>
 ` },
                     { type: 'video', title: '9 TEMEL SUTUN - 2: TAAHHÜT', icon: '🎥', data: 'https://www.youtube.com/embed/LDc4DC6ufaQ?list=PL0Hya99D5Lc74omeWpPF34NYJf0zRJ5nY' },
-                    { type: 'link', title: 'Teknik Belgeleri', icon: '🔗', data: 'https://tech-docs.example.com' }
+                    { type: 'survey', title: 'Açık Uçlu Sorular', icon: '📋', data: ['Hayatında verdiğin bir taahhüdü düşün. Bu taahhüt seni nasıl harekete geçirdi ve sonucunda ne hissettin?', 'Bir lidere göre, taahhüt almak ve vermek neden ekip içi güvenin temelidir? Kendi yorumunu yaz.' , '“Hayır” cevabını kişisel algılamamak neden önemli? Bu durumu yaşadığında nasıl davranmalısın?'] },
+                    {
+                        type: 'quiz',
+                        title: 'Aşama Testi',
+                        icon: '❓',
+                        questionCount: 5, // Kaç soru sorulacak
+                        stageId: 3 // Hangi havuzdan soru çekilecek
+                    }
                 ]
             },
             {
                 id: 5,
                 title: "9 TEMEL SUTUN",
-                description: "Proje yol haritası ve milestone'lar",
-                type: "3",
+                description: "9 TEMEL SUTUN",
+                type: "Temel Sütun - 3",
                 contents: [
                     { type: 'text', title: 'Liste Yapmak', icon: '📄', data: `
 <h2>Liste Yapmak</h2>
@@ -1257,15 +2208,20 @@ sizden ziyade Sinan’ın sizden güzel bir enerji alıp almadığıdır.</p>
 o doğrultuda ilerleme sağlamak ve doğru tutum takınabilmektir.</p>
 ` },
                     { type: 'video', title: '9 TEMEL SUTUN - 3: Kişi Listesi', icon: '🎥', data: 'https://www.youtube.com/embed/LDc4DC6ufaQ?list=PL0Hya99D5Lc74omeWpPF34NYJf0zRJ5nY' },
-                    { type: 'link', title: 'Etkileşimli Roadmap', icon: '🔗', data: 'https://roadmap.example.com' },
-                    { type: 'survey', title: 'Öncelik Anketi', icon: '📋', data: ['Hangi özellik önce gelmelidir?', 'Neler eksik olduğunu düşünüyorsunuz?'] }
-                ]
+                    { type: 'survey', title: 'Açık Uçlu Sorular', icon: '📋', data: ['İnsanlar adına karar vermemek neden önemli? Kendi çevrenden bir örnekle açıklayabilirsin.', 'Kişi listeni sürekli güncel tutmanın başarıya etkisi nedir? Kendi yorumunu yaz.' , 'Liste analizi yaparken karşıdaki kişinin enerjisinden başka hangi unsurlar değerlendirilebilir? Yaz.'] },
+                    {
+                        type: 'quiz',
+                        title: 'Aşama Testi',
+                        icon: '❓',
+                        questionCount: 5, // Kaç soru sorulacak
+                        stageId: 4 // Hangi havuzdan soru çekilecek
+                    }                ]
             },
             {
                 id: 6,
                 title: "9 TEMEL SUTUN",
-                description: "Komunite ile etkileşim ve geri bildirim",
-                type: "4",
+                description: "9 TEMEL SUTUN",
+                type: "Temel Sütun - 4",
                 contents: [
                     { type: 'text', title: 'Davet Etmek', icon: '📄', data: `
 <h2>Davet Etmek</h2>
@@ -1383,16 +2339,21 @@ Sunum için Presenter'ın olması şarttır.</p>
 Bunu da öyle düşünün.</p>
 
 ` },
-                    { type: 'survey', title: 'Topluluk Geri Bildirimi', icon: '📋', data: ['Projemizi nasıl değerlendiriyorsunuz?', 'Hangi alanlarda iyileştirme yapılmalı?', 'Proje hakkında tavsiye ve önerileriniz nelerdir?'] },
-                    { type: 'video', title: '9 TEMEL SUTUN - 4: DAVET', icon: '🎥', data: 'https://www.youtube.com/embed/FBp3fJLjMMo?list=PL0Hya99D5Lc74omeWpPF34NYJf0zRJ5nY' },
-                    { type: 'link', title: 'Discord Sunucusu', icon: '🔗', data: 'https://discord.gg/matproject' }
-                ]
+                { type: 'video', title: '9 TEMEL SUTUN - 4: DAVET', icon: '🎥', data: 'https://www.youtube.com/embed/FBp3fJLjMMo?list=PL0Hya99D5Lc74omeWpPF34NYJf0zRJ5nY' },
+                { type: 'survey', title: 'Açık Uçlu Sorular', icon: '📋', data: ['Farklı insanlarla farklı davet yöntemleri kullanmak neden gereklidir? Kendi çevrenden iki örnek ver.', 'Davette “aciliyet duygusu” oluşturmak ne işe yarar? Bunu kendi sözlerinle açıkla.' , 'Bir davetten sonra kendini değerlendirirken hangi noktaları analiz edersin? Kısa bir kişisel değerlendirme yaz.'] },
+                {
+                    type: 'quiz',
+                    title: 'Aşama Testi',
+                    icon: '❓',
+                    questionCount: 5, // Kaç soru sorulacak
+                    stageId: 5 // Hangi havuzdan soru çekilecek
+                }                ]
             },
             {
                 id: 7,
                 title: "9 TEMEL SUTUN",
-                description: "Gerçek dünya senaryoları ve örnekler",
-                type: "5",
+                description: "9 TEMEL SUTUN",
+                type: "Temel Sütun - 5",
                 contents: [
                     { type: 'text', title: 'Sunum Yapmak', icon: '📄', data: `<h2>Sunum Yapmak</h2>
 
@@ -1482,14 +2443,21 @@ Ancak siz, iyi bir davet ve follow yaparsanız o satışı kapatabilirsiniz.</p>
 
 ` },
                     { type: 'video', title: '9 TEMEL SUTUN - 5: SUNUM', icon: '🎥', data: 'https://www.youtube.com/embed/V9MdAFV-MAQ?list=PL0Hya99D5Lc74omeWpPF34NYJf0zRJ5nY' },
-                    { type: 'link', title: 'Demo Projeleri', icon: '🔗', data: 'https://github.com/mat/examples' }
+                    { type: 'survey', title: 'Açık Uçlu Sorular', icon: '📋', data: ['Sunum öncesinde davetçinin kurması gereken “güven” atmosferini, kendi cümlelerinle tarif et. Hangi cümleleri ve hangi beden dilini kullanırsın?', 'Presenter sunumdayken davetçinin “onaylayıcı rolü” neden kritik? Bu rol aksadığında davet edilen kişi neleri yanlış yorumlayabilir?' , 'Sunumdan sonra davetliyle baş başa kaldığında hangi “dost tavsiyelerini” verirsin? Metindeki ilkelere dayanarak kısa bir rehber yaz.'] },
+                    {
+                        type: 'quiz',
+                        title: 'Aşama Testi',
+                        icon: '❓',
+                        questionCount: 5, // Kaç soru sorulacak
+                        stageId: 6 // Hangi havuzdan soru çekilecek
+                    }
                 ]
             },
             {
                 id: 8,
                 title: "9 TEMEL SUTUN",
-                description: "Daha derinlemesine teknik konular",
-                type: "6",
+                description: "9 TEMEL SUTUN",
+                type: "Temel Sütun - 6",
                 contents: [
                     { type: 'text', title: 'Follow / Takip', icon: '📄', data: `<h2>Follow / Takip</h2>
 
@@ -1583,14 +2551,21 @@ Bunu diyen kişi şunu düşünecektir: <em>"Hee, bir tek ben değilmişim."</em
 <p><strong>"İnsanlar, kendileri gibi birilerini ararlar."</strong></p>
 ` },
                     { type: 'video', title: '9 TEMEL SUTUN - 6: TAKİP ve GÖRÜŞME', icon: '🎥', data: 'https://www.youtube.com/embed/qCitqOEvVL8?list=PL0Hya99D5Lc74omeWpPF34NYJf0zRJ5nY' },
-                    { type: 'survey', title: 'Bilgi Testi', icon: '📋', data: ['API authentication nasıl yapılır?', 'Veritabanı optimizasyonunun önemi nedir?', 'Rate limiting neden gereklidir?'] }
+                    { type: 'survey', title: 'Açık Uçlu Sorular', icon: '📋', data: ['Follow’da güven ile kibir arasındaki çizgiyi nasıl koruyorsun? Kendi ifadelerinle örneklendir.', 'Fell–Felt–Found taktiğini, Network dışı günlük bir senaryoya uygulayarak açıklayın.' , 'Sunum sonrası Follow’da kişiye “hayalini ondan daha çok önemsemek” ne demektir? Bunu kendi bakış açınla yorumla.'] },
+                    {
+                        type: 'quiz',
+                        title: 'Aşama Testi',
+                        icon: '❓',
+                        questionCount: 5, // Kaç soru sorulacak
+                        stageId: 7 // Hangi havuzdan soru çekilecek
+                    }
                 ]
             },
             {
                 id: 9,
                 title: "9 TEMEL SUTUN",
-                description: "Tüm öğrenilenlerin uygulandığı final projesi",
-                type: "7",
+                description: "9 TEMEL SUTUN",
+                type: "Temel Sütun - 7",
                 contents: [
                     { type: 'text', title: 'Koordinasyon', icon: '📄', data: `<h2>Koordinasyon</h2>
 
@@ -1670,15 +2645,20 @@ Eğer direkt olarak en üst yetkiliye sorarsanız, aradaki cevabı bilmeyen üst
 <p><strong>"Maymun görür, maymun yapar."</strong></p>
 ` },
                     { type: 'video', title: '9 TEMEL SUTUN - 7: KOORDİNASYON', icon: '🎥', data: 'https://www.youtube.com/embed/xxOScdUrgrs?list=PL0Hya99D5Lc74omeWpPF34NYJf0zRJ5nY' },
-                    { type: 'link', title: 'Başlangıç Şablonu', icon: '🔗', data: 'https://github.com/mat/starter-template' },
-                    { type: 'survey', title: 'Final Değerlendirmesi', icon: '📋', data: ['Proje tamamlanmış mı?', 'Neler öğrendiniz?', 'Geri bildirim ve gelecek planlarınız'] }
-                ]
+                    { type: 'survey', title: 'Açık Uçlu Sorular', icon: '📋', data: ['“Lidere danışmak” ile “liderin her dediğini gözü kapalı yapmak” arasındaki fark nedir? Kendi düşüncenle açıkla.', 'Koordinasyonun en güçlü öğrenme ortamı olduğunu söylüyorsun. Bunun kendi hayatındaki bir örneğini paylaş.' , 'Üst liderine saygı göstermenin, altındaki ekip davranışlarına nasıl yansıdığını açıklayın.'] },
+                    {
+                        type: 'quiz',
+                        title: 'Aşama Testi',
+                        icon: '❓',
+                        questionCount: 5, // Kaç soru sorulacak
+                        stageId: 8 // Hangi havuzdan soru çekilecek
+                    }                ]
             },
             {
                 id: 10,
                 title: "9 TEMEL SUTUN",
                 description: "9 TEMEL SUTUN",
-                type: "8",
+                type: "Temel Sütun -8",
                 contents: [
                     { type: 'text', title: 'Çoğalma', icon: '📄', data: `<h2>Çoğalma</h2>
 
@@ -1742,14 +2722,20 @@ Eğer yetiştirebilirseniz, eğitimleriniz ve sunumlarınız tıkır tıkır yü
 <p><strong>Network'deki Sır:</strong> "Öğren, öğret, öğretmeyi öğret."</p>
 ` },
                     { type: 'video', title: '9 TEMEL SUTUN - 8: ÇOĞALTMA', icon: '🎥', data: 'https://www.youtube.com/embed/l7DDWmbrFIs?list=PL0Hya99D5Lc74omeWpPF34NYJf0zRJ5nY' },
-                    { type: 'survey', title: 'Bilgi Testi', icon: '📋', data: ['API authentication nasıl yapılır?', 'Veritabanı optimizasyonunun önemi nedir?', 'Rate limiting neden gereklidir?'] }
-                ]
+                    { type: 'survey', title: 'Açık Uçlu Sorular', icon: '📋', data: ['“Öğretmeyi öğretmek” ifadesi senin için ne ifade ediyor? Kendi hayatından bir örnekle açıkla.', 'Duplicate eksik olduğunda sistemin neden büyüyemeyeceğini mantıksal bir şekilde yorumla.' , 'İnsanlara basit anlatmak ile hafife almak arasındaki fark nedir? Kendi cümlelerinle ifade et.'] },
+                    {
+                        type: 'quiz',
+                        title: 'Aşama Testi',
+                        icon: '❓',
+                        questionCount: 5, // Kaç soru sorulacak
+                        stageId: 9 // Hangi havuzdan soru çekilecek
+                    }                 ]
             },
             {
                 id: 11,
                 title: "9 TEMEL SUTUN",
                 description: "9 TEMEL SUTUN",
-                type: "9",
+                type: "Temel Sütun - 9",
                 contents: [
                     { type: 'text', title: 'Yüceltme', icon: '📄', data: `<h2>Yüceltme</h2>
 
@@ -1864,8 +2850,14 @@ Onların zaman algısını, Network düşüncesine çekmeniz gerekir.</p>
 Abartısız ve yalansız bir şekilde, hakkını vererek bilinmesini sağlamaktır.</p>
 `},
                     { type: 'video', title: '9 TEMEL SUTUN - 9: YÜCELTME', icon: '🎥', data: 'https://www.youtube.com/embed/Ok4J-npA5Rk?list=PL0Hya99D5Lc74omeWpPF34NYJf0zRJ5nY' },
-                    { type: 'survey', title: 'Bilgi Testi', icon: '📋', data: ['API authentication nasıl yapılır?', 'Veritabanı optimizasyonunun önemi nedir?', 'Rate limiting neden gereklidir?'] }
-                ]
+                    { type: 'survey', title: 'Açık Uçlu Sorular', icon: '📋', data: ['Edification yaparken “abartısız ve yalansız anlatım” neden kritik bir prensiptir? Güven ilişkisi açısından yorumla.', 'Şirket, ürün, üst kol veya alt kol… Bunların hangisinin Edification’ını en çok zorlanarak yaparsın? Neden?' , 'Edification’ın ekip kültürünü nasıl şekillendirdiğini, kendi cümlelerinle örneklendir.'] },
+                    {
+                        type: 'quiz',
+                        title: 'Aşama Testi',
+                        icon: '❓',
+                        questionCount: 5, // Kaç soru sorulacak
+                        stageId: 10 // Hangi havuzdan soru çekilecek
+                    }                ]
             },
         ];
 
