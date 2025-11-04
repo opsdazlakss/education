@@ -3657,49 +3657,56 @@ Abartısız ve yalansız bir şekilde, hakkını vererek bilinmesini sağlamakt�
         // Kullanıcı giriş kontrolü
         auth.onAuthStateChanged(async (user) => {
             if (!user) {
-                // Kullanıcı çıkış yaptıysa login sayfasına yönlendir
                 window.location.href = 'login.html';
                 return;
             }
         
-            // Aktif kullanıcı bilgilerini ayarla
             currentUser = user;
             currentUsername = user.email.split('@')[0];
         
             try {
-                // Firestore'dan kullanıcı bilgilerini al
+                // 🔹 Firebase Auth henüz yeni hesap için email verified olmamasına rağmen devam et
+                console.log('Kullanıcı girişi:', currentUsername);
+        
+                // Firestore'dan kullanÄ±cÄ± bilgilerini al
                 const userDoc = await db.collection('users').doc(currentUsername).get();
         
                 if (!userDoc.exists) {
-                    console.error('Kullanıcı Firestore’da bulunamadı.');
+                    console.error('KullanÄ±cÄ± Firestoreâ€™da bulunamadÄ±.');
+                    alert('Kullanıcı kaydı bulunamadı. Lütfen yöneticinize başvurun.');
                     await auth.signOut();
                     window.location.href = 'login.html';
                     return;
                 }
         
                 const userData = userDoc.data();
-                console.log(`Hoşgeldin: ${userData.fullname}`);
+                console.log(`HoÅŸgeldin: ${userData.fullname}`);
         
+                // 🔹 İlerleme verilerini yükle
                 await loadUserProgress();
         
+                // 🔹 UI'ı render et
                 await renderStages();
-        
                 renderContent();
         
+                // 🔹 Admin ve Presenter butonlarını göster
                 if (userData.isAdmin) {
                     const adminBtn = document.getElementById('adminButton');
                     if (adminBtn) adminBtn.style.display = 'block';
                 }
+                
+                if (userData.isPresenter) {
+                    const presenterBtn = document.getElementById('presenterButton');
+                    if (presenterBtn) presenterBtn.style.display = 'block';
+                }
         
-                console.log('Kullanıcı verileri ve aşamalar başarıyla yüklendi.');
+                console.log('✅ Kullanıcı verileri ve aşamalar başarıyla yüklendi.');
         
             } catch (error) {
-                console.error('Kullanıcı bilgisi alınamadı:', error);
-                const errorMessage = document.getElementById('errorMessage');
-                if (errorMessage) {
-                    errorMessage.textContent = 'Kullanıcı bilgileri yüklenemedi. Lütfen tekrar giriş yapın.';
-                    errorMessage.classList.add('show');
-                }
+                console.error('❌ Kullanıcı bilgisi alınamadı:', error);
+                alert('Bir hata oluştu. Lütfen tekrar giriş yapın.\nHata: ' + error.message);
+                await auth.signOut();
+                window.location.href = 'login.html';
             }
         });
         
