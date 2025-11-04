@@ -324,60 +324,82 @@
     
             errorMessage.classList.remove('show');
             loginBtn.disabled = true;
-            loginBtn.textContent = 'Giriş yapılıyor...';
+            loginBtn.textContent = 'GiriÅŸ yapÄ±lÄ±yor...';
     
             try {
-                // Firestore'dan kullanıcıyı bul
+                // 🔹 1. Firestore'dan kullanıcıyı kontrol et
                 const userDoc = await db.collection('users').doc(username).get();
     
                 if (!userDoc.exists) {
-                    throw new Error('Kullanıcı bulunamadı');
+                    throw new Error('KullanÄ±cÄ± bulunamadÄ±');
                 }
     
                 const userData = userDoc.data();
                 const email = userData.email;
-        
-                // Eğer kullanıcıda password field'i varsa, henüz Auth'a eklenmemiş demektir
-                if (userData.password) {
-    // Şifreyi kontrol et
-                const hashedPassword = btoa(password);
-                if (hashedPassword !== userData.password) {
-                    throw new Error('Şifre hatalı');
-                }
-            
-                try {
-                    // Önce giriş yapmayı dene
-                    await auth.signInWithEmailAndPassword(email, password);
-                } catch (error) {
-                    // Eğer kullanıcı Auth’ta yoksa (ilk giriş), oluştur
-                    if (error.code === 'auth/user-not-found') {
-                        await auth.createUserWithEmailAndPassword(email, password);
-                        console.log('Kullanıcı ilk kez Auth’a eklendi:', email);
-                    } else {
-                        throw error;
-                    }
-                }
-            
-                // Firestore'dan password alanını kaldır (artık Auth kontrol edecek)
-                await db.collection('users').doc(username).update({
-                    password: firebase.firestore.FieldValue.delete()
-                });
                 
-                console.log('Şifre Firestore’dan kaldırıldı, Auth devreye alındı.');
-            } else {
-                // Normal giriş (kullanıcı zaten Auth'da var)
-                await auth.signInWithEmailAndPassword(email, password);
-            }
+                console.log('✅ Kullanıcı Firestore\'da bulundu:', username);
+        
+                // 🔹 2. Eğer kullanıcıda password field'i varsa, henüz Auth'a eklenmemiş demektir
+                if (userData.password) {
+                    // Şifreyi kontrol et
+                    const hashedPassword = btoa(password);
+                    if (hashedPassword !== userData.password) {
+                        throw new Error('Åžifre hatalÄ±');
+                    }
+            
+                    console.log('ℹ️ İlk giriş - kullanıcı Auth\'a ekleniyor...');
+                    
+                    try {
+                        // 🔹 3a. İlk önce giriş yapmayı dene
+                        await auth.signInWithEmailAndPassword(email, password);
+                        console.log('✅ Kullanıcı zaten Auth\'da, giriş yapıldı.');
+                    } catch (error) {
+                        // 🔹 3b. Eğer kullanıcı Auth'ta yoksa (ilk giriş), oluştur
+                        if (error.code === 'auth/user-not-found') {
+                            await auth.createUserWithEmailAndPassword(email, password);
+                            console.log('✅ Kullanıcı ilk kez Auth\'a eklendi:', email);
+                        } else {
+                            throw error;
+                        }
+                    }
+            
+                    // 🔹 4. Firestore'dan password alanını kaldır (artık Auth kontrol edecek)
+                    await db.collection('users').doc(username).update({
+                        password: firebase.firestore.FieldValue.delete()
+                    });
+                    
+                    console.log('✅ Şifre Firestore\'dan kaldırıldı, Auth devreye alındı.');
+                    
+                } else {
+                    // 🔹 5. Normal giriş (kullanıcı zaten Auth'da var)
+                    console.log('ℹ️ Normal giriş denemesi...');
+                    await auth.signInWithEmailAndPassword(email, password);
+                    console.log('✅ Giriş başarılı!');
+                }
 
-
+                // 🔹 6. Başarılı girişten sonra kısa bir bekleme ekle
+                console.log('⏳ Yönlendirme yapılıyor...');
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                
                 window.location.href = 'index.html';
     
             } catch (error) {
-                console.error('Giriş hatası:', error);
-                errorMessage.textContent = 'Kullanıcı adı veya şifre hatalı!';
+                console.error('❌ GiriÅŸ hatasÄ±:', error);
+                let errorMsg = 'KullanÄ±cÄ± adÄ± veya ÅŸifre hatalÄ±!';
+                
+                // Daha açıklayıcı hata mesajları
+                if (error.code === 'auth/wrong-password') {
+                    errorMsg = 'Şifre hatalı!';
+                } else if (error.code === 'auth/too-many-requests') {
+                    errorMsg = 'Çok fazla başarısız deneme. Lütfen daha sonra tekrar deneyin.';
+                } else if (error.message) {
+                    errorMsg = error.message;
+                }
+                
+                errorMessage.textContent = errorMsg;
                 errorMessage.classList.add('show');
                 loginBtn.disabled = false;
-                loginBtn.textContent = 'Giriş Yap';
+                loginBtn.textContent = 'GiriÅŸ Yap';
             }
         });
     </script>
