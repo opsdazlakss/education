@@ -765,7 +765,7 @@ function startRealtimeApprovalListener() {
         addUserForm.addEventListener('submit', async (e) => {
             e.preventDefault();
         
-            const username = document.getElementById('newUsername').value.trim();
+            const username = document.getElementById('newUsername').value.trim().toLowerCase(); // 🔹 Küçük harfe çevir
             const fullname = document.getElementById('newFullname').value.trim();
             const password = document.getElementById('newPassword').value;
         
@@ -780,33 +780,42 @@ function startRealtimeApprovalListener() {
                 }
         
                 const email = `${username}@mat.local`;
-        
-                // 🔹 1. Firebase Auth’a kullanıcı ekle
-                // 🔹 1. Secondary Firebase instance oluştur (admin çıkmadan kullanıcı yaratmak için)
-                const secondaryApp = firebase.initializeApp(firebaseConfig, "Secondary");
                 
-                // 🔹 2. Yeni kullanıcıyı Auth’a ekle
+                console.log('📝 Yeni kullanıcı oluşturuluyor:', { username, email, fullname });
+        
+                // 🔹 1. Secondary Firebase instance oluştur (admin çıkmadan kullanıcı yaratmak için)
+                const secondaryApp = firebase.initializeApp(firebaseConfig, `Secondary_${Date.now()}`);
+                
+                // 🔹 2. Yeni kullanıcıyı Auth'a ekle
                 const userCredential = await secondaryApp.auth().createUserWithEmailAndPassword(email, password);
                 const createdUser = userCredential.user;
-                console.log('Auth’a eklendi:', createdUser.uid);
+                console.log('✅ Auth\'a eklendi:', createdUser.uid);
                 
                 // 🔹 3. Secondary app'i kapat (gereksiz oturumları temizler)
                 await secondaryApp.delete();
                 
-                // 🔹 4. Firestore’a kaydet
+                // 🔹 4. Firestore'a kaydet
                 await db.collection('users').doc(username).set({
-                    username,
-                    fullname,
-                    email,
+                    username: username,
+                    fullname: fullname,
+                    email: email,
                     isAdmin: false,
                     isPresenter: false,
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
+                
+                console.log('✅ Firestore\'a kaydedildi:', username);
 
-
-
+                // 🔹 5. İlk userProgress belgesini oluştur
+                await db.collection('userProgress').doc(username).set({
+                    completedStages: {},
+                    currentStage: 1,
+                    lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                
+                console.log('✅ UserProgress oluşturuldu:', username);
         
-                successMessage.textContent = `✅ ${fullname} başarıyla eklendi!`;
+                successMessage.textContent = `✅ ${fullname} başarıyla eklendi! (Kullanıcı adı: ${username})`;
                 successMessage.classList.add('show');
                 addUserForm.reset();
                 loadUsers();
@@ -816,8 +825,17 @@ function startRealtimeApprovalListener() {
                 }, 3000);
         
             } catch (error) {
-                console.error('Hata:', error);
-                errorMessage.textContent = `❌ Hata: ${error.message}`;
+                console.error('❌ Hata:', error);
+                let errorMsg = error.message;
+                
+                // Daha açıklayıcı hata mesajları
+                if (error.code === 'auth/email-already-in-use') {
+                    errorMsg = 'Bu kullanıcı adı zaten Auth sisteminde kayıtlı!';
+                } else if (error.code === 'auth/weak-password') {
+                    errorMsg = 'Şifre en az 6 karakter olmalıdır!';
+                }
+                
+                errorMessage.textContent = `❌ Hata: ${errorMsg}`;
                 errorMessage.classList.add('show');
             }
         });
