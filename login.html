@@ -324,14 +324,14 @@
     
             errorMessage.classList.remove('show');
             loginBtn.disabled = true;
-            loginBtn.textContent = 'GiriÅŸ yapÄ±lÄ±yor...';
+            loginBtn.textContent = 'Giriş Yapılıyor...';
     
             try {
                 // 🔹 1. Firestore'dan kullanıcıyı kontrol et
                 const userDoc = await db.collection('users').doc(username).get();
     
                 if (!userDoc.exists) {
-                    throw new Error('KullanÄ±cÄ± bulunamadÄ±');
+                    throw new Error('Kullanıcı Bulunamadı');
                 }
     
                 const userData = userDoc.data();
@@ -344,7 +344,7 @@
                     // Şifreyi kontrol et
                     const hashedPassword = btoa(password);
                     if (hashedPassword !== userData.password) {
-                        throw new Error('Åžifre hatalÄ±');
+                        throw new Error('Şifre Hatalı');
                     }
             
                     console.log('ℹ️ İlk giriş - kullanıcı Auth\'a ekleniyor...');
@@ -384,8 +384,8 @@
                 window.location.href = 'index.html';
     
             } catch (error) {
-                console.error('❌ GiriÅŸ hatasÄ±:', error);
-                let errorMsg = 'KullanÄ±cÄ± adÄ± veya ÅŸifre hatalÄ±!';
+                console.error('❌ Giriş Hatası:', error);
+                let errorMsg = 'Kullanıcı Adı veya Şifre Hatalı!';
                 
                 // Daha açıklayıcı hata mesajları
                 if (error.code === 'auth/wrong-password') {
@@ -399,7 +399,7 @@
                 errorMessage.textContent = errorMsg;
                 errorMessage.classList.add('show');
                 loginBtn.disabled = false;
-                loginBtn.textContent = 'GiriÅŸ Yap';
+                loginBtn.textContent = 'Giriş Yap';
             }
         });
     </script>
