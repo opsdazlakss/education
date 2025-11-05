@@ -81,6 +81,19 @@
             font-size: 14px;
             font-weight: 500;
             margin-bottom: 0.5rem;
+        }   
+        .msg-btn {
+            padding: 0.5rem 1rem;
+            background: rgba(59,130,246,0.2);
+            border: 1px solid rgba(59,130,246,0.4);
+            color: #3b82f6;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-right: 0.5rem;
+        }
+        .msg-btn:hover {
+            background: rgba(59,130,246,0.3);
         }
 
         .form-group input {
@@ -897,18 +910,26 @@ function startRealtimeApprovalListener() {
                             </button>`;
                     
                     html += `
-                        <tr>
-                            <td>${user.username}</td>
-                            <td>${user.fullname}</td>
-                            <td>${user.email}</td>
-                            <td style="font-size: 13px; color: #94a3b8;">${progressInfo}</td>
-                            <td>${presenterBtn}</td>
-                            <td>${date}</td>
-                            <td>
-                                ${!user.isAdmin ? `<button class="delete-btn" onclick="deleteUser('${doc.id}', '${user.email}')">Sil</button>` : '<span style="color: #64748b;">Admin</span>'}
-                            </td>
-                        </tr>
-                    `;
+                    <tr>
+                        <td>${user.username}</td>
+                        <td>${user.fullname}</td>
+                        <td>${user.email}</td>
+                        <td style="font-size: 13px; color: #94a3b8;">${progressInfo}</td>
+                        <td>${presenterBtn}</td>
+                        <td>${date}</td>
+                        <td>
+                            ${
+                                !user.isAdmin
+                                    ? `
+                                        <button class="msg-btn" onclick="openMessageModal('${user.username}')">💬 Mesaj</button>
+                                        <button class="delete-btn" onclick="deleteUser('${doc.id}', '${user.email}')">Sil</button>
+                                    `
+                                    : '<span style="color: #64748b;">Admin</span>'
+                            }
+                        </td>
+                    </tr>
+                `;
+
                 }
         
                 usersTableBody.innerHTML = html;
@@ -1178,6 +1199,55 @@ async function approveRequest(requestId, username, stageId) {
         }
 
         console.log("✅ Admin panel script başarıyla yüklendi.");
+    let selectedUserForMessage = null;
+
+function openMessageModal(username) {
+    selectedUserForMessage = username;
+    document.getElementById('modalUser').textContent = `💬 ${username} kullanıcısına mesaj gönder`;
+    document.getElementById('messageText').value = '';
+    document.getElementById('messageModal').style.display = 'block';
+}
+
+function closeMessageModal() {
+    document.getElementById('messageModal').style.display = 'none';
+    selectedUserForMessage = null;
+}
+
+async function sendMessage() {
+    const text = document.getElementById('messageText').value.trim();
+    if (!text) return alert('Mesaj boş olamaz!');
+    if (!selectedUserForMessage) return alert('Hedef kullanıcı seçilmedi!');
+
+    try {
+        await db.collection('messages').add({
+            toUsername: selectedUserForMessage,
+            from: auth.currentUser.email.split('@')[0],
+            message: text,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+            read: false
+        });
+
+        successMessage.textContent = `✅ ${selectedUserForMessage} kullanıcısına mesaj gönderildi!`;
+        successMessage.classList.add('show');
+        closeMessageModal();
+
+        setTimeout(() => successMessage.classList.remove('show'), 3000);
+    } catch (err) {
+        console.error('Mesaj gönderme hatası:', err);
+        errorMessage.textContent = `❌ Hata: ${err.message}`;
+        errorMessage.classList.add('show');
+    }
+}
     </script>
+<div id="messageModal" class="modal" style="display:none;">
+  <div class="modal-content" style="background:#1e293b;padding:1.5rem;border-radius:12px;max-width:400px;margin:auto;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);box-shadow:0 0 10px rgba(0,0,0,0.3);">
+    <h3 id="modalUser" style="margin-bottom:1rem;color:white;">Mesaj Gönder</h3>
+    <textarea id="messageText" rows="4" style="width:100%;padding:0.75rem;border-radius:8px;background:#0f172a;border:1px solid #334155;color:white;"></textarea>
+    <div style="display:flex;justify-content:flex-end;gap:0.5rem;margin-top:1rem;">
+      <button onclick="closeMessageModal()" class="delete-btn">İptal</button>
+      <button onclick="sendMessage()" class="add-btn">Gönder</button>
+    </div>
+  </div>
+</div>
 </body>
 </html>
