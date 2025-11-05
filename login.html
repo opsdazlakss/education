@@ -331,7 +331,7 @@
                 const userDoc = await db.collection('users').doc(username).get();
     
                 if (!userDoc.exists) {
-                    throw new Error('Kullanıcı Bulunamadı');
+                    throw new Error('KullanÄ±cÄ± bulunamadÄ±');
                 }
     
                 const userData = userDoc.data();
@@ -344,7 +344,7 @@
                     // Şifreyi kontrol et
                     const hashedPassword = btoa(password);
                     if (hashedPassword !== userData.password) {
-                        throw new Error('Şifre Hatası');
+                        throw new Error('Åžifre hatalÄ±');
                     }
             
                     console.log('ℹ️ İlk giriş - kullanıcı Auth\'a ekleniyor...');
@@ -384,8 +384,8 @@
                 window.location.href = 'index.html';
     
             } catch (error) {
-                console.error('❌ Giriş Hatası:', error);
-                let errorMsg = 'Kullanıcı adı veya şifre hatalı!';
+                console.error('❌ GiriÅŸ hatasÄ±:', error);
+                let errorMsg = 'KullanÄ±cÄ± adÄ± veya ÅŸifre hatalÄ±!';
                 
                 // Daha açıklayıcı hata mesajları
                 if (error.code === 'auth/wrong-password') {
@@ -399,7 +399,7 @@
                 errorMessage.textContent = errorMsg;
                 errorMessage.classList.add('show');
                 loginBtn.disabled = false;
-                loginBtn.textContent = 'Giriş Yap';
+                loginBtn.textContent = 'GiriÅŸ Yap';
             }
         });
     </script>
