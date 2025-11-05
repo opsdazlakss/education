@@ -979,6 +979,12 @@
         notifIcon.addEventListener('click', () => {
         notifPanel.style.display = notifPanel.style.display === 'none' ? 'block' : 'none';
         });
+        document.addEventListener('click', (event) => {
+          const isClickInside = notifPanel.contains(event.target) || notifIcon.contains(event.target);
+          if (!isClickInside) {
+            notifPanel.style.display = 'none';
+          }
+        });
         let currentUser = null;
         let currentUsername = null;
         let userProgress = null;
