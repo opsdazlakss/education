@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MEYDAN ACADEMY</title>
     <!-- Firebase CDN Scripts -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <style>
         * {
             margin: 0;
@@ -79,7 +79,34 @@
             color: #94a3b8;
             margin-bottom: 0.5rem;
         }
+        @keyframes ring {
+        0%, 100% { transform: rotate(0deg); }
+        10%, 30% { transform: rotate(-10deg); }
+        20%, 40% { transform: rotate(10deg); }
+        }
 
+        @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+        20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+
+        #notifIcon {
+        transition: transform 0.3s ease;
+        }
+
+        #notifIcon:hover {
+        transform: scale(1.1);
+        }
+
+        #notifCount {
+        animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+        }
         .progress-bar {
             width: 130px;
             height: 6px;
@@ -853,6 +880,10 @@
     </a>
 
     <div style="display: flex; gap: 1rem; align-items: center;">
+                <div id="notifIcon" style="cursor: pointer; font-size: 25px; position: relative;top:6px;">
+        🔔 
+        <span id="notifCount" style="background:red;color:white;padding:2px 6px;border-radius:8px;font-size:12px;display:none;position:absolute;top:-8px;right:-8px;">0</span>
+        </div>
         <div class="progress-section">
             <p>Aşama <span id="currentStageDisplay">1</span>/<span id="totalStageDisplay">9</span></p>
             <div class="progress-bar">
@@ -863,6 +894,12 @@
         <a href="admin.html" id="adminButton" style="display: none; padding: 0.5rem 1rem; background: rgba(59, 130, 246, 0.2); border: 1px solid rgba(59, 130, 246, 0.4); color: #3b82f6; border-radius: 6px; text-decoration: none; font-weight: 500; font-size: 14px;">🛠️ Admin</a>
         <a href="presenter.html" id="presenterButton"style="display: none; padding: 0.5rem 1rem; background: rgba(34, 197, 94, 0.2);border: 1px solid rgba(34, 197, 94, 0.4); color: #22c55e; border-radius: 6px;text-decoration: none; font-weight: 500; font-size: 14px;">🎤 Presenter</a>
         <button onclick="userLogout()" style="padding: 0.5rem 1rem; background: rgba(239, 68, 68, 0.2); border: 1px solid rgba(239, 68, 68, 0.4); color: #ef4444; border-radius: 6px; cursor: pointer; font-weight: 500; font-size: 14px;">Çıkış</button>
+        
+
+<div id="notifPanel" style="display:none;position:fixed;top:60px;right:20px;background:#1e293b;border:1px solid #334155;border-radius:10px;padding:1rem;width:300px;max-height:400px;overflow-y:auto;z-index:1000;">
+  <h3 style="color:white;font-size:16px;margin-bottom:0.5rem;">📨 Mesajlar</h3>
+  <div id="notifList" style="color:#cbd5e1;font-size:14px;"></div>
+</div>
     </div>
 </div>
     </header>
@@ -934,30 +971,160 @@
     
     <script src="firebase-config.js"></script>
     <script>
+        const notifIcon = document.getElementById('notifIcon');
+        const notifCount = document.getElementById('notifCount');
+        const notifPanel = document.getElementById('notifPanel');
+        const notifList = document.getElementById('notifList');
+
+        notifIcon.addEventListener('click', () => {
+        notifPanel.style.display = notifPanel.style.display === 'none' ? 'block' : 'none';
+        });
         let currentUser = null;
         let currentUsername = null;
         let userProgress = null;
-    auth.onAuthStateChanged(async (user) => {
-      if (!user) {
-        window.location.href = 'login.html';
-        return;
-      }
 
-      const userDoc = await db.collection('users').where('email', '==', user.email).get();
-      if (!userDoc.empty) {
-        const data = userDoc.docs[0].data();
+        let messagesUnsubscribe = null;
+let lastMessageCount = 0; // Son mesaj sayısını takip et
 
-        // Admin butonunu göster
-        if (data.isAdmin) {
-          document.getElementById('adminButton').style.display = 'inline-block';
+auth.onAuthStateChanged(user => {
+  if (user) {
+    const username = user.email.split('@')[0];
+
+    // Önceki dinleyiciyi temizle
+    if (messagesUnsubscribe) {
+      messagesUnsubscribe();
+    }
+
+    // Yeni dinleyici başlat
+    messagesUnsubscribe = db.collection('messages')
+      .where('toUsername', '==', username)
+      .orderBy('createdAt', 'desc')
+      .onSnapshot(
+        (snapshot) => {
+          notifList.innerHTML = '';
+          let unreadCount = 0;
+          let totalMessages = snapshot.size;
+
+          // Yeni mesaj geldi mi kontrol et
+          if (lastMessageCount > 0 && totalMessages > lastMessageCount) {
+            // Yeni mesaj bildirimi göster
+            showNewMessageNotification();
+          }
+          lastMessageCount = totalMessages;
+
+          snapshot.forEach(doc => {
+            const msg = doc.data();
+            const time = msg.createdAt ? msg.createdAt.toDate().toLocaleString('tr-TR') : '';
+            const item = document.createElement('div');
+            item.style.padding = '0.5rem';
+            item.style.borderBottom = '1px solid #334155';
+            item.style.cursor = 'pointer';
+            item.style.transition = 'background 0.2s';
+            
+            item.innerHTML = `
+              <strong>${msg.from}</strong>: ${msg.message}<br>
+              <span style="font-size:12px;color:#64748b;">${time}</span>
+              ${!msg.read ? '<span style="color:#3b82f6;font-size:11px;margin-left:8px;">● Yeni</span>' : ''}
+            `;
+
+            // Okunmamış mesaj ise farklı renk
+            if (!msg.read) {
+              item.style.background = 'rgba(59,130,246,0.2)';
+              unreadCount++;
+            }
+
+            // Mesaja tıklandığında okundu olarak işaretle
+            item.addEventListener('click', () => {
+              markMessageAsRead(doc.id, msg.read);
+              item.style.background = 'rgba(30,41,59,0.3)';
+              
+              // "Yeni" etiketini kaldır
+              const newBadge = item.querySelector('span[style*="color:#3b82f6"]');
+              if (newBadge) {
+                newBadge.remove();
+              }
+            });
+
+            item.addEventListener('mouseenter', () => {
+              item.style.background = 'rgba(59,130,246,0.15)';
+            });
+
+            item.addEventListener('mouseleave', () => {
+              if (!msg.read) {
+                item.style.background = 'rgba(59,130,246,0.2)';
+              } else {
+                item.style.background = 'transparent';
+              }
+            });
+
+            notifList.appendChild(item);
+          });
+
+          // Bildirim sayısını güncelle
+          updateNotificationBadge(unreadCount);
+
+          if (snapshot.empty) {
+            notifList.innerHTML = '<p style="color:#64748b;">Henüz mesaj yok.</p>';
+          }
+        },
+        (error) => {
+          console.error('Mesajlar dinlenirken hata:', error);
         }
+      );
+  } else {
+    // Kullanıcı çıkış yaptıysa dinleyiciyi temizle
+    if (messagesUnsubscribe) {
+      messagesUnsubscribe();
+      messagesUnsubscribe = null;
+    }
+  }
+});
 
-        // Presenter butonunu göster
-        if (data.isPresenter) {
-          document.getElementById('presenterButton').style.display = 'inline-block';
-        }
-      }
+// Mesajı okundu olarak işaretle
+async function markMessageAsRead(messageId, isAlreadyRead) {
+  if (isAlreadyRead) return; // Zaten okunmuşsa işlem yapma
+  
+  try {
+    await db.collection('messages').doc(messageId).update({ 
+      read: true,
+      readAt: firebase.firestore.FieldValue.serverTimestamp()
     });
+  } catch (error) {
+    console.error('Mesaj okundu olarak işaretlenirken hata:', error);
+  }
+}
+
+// Bildirim rozetini güncelle
+function updateNotificationBadge(count) {
+  if (count > 0) {
+    notifCount.textContent = count;
+    notifCount.style.display = 'inline-block';
+    
+    // Çan ikonuna animasyon ekle
+    notifIcon.style.animation = 'none';
+    setTimeout(() => {
+      notifIcon.style.animation = 'ring 0.5s ease-in-out';
+    }, 10);
+  } else {
+    notifCount.style.display = 'none';
+  }
+}
+
+// Yeni mesaj bildirimi göster
+function showNewMessageNotification() {
+  // Tarayıcı bildirimi (izin verilmişse)
+  if ('Notification' in window && Notification.permission === 'granted') {
+    new Notification('Yeni Mesaj', {
+      body: 'Size yeni bir mesaj geldi!',
+      icon: '🔔',
+      badge: '🔔'
+    });
+  }
+  
+  // Çan ikonunu salla
+  notifIcon.style.animation = 'shake 0.5s ease-in-out';
+  
+}
 
         const quizQuestionPools = {
             1: [ 
@@ -3722,6 +3889,7 @@ Abartısız ve yalansız bir şekilde, hakkını vererek bilinmesini sağlamakt�
                 });
             }
         }
+        
     </script>
 </body>
 </html>
