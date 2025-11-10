@@ -9,6 +9,88 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <style>
+        /* Tema Değişkenleri - Default Tema */
+        :root {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-tertiary: rgba(15, 23, 42, 0.5);
+            --bg-card: rgba(15, 23, 42, 0.5);
+            --bg-hover: rgba(30, 41, 59, 0.6);
+            --bg-input: #0f172a;
+            --bg-modal: #1e293b;
+            
+            --text-primary: #e2e8f0;
+            --text-secondary: #94a3b8;
+            --text-tertiary: #64748b;
+            --text-muted: #cbd5e1;
+            --text-white: white;
+            
+            --border-primary: #1e293b;
+            --border-secondary: #334155;
+            --border-hover: #475569;
+            
+            --accent-primary: #3b82f6;
+            --accent-secondary: #06b6d4;
+            --accent-gradient: linear-gradient(to right, #3b82f6, #06b6d4);
+            --accent-gradient-hover: linear-gradient(to right, #2563eb, #0891b2);
+            --accent-gradient-icon: linear-gradient(to bottom right, #3b82f6, #06b6d4);
+            
+            --success: #22c55e;
+            --success-bg: rgba(34, 197, 94, 0.1);
+            --success-border: rgba(34, 197, 94, 0.3);
+            
+            --error: #ef4444;
+            --error-bg: rgba(239, 68, 68, 0.2);
+            --error-border: rgba(239, 68, 68, 0.4);
+            
+            --progress-bg: #1e293b;
+            --progress-fill: linear-gradient(to right, #3b82f6, #06b6d4);
+            --progress-fill-alt: linear-gradient(to right, #06b6d4, #3b82f6);
+            
+            --shadow-color: rgba(0, 0, 0, 0.7);
+        }
+
+        /* AMOLED Tema */
+        [data-theme="amoled"] {
+            --bg-primary: #000000;
+            --bg-secondary: #0a0a0a;
+            --bg-tertiary: rgba(0, 0, 0, 0.8);
+            --bg-card: rgba(0, 0, 0, 0.6);
+            --bg-hover: rgba(20, 20, 20, 0.8);
+            --bg-input: #000000;
+            --bg-modal: #0a0a0a;
+            
+            --text-primary: #ffffff;
+            --text-secondary: #b0b0b0;
+            --text-tertiary: #808080;
+            --text-muted: #d0d0d0;
+            --text-white: #ffffff;
+            
+            --border-primary: #1a1a1a;
+            --border-secondary: #2a2a2a;
+            --border-hover: #3a3a3a;
+            
+            --accent-primary: #00ff00;
+            --accent-secondary: #00cc00;
+            --accent-gradient: linear-gradient(to right, #00ff00, #00cc00);
+            --accent-gradient-hover: linear-gradient(to right, #00cc00, #009900);
+            --accent-gradient-icon: linear-gradient(to bottom right, #00ff00, #00cc00);
+            
+            --success: #00ff00;
+            --success-bg: rgba(0, 255, 0, 0.1);
+            --success-border: rgba(0, 255, 0, 0.3);
+            
+            --error: #ff0000;
+            --error-bg: rgba(255, 0, 0, 0.2);
+            --error-border: rgba(255, 0, 0, 0.4);
+            
+            --progress-bg: #1a1a1a;
+            --progress-fill: linear-gradient(to right, #00ff00, #00cc00);
+            --progress-fill-alt: linear-gradient(to right, #00cc00, #00ff00);
+            
+            --shadow-color: rgba(0, 0, 0, 0.9);
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -17,14 +99,15 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background-color: #0f172a;
-            color: #e2e8f0;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
             line-height: 1.6;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
         header {
-            border-bottom: 1px solid #1e293b;
-            background: rgba(15, 23, 42, 0.5);
+            border-bottom: 1px solid var(--border-primary);
+            background: var(--bg-tertiary);
             backdrop-filter: blur(10px);
             position: static;
             top: 0;
@@ -50,24 +133,24 @@
             width: 40px;
             height: 40px;
             border-radius: 8px;
-            background: linear-gradient(to bottom right, #3b82f6, #06b6d4);
+            background: var(--accent-gradient-icon);
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: bold;
             font-size: 18px;
-            color: white;
+            color: var(--text-white);
         }
 
         .logo-text h1 {
             font-size: 24px;
             font-weight: bold;
-            color: white;
+            color: var(--text-white);
         }
 
         .logo-text p {
             font-size: 12px;
-            color: #94a3b8;
+            color: var(--text-secondary);
         }
 
         .progress-section {
@@ -76,7 +159,7 @@
 
         .progress-section p {
             font-size: 14px;
-            color: #94a3b8;
+            color: var(--text-secondary);
             margin-bottom: 0.5rem;
         }
         @keyframes ring {
@@ -110,14 +193,14 @@
         .progress-bar {
             width: 130px;
             height: 6px;
-            background-color: #1e293b;
+            background-color: var(--progress-bg);
             border-radius: 9999px;
             overflow: hidden;
         }
 
         .progress-fill {
             height: 100%;
-            background: linear-gradient(to right, #3b82f6, #06b6d4);
+            background: var(--progress-fill);
             transition: width 0.3s ease;
         }
 
@@ -314,7 +397,7 @@
         .sidebar h2 {
             font-size: 12px;
             font-weight: 600;
-            color: #cbd5e1;
+            color: var(--text-muted);
             text-transform: uppercase;
             letter-spacing: 1px;
             margin-bottom: 1rem;
@@ -349,26 +432,29 @@
         }
 
         .stages-list::-webkit-scrollbar-track {
-            background: rgba(30, 41, 59, 0.3);
+            background: var(--bg-secondary);
             border-radius: 10px;
+            opacity: 0.3;
         }
 
         .stages-list::-webkit-scrollbar-thumb {
-            background: rgba(59, 130, 246, 0.5);
+            background: var(--accent-primary);
             border-radius: 10px;
+            opacity: 0.5;
         }
 
         .stages-list::-webkit-scrollbar-thumb:hover {
-            background: rgba(59, 130, 246, 0.7);
+            background: var(--accent-primary);
+            opacity: 0.7;
         }
 
         .stage-btn {
             text-align: left;
             padding: 1.25rem;
             border-radius: 12px;
-            border: 1px solid #334155;
-            background: rgba(30, 41, 59, 0.4);
-            color: #e2e8f0;
+            border: 1px solid var(--border-secondary);
+            background: var(--bg-secondary);
+            color: var(--text-primary);
             cursor: pointer;
             transition: all 0.3s;
             display: flex;
@@ -380,21 +466,27 @@
         }
 
         .stage-btn:hover:not(:disabled) {
-            background: rgba(30, 41, 59, 0.6);
-            border-color: #475569;
+            background: var(--bg-hover);
+            border-color: var(--border-hover);
             transform: translateY(-2px);
         }
 
         .stage-btn.active {
             background: linear-gradient(135deg, rgba(59, 130, 246, 0.3), rgba(6, 182, 212, 0.3));
-            border: 2px solid rgba(59, 130, 246, 0.6);
+            border: 2px solid var(--accent-primary);
             box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+        }
+
+        [data-theme="amoled"] .stage-btn.active {
+            background: linear-gradient(135deg, rgba(0, 255, 0, 0.2), rgba(0, 204, 0, 0.2));
+            border: 2px solid var(--accent-primary);
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
         }
 
         .stage-btn:disabled {
             opacity: 0.6;
             cursor: not-allowed;
-            background: rgba(30, 41, 59, 0.2);
+            background: var(--bg-secondary);
         }
 
         .stage-btn-header {
@@ -420,36 +512,42 @@
         .stage-title {
             font-size: 15px;
             font-weight: 600;
-            color: #e2e8f0;
+            color: var(--text-primary);
             line-height: 1.3;
         }
 
         .stage-type {
             font-size: 11px;
-            color: #94a3b8;
+            color: var(--text-secondary);
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
 
         .stage-status {
             font-size: 12px;
-            color: #64748b;
+            color: var(--text-secondary);
             margin-top: 0.5rem;
             padding-top: 0.75rem;
-            border-top: 1px solid rgba(59, 130, 246, 0.2);
+            border-top: 1px solid var(--accent-primary);
+            opacity: 0.6;
+            font-weight: 500;
         }
 
         .content-card {
-            background: rgba(15, 23, 42, 0.5);
-            border: 1px solid #1e293b;
+            background: var(--bg-card);
+            border: 1px solid var(--border-primary);
             border-radius: 12px;
             overflow: hidden;
         }
 
         .card-header {
             background: linear-gradient(to right, rgba(59, 130, 246, 0.1), rgba(6, 182, 212, 0.1));
-            border-bottom: 1px solid #1e293b;
+            border-bottom: 1px solid var(--border-primary);
             padding: 2rem;
+        }
+
+        [data-theme="amoled"] .card-header {
+            background: linear-gradient(to right, rgba(0, 255, 0, 0.1), rgba(0, 204, 0, 0.1));
         }
 
         .card-header-top {
@@ -466,18 +564,24 @@
             border-radius: 9999px;
             font-size: 12px;
             font-weight: 600;
-            color: #93c5fd;
+            color: var(--accent-primary);
+        }
+
+        [data-theme="amoled"] .stage-badge {
+            background: rgba(0, 255, 0, 0.2);
+            border: 1px solid rgba(0, 255, 0, 0.4);
+            color: var(--accent-primary);
         }
 
         .card-header h2 {
             font-size: 32px;
             font-weight: bold;
-            color: white;
+            color: var(--text-white);
             margin-bottom: 0.5rem;
         }
 
         .card-header p {
-            color: #94a3b8;
+            color: var(--text-secondary);
             font-size: 14px;
         }
 
@@ -492,7 +596,7 @@
         .content-section h3 {
             font-size: 18px;
             font-weight: 600;
-            color: white;
+            color: var(--text-white);
             margin-bottom: 1rem;
         }
 
@@ -505,8 +609,8 @@
         .content-item {
             padding: 1.5rem;
             border-radius: 8px;
-            border: 1px solid #334155;
-            background: rgba(30, 41, 59, 0.3);
+            border: 1px solid var(--border-secondary);
+            background: var(--bg-secondary);
             cursor: pointer;
             transition: all 0.2s;
             display: flex;
@@ -516,13 +620,13 @@
         }
 
         .content-item:hover {
-            background: rgba(30, 41, 59, 0.5);
-            border-color: #475569;
+            background: var(--bg-hover);
+            border-color: var(--border-hover);
         }
 
         .content-item.completed {
-            background: rgba(34, 197, 94, 0.1);
-            border-color: rgba(34, 197, 94, 0.3);
+            background: var(--success-bg);
+            border-color: var(--success-border);
         }
 
         .content-emoji {
@@ -536,13 +640,13 @@
 
         .content-title {
             font-weight: 500;
-            color: #e2e8f0;
+            color: var(--text-primary);
             margin-bottom: 0.25rem;
         }
 
         .content-type {
             font-size: 12px;
-            color: #64748b;
+            color: var(--text-tertiary);
         }
 
         .content-check {
@@ -551,8 +655,8 @@
         }
 
         .progress-section-card {
-            background: rgba(30, 41, 59, 0.3);
-            border: 1px solid #334155;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-secondary);
             border-radius: 8px;
             padding: 1.5rem;
             margin-bottom: 2rem;
@@ -568,17 +672,17 @@
         .progress-header p {
             font-size: 14px;
             font-weight: 500;
-            color: #cbd5e1;
+            color: var(--text-muted);
         }
 
         .progress-count {
             font-size: 14px;
             font-weight: 600;
-            color: #06b6d4;
+            color: var(--accent-secondary);
         }
         .quiz-progress-info {
             font-size: 14px;
-            color: #94a3b8;
+            color: var(--text-secondary);
             margin-bottom: 1rem;
             text-align: center;
         }
@@ -591,14 +695,14 @@
         .progress-bar-full {
             width: 100%;
             height: 8px;
-            background-color: #1e293b;
+            background-color: var(--progress-bg);
             border-radius: 9999px;
             overflow: hidden;
         }
 
         .progress-fill-full {
             height: 100%;
-            background: linear-gradient(to right, #06b6d4, #3b82f6);
+            background: var(--progress-fill-alt);
             transition: width 0.3s ease;
         }
 
@@ -619,53 +723,53 @@
         }
 
         .btn-secondary {
-            border: 1px solid #475569;
-            color: #cbd5e1;
+            border: 1px solid var(--border-hover);
+            color: var(--text-muted);
             background: transparent;
         }
 
         .btn-secondary:hover {
-            background: rgba(30, 41, 59, 0.5);
+            background: var(--bg-secondary);
         }
 
         .btn-primary {
-            background: linear-gradient(to right, #3b82f6, #06b6d4);
-            color: white;
+            background: var(--accent-gradient);
+            color: var(--text-white);
         }
 
         .btn-primary:hover:not(:disabled) {
-            background: linear-gradient(to right, #2563eb, #0891b2);
+            background: var(--accent-gradient-hover);
         }
 
         .btn-primary:disabled {
-            background: #475569;
-            color: #64748b;
+            background: var(--border-hover);
+            color: var(--text-tertiary);
             cursor: not-allowed;
             opacity: 0.5;
         }
 
         .info-card {
             margin-top: 1.5rem;
-            background: rgba(15, 23, 42, 0.3);
-            border: 1px solid #1e293b;
+            background: var(--bg-card);
+            border: 1px solid var(--border-primary);
             border-radius: 8px;
             padding: 1.5rem;
         }
 
         .info-card p {
             font-size: 14px;
-            color: #94a3b8;
+            color: var(--text-secondary);
         }
 
         .info-card span {
             font-weight: 600;
-            color: #cbd5e1;
+            color: var(--text-muted);
         }
 
         .modal {
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.7);
+            background: var(--shadow-color);
             backdrop-filter: blur(4px);
             z-index: 50;
             display: none;
@@ -679,8 +783,8 @@
         }
 
         .modal-content {
-            background: #1e293b;
-            border: 1px solid #334155;
+            background: var(--bg-modal);
+            border: 1px solid var(--border-secondary);
             border-radius: 12px;
             width: 100%;
             max-width: 800px;
@@ -704,7 +808,7 @@
 
         .modal-header {
             background: linear-gradient(to right, rgba(59, 130, 246, 0.1), rgba(6, 182, 212, 0.1));
-            border-bottom: 1px solid #334155;
+            border-bottom: 1px solid var(--border-secondary);
             padding: 2rem;
             display: flex;
             justify-content: space-between;
@@ -712,10 +816,14 @@
             gap: 1rem;
         }
 
+        [data-theme="amoled"] .modal-header {
+            background: linear-gradient(to right, rgba(0, 255, 0, 0.1), rgba(0, 204, 0, 0.1));
+        }
+
         .modal-title-section h3 {
             font-size: 20px;
             font-weight: bold;
-            color: white;
+            color: var(--text-white);
             margin-top: 0.5rem;
         }
 
@@ -723,20 +831,20 @@
             font-size: 12px;
             font-weight: 600;
             text-transform: uppercase;
-            color: #94a3b8;
+            color: var(--text-secondary);
         }
 
         .close-btn {
             background: none;
             border: none;
-            color: #94a3b8;
+            color: var(--text-secondary);
             cursor: pointer;
             font-size: 24px;
             transition: color 0.2s;
         }
 
         .close-btn:hover {
-            color: #e2e8f0;
+            color: var(--text-primary);
         }
 
         .modal-body {
@@ -746,11 +854,11 @@
         }
 
         .text-content {
-            background: rgba(30, 41, 59, 0.3);
-            border: 1px solid #334155;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-secondary);
             border-radius: 8px;
             padding: 1.5rem;
-            color: #e2e8f0;
+            color: var(--text-primary);
             white-space: pre-wrap;
             line-height: 1.8;
         }
@@ -775,14 +883,14 @@
         }
 
         .link-box {
-            background: rgba(30, 41, 59, 0.3);
-            border: 1px solid #334155;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-secondary);
             border-radius: 8px;
             padding: 1.5rem;
         }
 
         .link-box p {
-            color: #cbd5e1;
+            color: var(--text-muted);
             margin-bottom: 1rem;
             font-size: 14px;
         }
@@ -792,8 +900,8 @@
             align-items: center;
             gap: 0.5rem;
             padding: 0.75rem 1.5rem;
-            background: linear-gradient(to right, #3b82f6, #06b6d4);
-            color: white;
+            background: var(--accent-gradient);
+            color: var(--text-white);
             border: none;
             border-radius: 8px;
             cursor: pointer;
@@ -802,12 +910,12 @@
         }
 
         .link-btn:hover {
-            background: linear-gradient(to right, #2563eb, #0891b2);
+            background: var(--accent-gradient-hover);
         }
 
         .link-url {
             font-size: 12px;
-            color: #64748b;
+            color: var(--text-tertiary);
             word-break: break-all;
             margin-top: 1rem;
         }
@@ -819,15 +927,15 @@
         }
 
         .question-box {
-            background: rgba(30, 41, 59, 0.3);
-            border: 1px solid #334155;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-secondary);
             border-radius: 8px;
             padding: 1.5rem;
         }
 
         .question-number {
             font-weight: 600;
-            color: #e2e8f0;
+            color: var(--text-primary);
             margin-bottom: 1rem;
             font-size: 14px;
         }
@@ -835,10 +943,10 @@
         .question-textarea {
             width: 100%;
             padding: 0.75rem;
-            background: #0f172a;
-            border: 1px solid #334155;
+            background: var(--bg-input);
+            border: 1px solid var(--border-secondary);
             border-radius: 6px;
-            color: #e2e8f0;
+            color: var(--text-primary);
             resize: vertical;
             min-height: 80px;
             font-family: inherit;
@@ -847,14 +955,14 @@
 
         .question-textarea:focus {
             outline: none;
-            border-color: #3b82f6;
+            border-color: var(--accent-primary);
         }
 
         .submit-survey-btn {
             width: 100%;
             padding: 0.75rem;
-            background: linear-gradient(to right, #3b82f6, #06b6d4);
-            color: white;
+            background: var(--accent-gradient);
+            color: var(--text-white);
             border: none;
             border-radius: 8px;
             cursor: pointer;
@@ -864,7 +972,7 @@
         }
 
         .submit-survey-btn:hover {
-            background: linear-gradient(to right, #2563eb, #0891b2);
+            background: var(--accent-gradient-hover);
         }
     </style>
 </head>
@@ -884,6 +992,7 @@
         🔔 
         <span id="notifCount" style="background:red;color:white;padding:2px 6px;border-radius:8px;font-size:12px;display:none;position:absolute;top:-8px;right:-8px;">0</span>
         </div>
+        <button id="themeToggleBtn" onclick="toggleTheme()" style="padding: 0.5rem 1rem; background: var(--bg-secondary); border: 1px solid var(--border-secondary); color: var(--text-primary); border-radius: 6px; cursor: pointer; font-weight: 500; font-size: 14px; transition: all 0.3s;">🌙 Tema</button>
         <div class="progress-section">
             <p>Aşama <span id="currentStageDisplay">1</span>/<span id="totalStageDisplay">9</span></p>
             <div class="progress-bar">
@@ -891,14 +1000,14 @@
             </div>
         </div>
         <!-- Admin butonu (sadece adminlere göster) -->
-        <a href="admin.html" id="adminButton" style="display: none; padding: 0.5rem 1rem; background: rgba(59, 130, 246, 0.2); border: 1px solid rgba(59, 130, 246, 0.4); color: #3b82f6; border-radius: 6px; text-decoration: none; font-weight: 500; font-size: 14px;">🛠️ Admin</a>
-        <a href="presenter.html" id="presenterButton"style="display: none; padding: 0.5rem 1rem; background: rgba(34, 197, 94, 0.2);border: 1px solid rgba(34, 197, 94, 0.4); color: #22c55e; border-radius: 6px;text-decoration: none; font-weight: 500; font-size: 14px;">🎤 Presenter</a>
-        <button onclick="userLogout()" style="padding: 0.5rem 1rem; background: rgba(239, 68, 68, 0.2); border: 1px solid rgba(239, 68, 68, 0.4); color: #ef4444; border-radius: 6px; cursor: pointer; font-weight: 500; font-size: 14px;">Çıkış</button>
+        <a href="admin.html" id="adminButton" style="display: none; padding: 0.5rem 1rem; background: rgba(59, 130, 246, 0.2); border: 1px solid rgba(59, 130, 246, 0.4); color: var(--accent-primary); border-radius: 6px; text-decoration: none; font-weight: 500; font-size: 14px;">🛠️ Admin</a>
+        <a href="presenter.html" id="presenterButton"style="display: none; padding: 0.5rem 1rem; background: var(--success-bg);border: 1px solid var(--success-border); color: var(--success); border-radius: 6px;text-decoration: none; font-weight: 500; font-size: 14px;">🎤 Presenter</a>
+        <button onclick="userLogout()" style="padding: 0.5rem 1rem; background: var(--error-bg); border: 1px solid var(--error-border); color: var(--error); border-radius: 6px; cursor: pointer; font-weight: 500; font-size: 14px;">Çıkış</button>
         
 
-<div id="notifPanel" style="display:none;position:fixed;top:60px;right:20px;background:#1e293b;border:1px solid #334155;border-radius:10px;padding:1rem;width:300px;max-height:400px;overflow-y:auto;z-index:1000;">
-  <h3 style="color:white;font-size:16px;margin-bottom:0.5rem;">📨 Mesajlar</h3>
-  <div id="notifList" style="color:#cbd5e1;font-size:14px;"></div>
+<div id="notifPanel" style="display:none;position:fixed;top:60px;right:20px;background:var(--bg-modal);border:1px solid var(--border-secondary);border-radius:10px;padding:1rem;width:300px;max-height:400px;overflow-y:auto;z-index:1000;">
+  <h3 style="color:var(--text-white);font-size:16px;margin-bottom:0.5rem;">📨 Mesajlar</h3>
+  <div id="notifList" style="color:var(--text-muted);font-size:14px;"></div>
 </div>
     </div>
 </div>
@@ -3792,15 +3901,15 @@ Abartısız ve yalansız bir şekilde, hakkını vererek bilinmesini sağlamakt�
     const quizStyle = document.createElement('style');
     quizStyle.textContent = `
         .quiz-box { text-align: center; padding: 1rem; }
-        .quiz-question { font-size: 18px; margin-bottom: 1.5rem; color: #e2e8f0; font-weight: 500; line-height: 1.6; }
+        .quiz-question { font-size: 18px; margin-bottom: 1.5rem; color: var(--text-primary); font-weight: 500; line-height: 1.6; }
         .quiz-options { display: flex; flex-direction: column; gap: 0.75rem; margin-top: 1.5rem; }
         .quiz-option { 
-            background: rgba(30,41,59,0.5); 
-            border: 1px solid #334155; 
+            background: var(--bg-secondary); 
+            border: 1px solid var(--border-secondary); 
             border-radius: 8px; 
             padding: 1rem 1.5rem; 
             cursor: pointer; 
-            color: #e2e8f0; 
+            color: var(--text-primary); 
             transition: all 0.2s;
             font-size: 15px;
             font-weight: 500;
@@ -3809,8 +3918,8 @@ Abartısız ve yalansız bir şekilde, hakkını vererek bilinmesini sağlamakt�
             font-family: inherit;
         }
         .quiz-option:hover:not(:disabled) { 
-            background: rgba(59,130,246,0.3); 
-            border-color: #3b82f6;
+            background: var(--bg-hover); 
+            border-color: var(--accent-primary);
             transform: translateX(4px);
         }
         .quiz-option:disabled {
@@ -3823,13 +3932,69 @@ Abartısız ve yalansız bir şekilde, hakkını vererek bilinmesini sağlamakt�
             font-size: 16px;
             padding: 1rem;
             border-radius: 8px;
-            background: rgba(30,41,59,0.3);
+            background: var(--bg-secondary);
         }
         `;
     document.head.appendChild(quizStyle);
 
         // Global değişkenler
+        let currentTheme = 'default'; // Varsayılan tema
 
+        // Tema yükleme fonksiyonu
+        async function loadUserTheme(username) {
+            try {
+                const userDoc = await db.collection('users').doc(username).get();
+                if (userDoc.exists) {
+                    const userData = userDoc.data();
+                    const theme = userData.theme || 'default';
+                    applyTheme(theme);
+                    currentTheme = theme;
+                    updateThemeButton();
+                }
+            } catch (error) {
+                console.error('Tema yüklenirken hata:', error);
+                applyTheme('default');
+            }
+        }
+
+        // Tema uygulama fonksiyonu
+        function applyTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            currentTheme = theme;
+            updateThemeButton();
+        }
+
+        // Tema butonunu güncelle
+        function updateThemeButton() {
+            const themeBtn = document.getElementById('themeToggleBtn');
+            if (themeBtn) {
+                if (currentTheme === 'amoled') {
+                    themeBtn.textContent = '☀️ Tema';
+                    themeBtn.title = 'Varsayılan temaya geç';
+                } else {
+                    themeBtn.textContent = '🌙 Tema';
+                    themeBtn.title = 'AMOLED temaya geç';
+                }
+            }
+        }
+
+        // Tema değiştirme fonksiyonu
+        async function toggleTheme() {
+            const newTheme = currentTheme === 'default' ? 'amoled' : 'default';
+            applyTheme(newTheme);
+            
+            // Firestore'a kaydet
+            if (currentUsername) {
+                try {
+                    await db.collection('users').doc(currentUsername).update({
+                        theme: newTheme
+                    });
+                    console.log('✅ Tema tercihi kaydedildi:', newTheme);
+                } catch (error) {
+                    console.error('❌ Tema kaydedilirken hata:', error);
+                }
+            }
+        }
         
         // Kullanıcı giriş kontrolü
         auth.onAuthStateChanged(async (user) => {
@@ -3858,6 +4023,9 @@ Abartısız ve yalansız bir şekilde, hakkını vererek bilinmesini sağlamakt�
         
                 const userData = userDoc.data();
                 console.log(`HoÅŸgeldin: ${userData.fullname}`);
+        
+                // 🔹 Tema tercihini yükle ve uygula
+                await loadUserTheme(currentUsername);
         
                 // 🔹 İlerleme verilerini yükle
                 await loadUserProgress();
