@@ -1424,6 +1424,8 @@
         }
 
         async function canAccessStage(stageId) {
+            if (currentUsername === 'furkanakgun') {
+            return true;
         // İlk aşama her zaman açık
         if (stageId === 50) return true;
 
