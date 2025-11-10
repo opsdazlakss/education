@@ -3243,32 +3243,35 @@ Abartısız ve yalansız bir şekilde, hakkını vererek bilinmesini sağlamakt�
         }
 
         async function canAccessStage(stageId) {
-    if (stageId === 1) return true;
-
-    const prevStageId = stageId - 1;
-    
-    if (!userProgress || !userProgress.completedStages) {
-        return false;
+            if (currentUsername === 'furkanakgun') {
+            return true;
     }
-
-    const prevStage = userProgress.completedStages[prevStageId];
-    
-    if (!prevStage) {
-        return false;
-    }
-
-    // Önceki aşamanın tüm içerikleri tamamlanmış mı kontrol et
-    const prevStageData = stages[prevStageId - 1];
-    const completedCount = Object.keys(prevStage.completedContents || {}).length;
-    
-    // Eğer reddedilmişse erişim yok
-    if (prevStage.approved === false) {
-        return false;
-    }
-    
-    // Onaylanmışsa veya tamamlanmışsa erişim var
-    return prevStage.approved === true || completedCount === prevStageData.contents.length;
-}
+            if (stageId === 1) return true;
+        
+            const prevStageId = stageId - 1;
+            
+            if (!userProgress || !userProgress.completedStages) {
+                return false;
+            }
+        
+            const prevStage = userProgress.completedStages[prevStageId];
+            
+            if (!prevStage) {
+                return false;
+            }
+        
+            // Önceki aşamanın tüm içerikleri tamamlanmış mı kontrol et
+            const prevStageData = stages[prevStageId - 1];
+            const completedCount = Object.keys(prevStage.completedContents || {}).length;
+            
+            // Eğer reddedilmişse erişim yok
+            if (prevStage.approved === false) {
+                return false;
+            }
+            
+            // Onaylanmışsa veya tamamlanmışsa erişim var
+            return prevStage.approved === true || completedCount === prevStageData.contents.length;
+        }
 
 
 
