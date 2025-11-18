@@ -938,9 +938,122 @@
             background: linear-gradient(to right, #16a34a, #059669);
             box-shadow: 0 6px 16px rgba(34, 197, 94, 0.4);
         }
+        .loading-logo {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 2rem;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #3b82f6, #06b6d4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 32px;
+    color: white;
+    animation: loadingPulse 2s ease-in-out infinite;
+}
+
+.loading-title {
+    font-size: 28px;
+    font-weight: bold;
+    color: #e2e8f0;
+    margin-bottom: 1rem;
+    animation: loadingFadeIn 1s ease-in-out;
+}
+
+.loading-text {
+    font-size: 14px;
+    color: #94a3b8;
+    margin-bottom: 2rem;
+    animation: loadingFadeIn 1.5s ease-in-out;
+}
+
+.loading-bar-container {
+    width: 200px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 0 auto;
+}
+
+.loading-bar {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, #3b82f6, #06b6d4, #3b82f6);
+    background-size: 200% 100%;
+    animation: loadingSlide 1.5s ease-in-out infinite;
+}
+
+@keyframes loadingPulse {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7);
+    }
+    50% {
+        transform: scale(1.05);
+        box-shadow: 0 0 0 20px rgba(59, 130, 246, 0);
+    }
+}
+
+@keyframes loadingFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes loadingSlide {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+/* AMOLED tema için loading cover */
+[data-theme="amoled"] #loadingCover {
+    background: linear-gradient(135deg, #000000 0%, #0a0a0a 100%);
+}
+
+[data-theme="amoled"] .loading-logo {
+    background: linear-gradient(135deg, #00ff00, #00cc00);
+}
+
+[data-theme="amoled"] .loading-bar {
+    background: linear-gradient(90deg, #00ff00, #00cc00, #00ff00);
+}
     </style>
 </head>
 <body>
+    <div id="loadingCover" style="
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+">
+    <div style="text-align: center;">
+        <div class="loading-logo">M</div>
+        <h1 class="loading-title">MEYDAN ACADEMY</h1>
+        <p class="loading-text">Yükleniyor...</p>
+        <div class="loading-bar-container">
+            <div class="loading-bar"></div>
+        </div>
+    </div>
+</div>
     <!-- Header -->
     <header>
         <div class="header-content">
@@ -2156,6 +2269,47 @@
                 });
             }
         }
+
+    window.addEventListener('load', function () {
+    const MIN_WAIT = 2000;   // minimum bekleme süresi (2 sn)
+    const MAX_WAIT = 10000;  // maksimum bekleme süresi (10 sn)
+    let loadStart = Date.now();
+    let minWaitPassed = false;
+    let contentReady = false;
+
+    // En az 2 saniye bekleme kontrolü
+    setTimeout(() => {
+        minWaitPassed = true;
+    }, MIN_WAIT);
+
+    // İçerik yüklenmiş mi kontrol et
+    const checkInterval = setInterval(() => {
+        const stagesList = document.getElementById('stagesList');
+        if (stagesList && stagesList.children.length > 0) {
+            contentReady = true;
+        }
+
+        // Minimum süre dolmuş + içerik hazır → yükleme ekranını kaldır
+        if (minWaitPassed && contentReady) {
+            hideCover();
+        }
+    }, 100);
+
+    // Maksimum 10 saniye sonra her şartta kaldır
+    setTimeout(() => {
+        hideCover();
+    }, MAX_WAIT);
+
+    function hideCover() {
+        const cover = document.getElementById('loadingCover');
+        if (cover) {
+            cover.style.opacity = '0';
+            cover.style.visibility = 'hidden';
+            setTimeout(() => cover.remove(), 500);
+        }
+        clearInterval(checkInterval);
+    }
+});
     </script>
 </body>
 </html>
