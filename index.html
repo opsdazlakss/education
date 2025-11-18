@@ -8,6 +8,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="translations.js"></script>
     <style>
         /* Tema Değişkenleri - Default Tema */
         :root {
@@ -974,39 +975,158 @@
         .submit-survey-btn:hover {
             background: var(--accent-gradient-hover);
         }
+        .loading-logo {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 2rem;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #3b82f6, #06b6d4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 32px;
+    color: white;
+    animation: loadingPulse 2s ease-in-out infinite;
+}
+
+.loading-title {
+    font-size: 28px;
+    font-weight: bold;
+    color: #e2e8f0;
+    margin-bottom: 1rem;
+    animation: loadingFadeIn 1s ease-in-out;
+}
+
+.loading-text {
+    font-size: 14px;
+    color: #94a3b8;
+    margin-bottom: 2rem;
+    animation: loadingFadeIn 1.5s ease-in-out;
+}
+
+.loading-bar-container {
+    width: 200px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 0 auto;
+}
+
+.loading-bar {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, #3b82f6, #06b6d4, #3b82f6);
+    background-size: 200% 100%;
+    animation: loadingSlide 1.5s ease-in-out infinite;
+}
+
+@keyframes loadingPulse {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7);
+    }
+    50% {
+        transform: scale(1.05);
+        box-shadow: 0 0 0 20px rgba(59, 130, 246, 0);
+    }
+}
+
+@keyframes loadingFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes loadingSlide {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+/* AMOLED tema için loading cover */
+[data-theme="amoled"] #loadingCover {
+    background: linear-gradient(135deg, #000000 0%, #0a0a0a 100%);
+}
+
+[data-theme="amoled"] .loading-logo {
+    background: linear-gradient(135deg, #00ff00, #00cc00);
+}
+
+[data-theme="amoled"] .loading-bar {
+    background: linear-gradient(90deg, #00ff00, #00cc00, #00ff00);
+}
     </style>
 </head>
 <body>
+    <div id="loadingCover" style="
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+">
+    <div style="text-align: center;">
+        <div class="loading-logo">M</div>
+        <h1 class="loading-title">MEYDAN ACADEMY</h1>
+        <p class="loading-text">Yükleniyor...</p>
+        <div class="loading-bar-container">
+            <div class="loading-bar"></div>
+        </div>
+    </div>
+</div>
     <!-- Header -->
     <header>
         <div class="header-content">
     <a href="index.html" class="logo" style="text-decoration: none;">
       <div class="logo-text">
-          <h1>MEYDAN ACADEMY</h1>
-          <p>To The Future</p>
+          <h1 data-i18n="header.title">MEYDAN ACADEMY</h1>
+          <p data-i18n="header.subtitle">To The Future</p>
       </div>
     </a>
 
     <div style="display: flex; gap: 1rem; align-items: center;">
-                <div id="notifIcon" style="cursor: pointer; font-size: 25px; position: relative;top:6px;">
-        🔔 
-        <span id="notifCount" style="background:red;color:white;padding:2px 6px;border-radius:8px;font-size:12px;display:none;position:absolute;top:-8px;right:-8px;">0</span>
-        </div>
-        <button id="themeToggleBtn" onclick="toggleTheme()" style="padding: 0.5rem 1rem; background: var(--bg-secondary); border: 1px solid var(--border-secondary); color: var(--text-primary); border-radius: 6px; cursor: pointer; font-weight: 500; font-size: 14px; transition: all 0.3s;">🌙 Tema</button>
         <div class="progress-section">
-            <p>Aşama <span id="currentStageDisplay">1</span>/<span id="totalStageDisplay">9</span></p>
+            <p><span data-i18n="header.stage">Aşama</span> <span id="currentStageDisplay">1</span>/<span id="totalStageDisplay">9</span></p>
             <div class="progress-bar">
                 <div class="progress-fill" id="headerProgressFill" style="width: 11.11%"></div>
             </div>
         </div>
-        <!-- Admin butonu (sadece adminlere göster) -->
-        <a href="admin.html" id="adminButton" style="display: none; padding: 0.5rem 1rem; background: rgba(59, 130, 246, 0.2); border: 1px solid rgba(59, 130, 246, 0.4); color: var(--accent-primary); border-radius: 6px; text-decoration: none; font-weight: 500; font-size: 14px;">🛠️ Admin</a>
-        <a href="presenter.html" id="presenterButton"style="display: none; padding: 0.5rem 1rem; background: var(--success-bg);border: 1px solid var(--success-border); color: var(--success); border-radius: 6px;text-decoration: none; font-weight: 500; font-size: 14px;">🎤 Presenter</a>
-        <button onclick="userLogout()" style="padding: 0.5rem 1rem; background: var(--error-bg); border: 1px solid var(--error-border); color: var(--error); border-radius: 6px; cursor: pointer; font-weight: 500; font-size: 14px;">Çıkış</button>
+        <div id="notifIcon" style="cursor: pointer; font-size: 25px; position: relative;top:0px;">
+            🔔 
+            <span id="notifCount" style="background:red;color:white;padding:2px 6px;border-radius:8px;font-size:12px;display:none;position:absolute;top:-8px;right:-8px;">0</span>
+        </div>
+        <button id="themeToggleBtn" onclick="toggleTheme()" data-i18n="header.theme" style="padding: 0.5rem 1rem; background: var(--bg-secondary); border: 1px solid var(--border-secondary); color: var(--text-primary); border-radius: 6px; cursor: pointer; font-weight: 500; font-size: 14px; transition: all 0.3s;">🌙 Tema</button>
+        <!--<div>
+            <select id="languageSelector" onchange="handleLanguageChange(this.value)" 
+                    style="padding: 0.5rem; background: var(--bg-secondary); border: 1px solid var(--border-secondary); color: var(--text-primary); border-radius: 6px; cursor: pointer; font-weight: 500; font-size: 14px;">
+                <option value="tr">🇹🇷 Türkçe</option>
+                <option value="en">🇬🇧 English</option>
+            </select>
+        </div>-->
+        <a href="admin.html" id="adminButton" data-i18n="header.admin" style="display: none; padding: 0.5rem 1rem; background: rgba(59, 130, 246, 0.2); border: 1px solid rgba(59, 130, 246, 0.4); color: var(--accent-primary); border-radius: 6px; text-decoration: none; font-weight: 500; font-size: 14px;">🛠️ Admin</a>
+        <a href="presenter.html" id="presenterButton" data-i18n="header.presenter" style="display: none; padding: 0.5rem 1rem; background: var(--success-bg);border: 1px solid var(--success-border); color: var(--success); border-radius: 6px;text-decoration: none; font-weight: 500; font-size: 14px;">🎤 Presenter</a>
+        <button onclick="userLogout()" data-i18n="header.logout" style="padding: 0.5rem 1rem; background: var(--error-bg); border: 1px solid var(--error-border); color: var(--error); border-radius: 6px; cursor: pointer; font-weight: 500; font-size: 14px;">Çıkış</button>
         
 
 <div id="notifPanel" style="display:none;position:fixed;top:60px;right:20px;background:var(--bg-modal);border:1px solid var(--border-secondary);border-radius:10px;padding:1rem;width:300px;max-height:400px;overflow-y:auto;z-index:1000;">
-  <h3 style="color:var(--text-white);font-size:16px;margin-bottom:0.5rem;">📨 Mesajlar</h3>
+  <h3 data-i18n="header.messages" style="color:var(--text-white);font-size:16px;margin-bottom:0.5rem;">📨 Mesajlar</h3>
   <div id="notifList" style="color:var(--text-muted);font-size:14px;"></div>
 </div>
     </div>
@@ -1018,7 +1138,7 @@
         <div class="main-grid">
             <!-- Sidebar -->
             <div class="sidebar">
-                <h2>Aşamalar</h2>
+                <h2 data-i18n="sidebar.stages">Aşamalar</h2>
                 <div class="stages-list" id="stagesList"></div>
             </div>
 
@@ -1027,7 +1147,7 @@
                 <div class="content-card">
                     <div class="card-header">
                         <div class="card-header-top">
-                            <div class="stage-badge">Aşama <span id="stageId">1</span></div>
+                            <div class="stage-badge"><span data-i18n="header.stage">Aşama</span> <span id="stageId">1</span></div>
                             <span id="stageTypeLabel">Konferans</span>
                         </div>
                         <h2 id="stageTitle">Proje Tanıtımı</h2>
@@ -1036,13 +1156,13 @@
 
                     <div class="card-body">
                         <div class="content-section">
-                            <h3>Aşama İçeriği</h3>
+                            <h3 data-i18n="section.stageContent">Aşama İçeriği</h3>
                             <div class="content-list" id="contentList"></div>
                         </div>
 
                         <div class="progress-section-card">
                             <div class="progress-header">
-                                <p>Bu Aşamayı Tamamlama İlerlemesi</p>
+                                <p data-i18n="section.stageProgress">Bu Aşamayı Tamamlama İlerlemesi</p>
                                 <span class="progress-count"><span id="completedCount">0</span>/<span id="totalCount">4</span></span>
                             </div>
                             <div class="progress-bar-full">
@@ -1051,14 +1171,14 @@
                         </div>
 
                         <div class="action-buttons">
-                            <button class="btn btn-secondary" id="prevBtn" style="display: none;">← Önceki</button>
-                            <button class="btn btn-primary" id="nextBtn">Sonraki Aşama →</button>
+                            <button class="btn btn-secondary" id="prevBtn" data-i18n="btn.previous" style="display: none;">← Önceki</button>
+                            <button class="btn btn-primary" id="nextBtn" data-i18n="btn.next">Sonraki Aşama →</button>
                         </div>
                     </div>
                 </div>
 
                 <div class="info-card">
-                    <p>💡 <span>İpucu:</span> Bu aşamadaki tüm içeriği tamamladıktan sonra sonraki aşamaya geçebilirsiniz.</p>
+                    <p><span data-i18n="progress.tip">İpucu:</span> <span data-i18n="progress.tipText">Bu aşamadaki tüm içeriği tamamladıktan sonra sonraki aşamaya geçebilirsiniz.</span></p>
                 </div>
             </div>
         </div>
@@ -1139,7 +1259,7 @@ auth.onAuthStateChanged(user => {
             item.innerHTML = `
               <strong>${msg.from}</strong>: ${msg.message}<br>
               <span style="font-size:12px;color:#64748b;">${time}</span>
-              ${!msg.read ? '<span style="color:#3b82f6;font-size:11px;margin-left:8px;">● Yeni</span>' : ''}
+              ${!msg.read ? `<span style="color:#3b82f6;font-size:11px;margin-left:8px;">● ${t('notif.newMessage')}</span>` : ''}
             `;
 
             // Okunmamış mesaj ise farklı renk
@@ -1179,7 +1299,7 @@ auth.onAuthStateChanged(user => {
           updateNotificationBadge(unreadCount);
 
           if (snapshot.empty) {
-            notifList.innerHTML = '<p style="color:#64748b;">Henüz mesaj yok.</p>';
+            notifList.innerHTML = `<p style="color:#64748b;">${t('header.noMessages')}</p>`;
           }
         },
         (error) => {
@@ -1208,7 +1328,38 @@ async function markMessageAsRead(messageId, isAlreadyRead) {
     console.error('Mesaj okundu olarak işaretlenirken hata:', error);
   }
 }
+async function handleLanguageChange(lang) {
+    setLanguage(lang);
+    
+    // Kullanıcının dil tercihini Firestore'a kaydet
+    if (currentUsername) {
+        try {
+            await db.collection('users').doc(currentUsername).update({
+                preferredLanguage: lang
+            });
+            console.log('✅ Dil tercihi kaydedildi:', lang);
+        } catch (error) {
+            console.error('❌ Dil kaydedilirken hata:', error);
+        }
+    }
+}
 
+// Kullanıcı dilini yükle
+async function loadUserLanguage(username) {
+    try {
+        const userDoc = await db.collection('users').doc(username).get();
+        if (userDoc.exists) {
+            const userData = userDoc.data();
+            const lang = userData.preferredLanguage || 'tr';
+            setLanguage(lang);
+            document.getElementById('languageSelector').value = lang;
+        }
+    } catch (error) {
+        return 'tr'; // Default language
+        console.error('Dil yüklenirken hata:', error);
+        setLanguage('tr');
+    }
+}
 // Bildirim rozetini güncelle
 function updateNotificationBadge(count) {
   if (count > 0) {
@@ -1229,8 +1380,8 @@ function updateNotificationBadge(count) {
 function showNewMessageNotification() {
   // Tarayıcı bildirimi (izin verilmişse)
   if ('Notification' in window && Notification.permission === 'granted') {
-    new Notification('Yeni Mesaj', {
-      body: 'Size yeni bir mesaj geldi!',
+    new Notification(t('notif.newMessage'), {
+      body: t('notif.newMessageBody'),
       icon: '🔔',
       badge: '🔔'
     });
@@ -3164,74 +3315,69 @@ Abartısız ve yalansız bir şekilde, hakkını vererek bilinmesini sağlamakt�
         let completedContents = {};
 
         async function renderStages() {
-            const stagesList = document.getElementById('stagesList');
-            stagesList.innerHTML = '';
+    const stagesList = document.getElementById('stagesList');
+    stagesList.innerHTML = '';
+
+    for (const stage of stages) {
+        const isLocked = !(await canAccessStage(stage.id));
         
-            for (const stage of stages) {
-                // Aşamaya erişim kontrolü
-                const isLocked = !(await canAccessStage(stage.id));
-                
-                // Bu aşamanın tamamlanma durumunu kontrol et
-                let stageCompletedContents = {};
-                if (userProgress && 
-                    userProgress.completedStages && 
-                    userProgress.completedStages[stage.id] && 
-                    userProgress.completedStages[stage.id].completedContents) {
-                    stageCompletedContents = userProgress.completedStages[stage.id].completedContents;
-                }
-                
-                // Tamamlanan içerik sayısını hesapla
-                let completedCount = 0;
-                for (let i = 0; i < stage.contents.length; i++) {
-                    const contentId = `${stage.id}-${i}`;
-                    if (stageCompletedContents[contentId]) {
-                        completedCount++;
-                    }
-                }
-                
-                // Aşama tamamen tamamlanmış mı?
-                const isCompleted = completedCount === stage.contents.length;
-                
-                // Bu aşama şu anda seçili mi?
-                const isActive = currentStage === stage.id;
+        let stageCompletedContents = {};
+        if (userProgress && 
+            userProgress.completedStages && 
+            userProgress.completedStages[stage.id] && 
+            userProgress.completedStages[stage.id].completedContents) {
+            stageCompletedContents = userProgress.completedStages[stage.id].completedContents;
+        }
         
-                // İkon belirleme
-                let icon = '⭕'; // Varsayılan
-                if (isLocked) {
-                    icon = '🔒'; // Kilitli
-                } else if (isCompleted) {
-                    icon = '✅'; // Tamamlanmış
-                } else if (isActive) {
-                    icon = '🔵'; // Aktif/Devam Eden
-                }
-        
-                // Buton oluştur
-                const btn = document.createElement('button');
-                btn.className = `stage-btn ${isActive ? 'active' : ''}`;
-                btn.disabled = isLocked;
-                
-                btn.innerHTML = `
-                    <div class="stage-btn-header">
-                        <span class="stage-icon">${icon}</span>
-                        <div class="stage-info">
-                            <span class="stage-title">${stage.title}</span>
-                            <span class="stage-type">${stage.type}</span>
-                        </div>
-                    </div>
-                    ${!isLocked ? `<div class="stage-status">${completedCount}/${stage.contents.length} içerik tamamlandı</div>` : '<div class="stage-status">🔒 Kilitli</div>'}
-                `;
-        
-                btn.onclick = () => {
-                    if (!isLocked) {
-                        currentStage = stage.id;
-                        updateCompletedContentsForStage(currentStage);
-                        render();
-                    }
-                };
-        
-                stagesList.appendChild(btn);
+        let completedCount = 0;
+        for (let i = 0; i < stage.contents.length; i++) {
+            const contentId = `${stage.id}-${i}`;
+            if (stageCompletedContents[contentId]) {
+                completedCount++;
             }
         }
+        
+        const isCompleted = completedCount === stage.contents.length;
+        const isActive = currentStage === stage.id;
+
+        let icon = '⭕';
+        if (isLocked) {
+            icon = '🔒';
+        } else if (isCompleted) {
+            icon = '✅';
+        } else if (isActive) {
+            icon = '🔵';
+        }
+
+        const btn = document.createElement('button');
+        btn.className = `stage-btn ${isActive ? 'active' : ''}`;
+        btn.disabled = isLocked;
+        
+        btn.innerHTML = `
+            <div class="stage-btn-header">
+                <span class="stage-icon">${icon}</span>
+                <div class="stage-info">
+                    <span class="stage-title">${stage.title}</span>
+                    <span class="stage-type">${stage.type}</span>
+                </div>
+            </div>
+            ${!isLocked ? 
+                `<div class="stage-status">${completedCount}/${stage.contents.length} ${t('sidebar.content')} ${t('sidebar.completed')}</div>` : 
+                `<div class="stage-status" data-i18n="sidebar.locked">${t('sidebar.locked')}</div>`
+            }
+        `;
+
+        btn.onclick = () => {
+            if (!isLocked) {
+                currentStage = stage.id;
+                updateCompletedContentsForStage(currentStage);
+                render();
+            }
+        };
+
+        stagesList.appendChild(btn);
+    }
+}
 
 
         function renderContent() {
@@ -3264,10 +3410,11 @@ Abartısız ve yalansız bir şekilde, hakkını vererek bilinmesini sağlamakt�
                     <div class="content-details">
                         <div class="content-title">${content.title}</div>
                         <div class="content-type">
-                            ${content.type === 'text' ? '📝 Metin İçeriği' : ''}
-                            ${content.type === 'video' ? '🎥 Video' : ''}
-                            ${content.type === 'link' ? '🔗 Harici Link' : ''}
-                            ${content.type === 'survey' ? '📋 Anket' : ''}
+                            ${content.type === 'text' ? t('content.text') : ''}
+                            ${content.type === 'video' ? t('content.video') : ''}
+                            ${content.type === 'link' ? t('content.link') : ''}
+                            ${content.type === 'survey' ? t('content.survey') : ''}
+                            ${content.type === 'quiz' ? t('content.quiz') : ''}
                         </div>
                     </div>
                     <span class="content-check">${isCompleted ? '✅' : '⭕'}</span>
@@ -3312,19 +3459,19 @@ Abartısız ve yalansız bir şekilde, hakkını vererek bilinmesini sağlamakt�
             if (userProgress.completedStages && 
                 userProgress.completedStages[currentStage] && 
                 userProgress.completedStages[currentStage].approved === true) {
-                nextBtn.textContent = '🎉 Eğitim Tamamlandı!';
+                nextBtn.textContent = t('btn.completed');
                 nextBtn.disabled = true;
             } else {
-                nextBtn.textContent = '📝 Onay Talebi Gönder';
+                nextBtn.textContent = t('btn.sendApproval');
                 nextBtn.disabled = false;
             }
         } else {
-            nextBtn.textContent = 'İçerikleri Tamamlayın';
+            nextBtn.textContent = t('btn.completeContent');
             nextBtn.disabled = true;
         }
     } else {
         nextBtn.disabled = !isCompleted;
-        nextBtn.textContent = isCompleted ? '📝 Onay Talebi Gönder' : 'Sonraki Aşama →';
+        nextBtn.textContent = isCompleted ? t('btn.sendApproval') : t('btn.next');
     }
 }
 
@@ -3399,53 +3546,51 @@ Abartısız ve yalansız bir şekilde, hakkını vererek bilinmesini sağlamakt�
 
         //ben bu fonksiyonun taaa aq
         function showContentModal(content) {
-            const modal = document.getElementById('contentModal');
-            const modalBody = document.getElementById('modalBody');
-            document.getElementById('modalType').textContent =
-                content.type === 'text' ? '📝 METİN' :
-                content.type === 'video' ? '🎥 VİDEO' :
-                content.type === 'link' ? '🔗 LİNK' :
-                content.type === 'survey' ? '📋 ANKET' :
-                '❓ QUIZ';
-            document.getElementById('modalTitle').textContent = content.title;
+    const modal = document.getElementById('contentModal');
+    const modalBody = document.getElementById('modalBody');
+    
+    document.getElementById('modalType').textContent =
+        content.type === 'text' ? t('modal.text') :
+        content.type === 'video' ? t('modal.video') :
+        content.type === 'link' ? t('modal.link') :
+        content.type === 'survey' ? t('modal.survey') :
+        t('modal.quiz');
+    
+    document.getElementById('modalTitle').textContent = content.title;
 
-            if (content.type === 'quiz') {
-                // Rastgele sorular seç
-                const quizQuestions = getRandomQuestions(content.stageId, content.questionCount);
-                
-                if (quizQuestions.length === 0) {
-                    modalBody.innerHTML = '<p style="color: #ef4444; text-align: center;">Soru havuzu boş!</p>';
-                    modal.classList.add('active');
-                    return;
-                }
-                
-                // Seçilen soruları content'e ekle
-                content.questions = quizQuestions;
-                
-                // İlk soruyu göster
-                currentQuizIndex = 0;
-                currentQuizAnswers = new Array(quizQuestions.length).fill(null);
-                
-                const currentQ = quizQuestions[currentQuizIndex];
-                let optionsHTML = currentQ.options.map((opt, idx) => `
-                    <button class="quiz-option" data-answer="${opt}">${opt}</button>
-                `).join('');
+    if (content.type === 'quiz') {
+        const quizQuestions = getRandomQuestions(content.stageId, content.questionCount);
+        
+        if (quizQuestions.length === 0) {
+            modalBody.innerHTML = `<p style="color: #ef4444; text-align: center;">${t('quiz.emptyPool')}</p>`;
+            modal.classList.add('active');
+            return;
+        }
+        
+        content.questions = quizQuestions;
+        currentQuizIndex = 0;
+        currentQuizAnswers = new Array(quizQuestions.length).fill(null);
+        
+        const currentQ = quizQuestions[currentQuizIndex];
+        let optionsHTML = currentQ.options.map((opt, idx) => `
+            <button class="quiz-option" data-answer="${opt}">${opt}</button>
+        `).join('');
 
-                modalBody.innerHTML = `
-                    <div class="quiz-box">
-                        <div class="quiz-progress-info">Soru ${currentQuizIndex + 1} / ${quizQuestions.length}</div>
-                        <p class="quiz-question">${currentQ.question}</p>
-                        <div class="quiz-options" id="quizOptionsContainer">${optionsHTML}</div>
-                        <p id="quizResult" class="quiz-result"></p>
-                        <div class="quiz-navigation" style="margin-top: 1.5rem; display: none;">
-                            <button class="btn btn-secondary" id="quizNextBtn">Sonraki Soru →</button>
-                        </div>
-                    </div>
-                `;
+        modalBody.innerHTML = `
+            <div class="quiz-box">
+                <div class="quiz-progress-info">${t('quiz.question')} ${currentQuizIndex + 1} / ${quizQuestions.length}</div>
+                <p class="quiz-question">${currentQ.question}</p>
+                <div class="quiz-options" id="quizOptionsContainer">${optionsHTML}</div>
+                <p id="quizResult" class="quiz-result"></p>
+                <div class="quiz-navigation" style="margin-top: 1.5rem; display: none;">
+                    <button class="btn btn-secondary" id="quizNextBtn" data-i18n="btn.nextQuestion">${t('btn.nextQuestion')}</button>
+                </div>
+            </div>
+        `;
 
-                document.querySelectorAll('.quiz-option').forEach(btn => {
-                    btn.onclick = () => checkMultiQuizAnswer(btn, content);
-                });
+        document.querySelectorAll('.quiz-option').forEach(btn => {
+            btn.onclick = () => checkMultiQuizAnswer(btn, content);
+        });
             } 
             // Diğer içerik tipleri aynı kalacak...
             else if (content.type === 'text') {
@@ -3489,7 +3634,7 @@ Abartısız ve yalansız bir şekilde, hakkını vererek bilinmesini sağlamakt�
                 }
             } 
             else if (content.type === 'link') {
-                modalBody.innerHTML = `<div class="link-box"><a href="${content.data}" target="_blank" class="link-btn">Linki Aç →</a><div class="link-url">${content.data}</div></div>`;
+                modalBody.innerHTML = `<div class="link-box"><a href="${content.data}" target="_blank" class="link-btn" data-i18n="btn.openLink">${t('btn.openLink')}</a><div class="link-url">${content.data}</div></div>`;
             } 
             else if (content.type === 'survey') {
                 let questionsHTML = '<div class="survey-questions">';
@@ -3497,15 +3642,15 @@ Abartısız ve yalansız bir şekilde, hakkını vererek bilinmesini sağlamakt�
                     questionsHTML += `
                         <div class="question-box">
                             <div class="question-number">${idx + 1}. ${question}</div>
-                            <textarea class="question-textarea" placeholder="Cevabınızı yazın..."></textarea>
+                            <textarea class="question-textarea" placeholder="${t('survey.placeholder')}"></textarea>
                         </div>
                     `;
                 });
             
                 // Anket gönderim butonunda stageId ve contentIndex parametreleri geçiyoruz
                 questionsHTML += `
-                    <button class="submit-survey-btn" onclick="submitSurvey(${currentStage}, ${stages[currentStage - 1].contents.indexOf(content)})">
-                        Anketi Gönder
+                    <button class="submit-survey-btn" onclick="submitSurvey(${currentStage}, ${stages[currentStage - 1].contents.indexOf(content)})" data-i18n="btn.submitSurvey">
+                        ${t('btn.submitSurvey')}
                     </button>
                 `;
                 questionsHTML += '</div>';
@@ -3521,14 +3666,14 @@ Abartısız ve yalansız bir şekilde, hakkını vererek bilinmesini sağlamakt�
 
 
             if (selected === correct) {
-            result.textContent = '✅ Doğru cevap!';
+            result.textContent = t('quiz.correct');
             result.style.color = '#22c55e';
             setTimeout(() => {
             closeModal();
             render();
             }, 1000);
             } else {
-                result.innerHTML = `❌ Yanlış cevap verdiniz.`;
+                result.innerHTML = t('quiz.incorrect');
                 result.style.color = '#ef4444';
                 //result.innerHTML = `❌ Yanlış cevap. Doğru cevap: <b>${correct}</b>`; bu kısım test kısmında eğer doğru cevabı da göstermek istersek olacak şu anlık doğru cevap gösterme yoks
             }
@@ -3551,12 +3696,12 @@ Abartısız ve yalansız bir şekilde, hakkını vererek bilinmesini sağlamakt�
             if (selected === currentQ.correctAnswer) {
                 button.style.background = 'rgba(34, 197, 94, 0.3)';
                 button.style.borderColor = '#22c55e';
-                result.textContent = '✅ Doğru cevap!';
+                result.textContent = t('quiz.correct');
                 result.style.color = '#22c55e';
             } else {
                 button.style.background = 'rgba(239, 68, 68, 0.3)';
                 button.style.borderColor = '#ef4444';
-                result.innerHTML = `❌ Yanlış cevap verdiniz.`;
+                result.innerHTML = t('quiz.incorrect');
                 result.style.color = '#ef4444';
                 //result.innerHTML = `❌ Yanlış cevap. Doğru cevap: <b>${currentQ.correctAnswer}</b>`; //doğru cevabı gösteren kod
             }
@@ -3584,12 +3729,12 @@ Abartısız ve yalansız bir şekilde, hakkını vererek bilinmesini sağlamakt�
             const modalBody = document.getElementById('modalBody');
             modalBody.innerHTML = `
                 <div class="quiz-box">
-                    <div class="quiz-progress-info">Soru ${currentQuizIndex + 1} / ${content.questions.length}</div>
+                    <div class="quiz-progress-info">${t('quiz.question')} ${currentQuizIndex + 1} / ${content.questions.length}</div>
                     <p class="quiz-question">${currentQ.question}</p>
                     <div class="quiz-options">${optionsHTML}</div>
                     <p id="quizResult" class="quiz-result"></p>
                     <div class="quiz-navigation" style="margin-top: 1.5rem; display: none;">
-                        <button class="btn btn-secondary" id="quizNextBtn">Sonraki Soru →</button>
+                        <button class="btn btn-secondary" id="quizNextBtn" data-i18n="btn.nextQuestion">${t('btn.nextQuestion')}</button>
                     </div>
                 </div>
             `;
@@ -3635,13 +3780,13 @@ Abartısız ve yalansız bir şekilde, hakkını vererek bilinmesini sağlamakt�
                 <div class="quiz-box" style="text-align: center;">
                     <div style="font-size: 64px; margin-bottom: 1rem;">${passed ? '🎉' : '📚'}</div>
                     <h2 style="font-size: 28px; color: ${passed ? '#22c55e' : '#ef4444'}; margin-bottom: 1rem;">
-                        ${passed ? 'Tebrikler! Tüm Soruları Doğru Cevapladınız!' : 'Tüm Soruları Doğru Cevaplamalısınız'}
+                        ${passed ? t('quiz.results.pass') : t('quiz.results.fail')}
                     </h2>
                     <p style="font-size: 18px; margin-bottom: 2rem;">
-                        ${correctCount} / ${content.questions.length} doğru cevap
+                        ${correctCount} / ${content.questions.length} ${t('quiz.correctAnswers')}
                     </p>
-                    ${!passed ? '<p style="color: #94a3b8; margin-bottom: 1rem;">Lütfen testi tekrar deneyin ve tüm soruları doğru cevaplayın.</p>' : ''}
-                    <button class="btn btn-primary" onclick="closeModal(); render();">Kapat</button>
+                    ${!passed ? `<p style="color: #94a3b8; margin-bottom: 1rem;">${t('quiz.results.retry')}</p>` : ''}
+                    <button class="btn btn-primary" onclick="closeModal(); render();" data-i18n="btn.close">${t('btn.close')}</button>
                 </div>
             `;
         }
@@ -3685,7 +3830,7 @@ Abartısız ve yalansız bir şekilde, hakkını vererek bilinmesini sağlamakt�
             completedContents[`${stageId}-${contentIndex}`] = true;
             await markContentCompleted(stageId, contentIndex);
         
-            alert('📋 Anket başarıyla gönderildi!');
+            alert(t('survey.success'));
             closeModal();
             render();
         }
@@ -3796,9 +3941,9 @@ Abartısız ve yalansız bir şekilde, hakkını vererek bilinmesini sağlamakt�
         if (!existingRequests.empty) {
             const requestData = existingRequests.docs[0].data();
             if (requestData.status === 'pending') {
-                alert('⏳ Bu aşama için onay talebi zaten gönderilmiş. Admin onayı bekleniyor...');
+                alert(t('alert.alreadyPending'));
             } else if (requestData.status === 'approved') {
-                alert('✅ Bu aşama zaten onaylanmış!');
+                alert(t('alert.alreadyApproved'));
                 // Bir sonraki aşamaya geç
                 if (stageId < stages.length) {
                     currentStage++;
@@ -3812,7 +3957,7 @@ Abartısız ve yalansız bir şekilde, hakkını vererek bilinmesini sağlamakt�
         // 🔹 2. Kullanıcının userProgress belgesini al
         const progressDoc = await db.collection('userProgress').doc(currentUsername).get();
         if (!progressDoc.exists) {
-            alert('❌ İlerleme verisi bulunamadı!');
+            alert(t('alert.progressNotFound'));
             return;
         }
 
@@ -3842,9 +3987,9 @@ Abartısız ve yalansız bir şekilde, hakkını vererek bilinmesini sağlamakt�
 
         // Son aşama mı kontrol et
         if (stageId === stages.length) {
-            alert('🎉 Son aşama için onay talebi gönderildi! Admin onayından sonra eğitiminiz tamamlanacak.');
+            alert(t('alert.lastStageApproval'));
         } else {
-            alert('✅ Onay talebi gönderildi! Admin onayından sonra sonraki aşamaya geçebilirsiniz.');
+            alert(t('alert.approvalSent'));
         }
         
         // UI'ı güncelle
@@ -3852,7 +3997,7 @@ Abartısız ve yalansız bir şekilde, hakkını vererek bilinmesini sağlamakt�
         
     } catch (error) {
         console.error('Onay talebi gönderilirken hata:', error);
-        alert('❌ Onay talebi gönderilemedi! Lütfen tekrar deneyin.');
+        alert(t('alert.approvalError'));
     }
 }
 
@@ -3879,13 +4024,13 @@ Abartısız ve yalansız bir şekilde, hakkını vererek bilinmesini sağlamakt�
             // Son aşama tamamlanmış, onay talebi gönder
             await requestStageApproval(currentStage);
         } else {
-            alert('⚠️ Lütfen önce bu aşamadaki tüm içerikleri tamamlayın!');
+            alert(t('alert.completeFirst'));
         }
     } else if (isStageFullyCompleted(currentStage)) {
         // Aşama tamamlanmış, onay talebi gönder
         await requestStageApproval(currentStage);
     } else {
-        alert('⚠️ Lütfen önce bu aşamadaki tüm içerikleri tamamlayın!');
+        alert(t('alert.completeFirst'));
     }
 };
 
@@ -4014,7 +4159,7 @@ Abartısız ve yalansız bir şekilde, hakkını vererek bilinmesini sağlamakt�
                 const userDoc = await db.collection('users').doc(currentUsername).get();
         
                 if (!userDoc.exists) {
-                    console.error('KullanÄ±cÄ± Firestoreâ€™da bulunamadÄ±.');
+                    console.error('Kullanıcı Firestore\'da bulunamadı.');
                     alert('Kullanıcı kaydı bulunamadı. Lütfen yöneticinize başvurun.');
                     await auth.signOut();
                     window.location.href = 'login.html';
@@ -4022,14 +4167,17 @@ Abartısız ve yalansız bir şekilde, hakkını vererek bilinmesini sağlamakt�
                 }
         
                 const userData = userDoc.data();
-                console.log(`HoÅŸgeldin: ${userData.fullname}`);
+                console.log(`Hoşgeldin: ${userData.fullname}`);
         
-                // 🔹 Tema tercihini yükle ve uygula
+                // 🔹 Dil tercihini yükle
+                await loadUserLanguage(currentUsername);
+                
+                // 🔹 Tema tercihini yükle
                 await loadUserTheme(currentUsername);
-        
+
                 // 🔹 İlerleme verilerini yükle
                 await loadUserProgress();
-        
+
                 // 🔹 UI'ı render et
                 await renderStages();
                 renderContent();
@@ -4060,13 +4208,54 @@ Abartısız ve yalansız bir şekilde, hakkını vererek bilinmesini sağlamakt�
 
         // Çıkış fonksiyonu
         function userLogout() {
-            if (confirm('Çıkış yapmak istediğinize emin misiniz?')) {
+            if (confirm(t('alert.logoutConfirm'))) {
                 auth.signOut().then(() => {
                     window.location.href = 'login.html';
                 });
             }
         }
-        
+        // Site tamamen yüklendiğinde cover'ı kaldır
+window.addEventListener('load', function () {
+    const MIN_WAIT = 2000;   // minimum bekleme süresi (2 sn)
+    const MAX_WAIT = 10000;  // maksimum bekleme süresi (10 sn)
+    let loadStart = Date.now();
+    let minWaitPassed = false;
+    let contentReady = false;
+
+    // En az 2 saniye bekleme kontrolü
+    setTimeout(() => {
+        minWaitPassed = true;
+    }, MIN_WAIT);
+
+    // İçerik yüklenmiş mi kontrol et
+    const checkInterval = setInterval(() => {
+        const stagesList = document.getElementById('stagesList');
+        if (stagesList && stagesList.children.length > 0) {
+            contentReady = true;
+        }
+
+        // Minimum süre dolmuş + içerik hazır → yükleme ekranını kaldır
+        if (minWaitPassed && contentReady) {
+            hideCover();
+        }
+    }, 100);
+
+    // Maksimum 10 saniye sonra her şartta kaldır
+    setTimeout(() => {
+        hideCover();
+    }, MAX_WAIT);
+
+    function hideCover() {
+        const cover = document.getElementById('loadingCover');
+        if (cover) {
+            cover.style.opacity = '0';
+            cover.style.visibility = 'hidden';
+            setTimeout(() => cover.remove(), 500);
+        }
+        clearInterval(checkInterval);
+    }
+});
+
     </script>
 </body>
 </html>
