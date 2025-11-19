@@ -106,22 +106,164 @@
         }
 
         header {
-            border-bottom: 1px solid var(--border-primary);
-            background: var(--bg-tertiary);
-            backdrop-filter: blur(10px);
-            position: static;
-            top: 0;
-            z-index: 40;
-        }
+    /* Mevcut stilleriniz kalabilir, sadece z-index ve position'ı güncelleyin */
+    border-bottom: 2px solid #22c55e;
+    background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(34, 197, 94, 0.1));
+    backdrop-filter: blur(10px);
+    
+    /* ÖNEMLİ GÜNCELLEME BURADA: */
+    position: relative; /* static olursa z-index çalışmaz, relative veya sticky olmalı */
+    z-index: 1000; /* Sayfa içeriğinin (sidebar, kartlar) üzerinde kalması için yüksek değer */
+    box-shadow: 0 4px 20px rgba(34, 197, 94, 0.2);
+}
 
-        .header-content {
-            max-width: 1280px;
-            margin: 0 auto;
-            padding: 1.5rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+        /* --- Header Düzeni --- */
+.header-content {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 1rem 1.5rem;
+    display: flex;
+    justify-content: space-between; /* Logoyu sola, aksiyonları sağa iter */
+    align-items: center;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+/* Aksiyon Kapsayıcısı (Buton ve Panel Gruplaması) */
+.action-wrapper {
+    position: relative; /* Panellerin buna göre hizalanmasını sağlar */
+}
+
+/* İkon Butonlar */
+.icon-btn {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-secondary);
+    color: var(--text-secondary);
+    width: 40px;
+    height: 40px;
+    border-radius: 10px; /* Karemsi yuvarlak (Squircle) */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.icon-btn:hover {
+    background: var(--bg-hover);
+    color: var(--text-primary);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+/* Açılır Menü ve Bildirim Paneli Stilleri */
+.dropdown-menu, #notifPanel {
+    position: absolute;
+    top: 55px; /* Butonun biraz daha altı */
+    right: 0;
+    width: 280px;
+    background: var(--bg-modal);
+    border: 1px solid var(--border-secondary);
+    border-radius: 12px;
+    padding: 0.5rem;
+    box-shadow: 0 10px 40px -10px rgba(0,0,0,0.8); /* Gölgeyi biraz koyulaştırdık */
+    
+    /* ÖNEMLİ GÜNCELLEME BURADA: */
+    z-index: 1001; /* Header'dan (1000) bir tık daha yüksek olmalı */
+    
+    display: none;
+    flex-direction: column;
+    gap: 4px;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity 0.2s, transform 0.2s;
+}
+
+/* Aktif Sınıfı (JS ile eklenir) */
+.dropdown-menu.show, #notifPanel.show {
+    display: flex; /* Görünür yap */
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Bildirim Paneli Özel Ayarı */
+#notifPanel {
+    width: 320px; /* Bildirimler biraz daha geniş olabilir */
+    max-height: 400px;
+    overflow-y: auto;
+    display: none; /* Flex değil block olarak açılması için show sınıfını ezeceğiz */
+}
+#notifPanel.show {
+    display: block;
+}
+
+/* Menü Öğeleri */
+.menu-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    color: var(--text-primary);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: 8px;
+    background: transparent;
+    border: none;
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.menu-item:hover {
+    background: var(--bg-hover);
+}
+
+.menu-item .icon {
+    width: 24px;
+    text-align: center;
+    font-size: 16px;
+}
+
+.menu-divider {
+    height: 1px;
+    background: var(--border-secondary);
+    margin: 4px 0;
+}
+
+.menu-item.danger { color: var(--error); }
+.menu-item.danger:hover { background: var(--error-bg); }
+
+/* Progress Bar (Header İçi) */
+.header-progress-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    margin-right: 0.5rem;
+}
+
+.header-progress-container p {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-bottom: 4px;
+}
+
+/* Mobil Uyumluluk */
+@media (max-width: 600px) {
+    .header-progress-container p { display: none; }
+    .progress-bar { width: 60px; }
+    /* Mobilde paneller ekran dışına taşmasın diye genişliği ayarla */
+    .dropdown-menu, #notifPanel {
+        width: 260px;
+    }
+}
 
         .logo {
             display: flex;
@@ -1092,39 +1234,68 @@
 </div>
     <!-- Header -->
     <header>
-        <div class="header-content">
-    <a href="index.html" class="logo" style="text-decoration: none;">
-      <div class="logo-text">
-          <h1>MEYDAN ACADEMY</h1>
-          <p>To The Future</p>
-      </div>
-    </a>
-
-    <div style="display: flex; gap: 1rem; align-items: center;">
-                <div id="notifIcon" style="cursor: pointer; font-size: 25px; position: relative;top:6px;">
-        🔔 
-        <span id="notifCount" style="background:red;color:white;padding:2px 6px;border-radius:8px;font-size:12px;display:none;position:absolute;top:-8px;right:-8px;">0</span>
-        </div>
-        <button id="themeToggleBtn" onclick="toggleTheme()" style="padding: 0.5rem 1rem; background: var(--bg-secondary); border: 1px solid var(--border-secondary); color: var(--text-primary); border-radius: 6px; cursor: pointer; font-weight: 500; font-size: 14px; transition: all 0.3s;">🌙 Tema</button>
-        <div class="progress-section">
-            <p>Aşama <span id="currentStageDisplay">1</span>/<span id="totalStageDisplay">9</span></p>
-            <div class="progress-bar">
-                <div class="progress-fill" id="headerProgressFill" style="width: 11.11%"></div>
+    <div class="header-content">
+        <a href="index.html" class="logo" style="text-decoration: none;">
+            <div class="logo-icon">M</div>
+            <div class="logo-text">
+                <h1>MEYDAN ACADEMY</h1>
+                <p>To The Future</p>
             </div>
-        </div>
-        <!-- Admin butonu (sadece adminlere göster) -->
-        <a href="admin.html" id="adminButton" style="display: none; padding: 0.5rem 1rem; background: rgba(59, 130, 246, 0.2); border: 1px solid rgba(59, 130, 246, 0.4); color: var(--accent-primary); border-radius: 6px; text-decoration: none; font-weight: 500; font-size: 14px;">🛠️ Admin</a>
-        <a href="presenter.html" id="presenterButton"style="display: none; padding: 0.5rem 1rem; background: var(--success-bg);border: 1px solid var(--success-border); color: var(--success); border-radius: 6px;text-decoration: none; font-weight: 500; font-size: 14px;">🎤 Presenter</a>
-        <button onclick="userLogout()" style="padding: 0.5rem 1rem; background: var(--error-bg); border: 1px solid var(--error-border); color: var(--error); border-radius: 6px; cursor: pointer; font-weight: 500; font-size: 14px;">Çıkış</button>
-        
+        </a>
 
-<div id="notifPanel" style="display:none;position:fixed;top:60px;right:20px;background:var(--bg-modal);border:1px solid var(--border-secondary);border-radius:10px;padding:1rem;width:300px;max-height:400px;overflow-y:auto;z-index:1000;">
-  <h3 style="color:var(--text-white);font-size:16px;margin-bottom:0.5rem;">📨 Mesajlar</h3>
-  <div id="notifList" style="color:var(--text-muted);font-size:14px;"></div>
-</div>
+        <div class="header-actions">
+            
+            <div class="header-progress-container">
+                <p>Aşama <span id="currentStageDisplay">1</span>/<span id="totalStageDisplay">9</span></p>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="headerProgressFill" style="width: 11.11%"></div>
+                </div>
+            </div>
+
+            <div class="action-wrapper">
+                <button class="icon-btn" id="notifIcon">
+                    🔔
+                    <span id="notifCount" style="position: absolute; top: -5px; right: -5px; background: var(--error); color: white; font-size: 10px; padding: 2px 6px; border-radius: 10px; display: none; border: 2px solid var(--bg-secondary);">0</span>
+                </button>
+                <div id="notifPanel">
+                    <h3 style="color:var(--text-primary); font-size:14px; margin-bottom:0.75rem; padding-bottom:0.5rem; border-bottom:1px solid var(--border-secondary); display:flex; justify-content:space-between; align-items:center;">
+                        📨 Mesajlar
+                        <span style="font-size:11px; color:var(--text-secondary); font-weight:normal; cursor:pointer;" onclick="event.stopPropagation(); document.getElementById('notifPanel').classList.remove('show');"></span>
+                    </h3>
+                    <div id="notifList"></div>
+                </div>
+            </div>
+
+            <div class="action-wrapper">
+                <button class="icon-btn" id="menuToggleBtn" onclick="toggleMenu()">
+                    ☰
+                </button>
+                
+                <div class="dropdown-menu" id="mainMenu">
+                    <a href="admin.html" class="menu-item" id="adminButton" style="display: none;">
+                        <span class="icon">🛠️</span> Admin Paneli
+                    </a>
+                    <a href="presenter.html" class="menu-item" id="presenterButton" style="display: none;">
+                        <span class="icon">🎤</span> Presenter Modu
+                    </a>
+                    
+                    <div class="menu-divider" id="adminDivider" style="display: none;"></div>
+
+                    <button class="menu-item" onclick="toggleTheme()">
+                        <span class="icon">🌓</span> Tema Değiştir
+                    </button>
+                    
+                    <div class="menu-divider"></div>
+
+                    <button class="menu-item danger" onclick="userLogout()">
+                        <span class="icon">🚪</span> Çıkış Yap
+                    </button>
+                </div>
+            </div>
+
+        </div>
     </div>
-</div>
-    </header>
+</header>
 
     <!-- Main Container -->
     <div class="container">
@@ -4217,6 +4388,55 @@ window.addEventListener('load', function () {
             setTimeout(() => cover.remove(), 500);
         }
         clearInterval(checkInterval);
+    }
+});
+// Menü Aç/Kapa
+function toggleMenu() {
+    const menu = document.getElementById('mainMenu');
+    const notifPanel = document.getElementById('notifPanel');
+    
+    // Diğer paneli kapat
+    notifPanel.classList.remove('show');
+    
+    // Menüyü değiştir
+    menu.classList.toggle('show');
+    
+    // İkonu değiştir
+    const btn = document.getElementById('menuToggleBtn');
+    btn.innerHTML = menu.classList.contains('show') ? '✕' : '☰';
+}
+
+// Bildirim Paneli Aç/Kapa (Mevcut event listener'ı buna güncelleyin)
+const notifIconBtn = document.getElementById('notifIcon');
+notifIconBtn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    const notifPanel = document.getElementById('notifPanel');
+    const menu = document.getElementById('mainMenu');
+    
+    // Diğer paneli kapat
+    menu.classList.remove('show');
+    document.getElementById('menuToggleBtn').innerHTML = '☰';
+    
+    // Bildirimi değiştir
+    notifPanel.classList.toggle('show');
+});
+
+// Dışarı tıklayınca kapatma
+document.addEventListener('click', function(event) {
+    const menu = document.getElementById('mainMenu');
+    const notifPanel = document.getElementById('notifPanel');
+    const menuBtn = document.getElementById('menuToggleBtn');
+    const notifBtn = document.getElementById('notifIcon');
+
+    // Menü dışına tıklandıysa
+    if (!menu.contains(event.target) && !menuBtn.contains(event.target)) {
+        menu.classList.remove('show');
+        menuBtn.innerHTML = '☰';
+    }
+    
+    // Bildirim dışına tıklandıysa
+    if (!notifPanel.contains(event.target) && !notifBtn.contains(event.target)) {
+        notifPanel.classList.remove('show');
     }
 });
     </script>
