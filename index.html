@@ -254,7 +254,46 @@
     color: var(--text-secondary);
     margin-bottom: 4px;
 }
+.sidebar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    padding: 10px;
+    background-color: #0a0a0a; /* İsteğe bağlı arka plan */
+    border-radius: 5px;
+    user-select: none; /* Metin seçimini engeller */
+}
 
+.sidebar-header:hover {
+    background-color: #222222;
+}
+
+/* Kapsayıcı (Animation Container) */
+.stages-list-container {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+}
+
+/* Açık Durum (Expanded) */
+.stages-list-container.expanded {
+    max-height: 1000px; /* İçeriğin sığacağı kadar büyük bir değer verin */
+}
+
+/* Ok İkonu Animasyonu */
+.toggle-icon {
+    transition: transform 0.3s ease;
+}
+
+/* Liste açıkken ok aşağı dönsün (veya yukarı) */
+.stages-list-container.expanded ~ .sidebar-header .toggle-icon,
+/* HTML yapısına göre sibling seçiciyi ayarlayalım.
+   JS ile class'ı header'a eklemek daha kolay olabilir ama 
+   burada container'a class eklediğimiz için oku döndürmek için şu JS'i kullanacağız: */
+.rotate-icon {
+    transform: rotate(180deg);
+}
 /* Mobil Uyumluluk */
 @media (max-width: 600px) {
     .header-progress-container p { display: none; }
@@ -1302,9 +1341,15 @@
         <div class="main-grid">
             <!-- Sidebar -->
             <div class="sidebar">
-                <h2>Aşamalar</h2>
-                <div class="stages-list" id="stagesList"></div>
-            </div>
+    <div class="sidebar-header" onclick="toggleStagesList()">
+        <h2>Aşamalar</h2>
+        <span id="stagesToggleIcon" class="toggle-icon">▼</span>
+    </div>
+    
+    <div class="stages-list-container" id="stagesListContainer">
+        <div class="stages-list" id="stagesList"></div>
+    </div>
+</div>
 
             <!-- Main Content -->
             <div>
@@ -2661,7 +2706,7 @@ Eğer çok fazla "Nasıl yapacağım?", "Nasıl edeceğim?" gibi sorulara takıl
 
 <p><em>"Unutmayın! Nasıl’lar, nedenleri geçmemelidir."</em></p>
 ` },
-                    { type: 'video', title: '9 TEMEL SUTUN - 1: HAYAL HEDEF NEDENLERİMİZ', icon: '🎥', data: 'https://www.youtube.com/embed/S7aS6Qdfmuo?list=PL0Hya99D5Lc74omeWpPF34NYJf0zRJ5nY' },
+                    { type: 'video', title: '9 TEMEL SUTUN - 1: HAYAL HEDEF NEDENLERİMİZ', icon: '🎥', data: 'https://www.youtube.com/embed/S7aS6Qdfmuo' },
                     { type: 'survey', title: 'Açık Uçlu Sorular', icon: '📋', data: [ 'Senin için “TOMBUL hedef” ifadesi ne anlam taşıyor? Kendi hayatından bir örnek vererek açıklayın.','Hayaller sınırsız olmalı deniyor. Senin “sınır koymadığın” bir hayalin nedir ve bu hayal sana ne hissettiriyor?','Hedeflerini belirlerken “nedenlerin” seni nasıl etkiliyor? Zorlandığın bir anda seni ayağa kaldıran neden neydi?']},
                     {
                         type: 'quiz',
@@ -2739,7 +2784,7 @@ Fakat bu işlerle uğraşmayan kişiler için bu basit şeyler bile zor gelebili
 
 <p>O kişiyle uğraşmayı bırakıp, <strong>"Kendi iyiliğini, hayallerini, isteklerini gerçekleştirmek isteyenlere"</strong> yoğunlaşın.</p>
 ` },
-                    { type: 'video', title: '9 TEMEL SUTUN - 2: TAAHHÜT', icon: '🎥', data: 'https://www.youtube.com/embed/LDc4DC6ufaQ?list=PL0Hya99D5Lc74omeWpPF34NYJf0zRJ5nY' },
+                    { type: 'video', title: '9 TEMEL SUTUN - 2: TAAHHÜT', icon: '🎥', data: 'https://www.youtube.com/embed/LDc4DC6ufaQ' },
                     { type: 'survey', title: 'Açık Uçlu Sorular', icon: '📋', data: ['Hayatında verdiğin bir taahhüdü düşün. Bu taahhüt seni nasıl harekete geçirdi ve sonucunda ne hissettin?', 'Bir lidere göre, taahhüt almak ve vermek neden ekip içi güvenin temelidir? Kendi yorumunu yaz.' , '“Hayır” cevabını kişisel algılamamak neden önemli? Bu durumu yaşadığında nasıl davranmalısın?'] },
                     {
                         type: 'quiz',
@@ -2922,7 +2967,7 @@ Sunum için Presenter'ın olması şarttır.</p>
 Bunu da öyle düşünün.</p>
 
 ` },
-                { type: 'video', title: '9 TEMEL SUTUN - 4: DAVET', icon: '🎥', data: 'https://www.youtube.com/embed/FBp3fJLjMMo?list=PL0Hya99D5Lc74omeWpPF34NYJf0zRJ5nY' },
+                { type: 'video', title: '9 TEMEL SUTUN - 4: DAVET', icon: '🎥', data: 'https://www.youtube.com/embed/FBp3fJLjMMo' },
                 { type: 'survey', title: 'Açık Uçlu Sorular', icon: '📋', data: ['Farklı insanlarla farklı davet yöntemleri kullanmak neden gereklidir? Kendi çevrenden iki örnek ver.', 'Davette “aciliyet duygusu” oluşturmak ne işe yarar? Bunu kendi sözlerinle açıkla.' , 'Bir davetten sonra kendini değerlendirirken hangi noktaları analiz edersin? Kısa bir kişisel değerlendirme yaz.'] },
                 {
                     type: 'quiz',
@@ -3025,7 +3070,7 @@ Ancak siz, iyi bir davet ve follow yaparsanız o satışı kapatabilirsiniz.</p>
 <p>Presenter'ın sunumdaki hitabı, heyecanı ve işine olan güveni dinleyiciye geçmelidir.</p>
 
 ` },
-                    { type: 'video', title: '9 TEMEL SUTUN - 5: SUNUM', icon: '🎥', data: 'https://www.youtube.com/embed/V9MdAFV-MAQ?list=PL0Hya99D5Lc74omeWpPF34NYJf0zRJ5nY' },
+                    { type: 'video', title: '9 TEMEL SUTUN - 5: SUNUM', icon: '🎥', data: 'https://www.youtube.com/embed/V9MdAFV-MAQ' },
                     { type: 'survey', title: 'Açık Uçlu Sorular', icon: '📋', data: ['Sunum öncesinde davetçinin kurması gereken “güven” atmosferini, kendi cümlelerinle tarif et. Hangi cümleleri ve hangi beden dilini kullanırsın?', 'Presenter sunumdayken davetçinin “onaylayıcı rolü” neden kritik? Bu rol aksadığında davet edilen kişi neleri yanlış yorumlayabilir?' , 'Sunumdan sonra davetliyle baş başa kaldığında hangi “dost tavsiyelerini” verirsin? Metindeki ilkelere dayanarak kısa bir rehber yaz.'] },
                     {
                         type: 'quiz',
@@ -3133,7 +3178,7 @@ Bunu diyen kişi şunu düşünecektir: <em>"Hee, bir tek ben değilmişim."</em
 
 <p><strong>"İnsanlar, kendileri gibi birilerini ararlar."</strong></p>
 ` },
-                    { type: 'video', title: '9 TEMEL SUTUN - 6: TAKİP ve GÖRÜŞME', icon: '🎥', data: 'https://www.youtube.com/embed/qCitqOEvVL8?list=PL0Hya99D5Lc74omeWpPF34NYJf0zRJ5nY' },
+                    { type: 'video', title: '9 TEMEL SUTUN - 6: TAKİP ve GÖRÜŞME', icon: '🎥', data: 'https://www.youtube.com/embed/qCitqOEvVL8' },
                     { type: 'survey', title: 'Açık Uçlu Sorular', icon: '📋', data: ['Follow’da güven ile kibir arasındaki çizgiyi nasıl koruyorsun? Kendi ifadelerinle örneklendir.', 'Fell–Felt–Found taktiğini, Network dışı günlük bir senaryoya uygulayarak açıklayın.' , 'Sunum sonrası Follow’da kişiye “hayalini ondan daha çok önemsemek” ne demektir? Bunu kendi bakış açınla yorumla.'] },
                     {
                         type: 'quiz',
@@ -3227,7 +3272,7 @@ Eğer direkt olarak en üst yetkiliye sorarsanız, aradaki cevabı bilmeyen üst
 
 <p><strong>"Maymun görür, maymun yapar."</strong></p>
 ` },
-                    { type: 'video', title: '9 TEMEL SUTUN - 7: KOORDİNASYON', icon: '🎥', data: 'https://www.youtube.com/embed/xxOScdUrgrs?list=PL0Hya99D5Lc74omeWpPF34NYJf0zRJ5nY' },
+                    { type: 'video', title: '9 TEMEL SUTUN - 7: KOORDİNASYON', icon: '🎥', data: 'https://www.youtube.com/embed/xxOScdUrgrs' },
                     { type: 'survey', title: 'Açık Uçlu Sorular', icon: '📋', data: ['“Lidere danışmak” ile “liderin her dediğini gözü kapalı yapmak” arasındaki fark nedir? Kendi düşüncenle açıkla.', 'Koordinasyonun en güçlü öğrenme ortamı olduğunu söylüyorsun. Bunun kendi hayatındaki bir örneğini paylaş.' , 'Üst liderine saygı göstermenin, altındaki ekip davranışlarına nasıl yansıdığını açıklayın.'] },
                     {
                         type: 'quiz',
@@ -3304,7 +3349,7 @@ Eğer yetiştirebilirseniz, eğitimleriniz ve sunumlarınız tıkır tıkır yü
 
 <p><strong>Network'deki Sır:</strong> "Öğren, öğret, öğretmeyi öğret."</p>
 ` },
-                    { type: 'video', title: '9 TEMEL SUTUN - 8: ÇOĞALTMA', icon: '🎥', data: 'https://www.youtube.com/embed/l7DDWmbrFIs?list=PL0Hya99D5Lc74omeWpPF34NYJf0zRJ5nY' },
+                    { type: 'video', title: '9 TEMEL SUTUN - 8: ÇOĞALTMA', icon: '🎥', data: 'https://www.youtube.com/embed/l7DDWmbrFIs' },
                     { type: 'survey', title: 'Açık Uçlu Sorular', icon: '📋', data: ['“Öğretmeyi öğretmek” ifadesi senin için ne ifade ediyor? Kendi hayatından bir örnekle açıkla.', 'Duplicate eksik olduğunda sistemin neden büyüyemeyeceğini mantıksal bir şekilde yorumla.' , 'İnsanlara basit anlatmak ile hafife almak arasındaki fark nedir? Kendi cümlelerinle ifade et.'] },
                     {
                         type: 'quiz',
@@ -3432,7 +3477,7 @@ Onların zaman algısını, Network düşüncesine çekmeniz gerekir.</p>
 <p><em>İşte bu, Zamanın Edification'ıdır.</em><br>
 Abartısız ve yalansız bir şekilde, hakkını vererek bilinmesini sağlamaktır.</p>
 `},
-                    { type: 'video', title: '9 TEMEL SUTUN - 9: YÜCELTME', icon: '🎥', data: 'https://www.youtube.com/embed/Ok4J-npA5Rk?list=PL0Hya99D5Lc74omeWpPF34NYJf0zRJ5nY' },
+                    { type: 'video', title: '9 TEMEL SUTUN - 9: YÜCELTME', icon: '🎥', data: 'https://www.youtube.com/embed/Ok4J-npA5Rk' },
                     { type: 'survey', title: 'Açık Uçlu Sorular', icon: '📋', data: ['Edification yaparken “abartısız ve yalansız anlatım” neden kritik bir prensiptir? Güven ilişkisi açısından yorumla.', 'Şirket, ürün, üst kol veya alt kol… Bunların hangisinin Edification’ını en çok zorlanarak yaparsın? Neden?' , 'Edification’ın ekip kültürünü nasıl şekillendirdiğini, kendi cümlelerinle örneklendir.'] },
                     {
                         type: 'quiz',
@@ -3736,42 +3781,25 @@ Abartısız ve yalansız bir şekilde, hakkını vererek bilinmesini sağlamakt�
                 modalBody.innerHTML = `<div class="text-content">${content.data}</div>`;
             } 
             else if (content.type === 'video') {
-                if (content.platform === 'screenpal') {
-                    modalBody.innerHTML = `
-                        <div class="video-container">
-                            <div class="sp-embed-player" data-id="${content.data}">
-                                <script src="https://go.screenpal.com/player/appearance/${content.data}"><\/script>
-                                <iframe width="100%" height="100%" style="border:0;" scrolling="no" 
-                                    src="https://go.screenpal.com/player/${content.data}?width=100%&height=100%&ff=1&title=0" 
-                                    allowfullscreen="true"
-                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share">
-                                </iframe>
-                            </div>
-                        </div>
-                    `;
-                } else {
-                    // YouTube URL'sine mobil parametreler ekle
-                    let videoUrl = content.data;
-                    if (!videoUrl.includes('?')) {
-                        videoUrl += '?';
-                    } else {
-                        videoUrl += '&';
-                    }
-                    videoUrl += 'playsinline=1&modestbranding=1&rel=0';
-                    
-                    modalBody.innerHTML = `
-                        <div class="video-container">
-                            <iframe src="${videoUrl}" 
-                                frameborder="0" 
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                                allowfullscreen
-                                webkitallowfullscreen
-                                mozallowfullscreen>
-                            </iframe>
-                        </div>
-                    `;
-                }
-            } 
+    let videoUrl = content.data;
+    
+    // Playlist parametresini temizle
+    videoUrl = videoUrl.split('?list=')[0];
+    
+    // Gerekli parametreleri ekle
+    const separator = videoUrl.includes('?') ? '&' : '?';
+    videoUrl += separator + 'playsinline=1&rel=0&enablejsapi=1';
+    
+    modalBody.innerHTML = `
+        <div class="video-container">
+            <iframe src="${videoUrl}" 
+                frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                allowfullscreen>
+            </iframe>
+        </div>
+    `;
+} 
             else if (content.type === 'link') {
                 modalBody.innerHTML = `<div class="link-box"><a href="${content.data}" target="_blank" class="link-btn">Linki Aç →</a><div class="link-url">${content.data}</div></div>`;
             } 
@@ -4261,7 +4289,20 @@ Abartısız ve yalansız bir şekilde, hakkını vererek bilinmesini sağlamakt�
                 }
             }
         }
-
+        function toggleStagesList() {
+    const container = document.getElementById('stagesListContainer');
+    const icon = document.getElementById('stagesToggleIcon');
+    
+    // Class'ı toggle yap (varsa siler, yoksa ekler)
+    container.classList.toggle('expanded');
+    
+    // İkonu döndürmek için class ekle/çıkar
+    if (container.classList.contains('expanded')) {
+        icon.style.transform = 'rotate(0deg)'; // Veya 'rotate(180deg)' zevkine göre
+    } else {
+        icon.style.transform = 'rotate(-90deg)'; // Kapalıyken yan dursun
+    }
+}
         // Tema değiştirme fonksiyonu
         async function toggleTheme() {
             const newTheme = currentTheme === 'default' ? 'amoled' : 'default';
