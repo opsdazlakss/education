@@ -503,7 +503,23 @@
             }
         }
         
+            
         @media (max-width: 480px) {
+            .modal-body {
+            padding: 0.5rem !important; /* 2rem'den 0.5rem'e düşürdük */
+            }
+            
+            .video-container {
+                /* Videonun kenar boşluklarına takılmaması için */
+                width: 100%;
+                border-radius: 8px;
+                box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            }
+
+            /* Modal başlığını da biraz sıkılaştıralım */
+            .modal-header {
+                padding: 1rem !important;
+            }
             .logo-text h1 {
                 font-size: 18px;
             }
@@ -532,8 +548,6 @@
             .stages-list {
                 max-height: 300px;
             }
-        }
-        @media (max-width: 480px) {
     .header-content {
         padding: 0.75rem;
     }
@@ -3783,26 +3797,24 @@ Abartısız ve yalansız bir şekilde, hakkını vererek bilinmesini sağlamakt�
             else if (content.type === 'video') {
     let videoUrl = content.data;
     
-    // Playlist parametresini temizle
+    // Link temizleme ve parametre ekleme
     videoUrl = videoUrl.split('?list=')[0];
-    
-    // Gerekli parametreleri ekle
     const separator = videoUrl.includes('?') ? '&' : '?';
-    // fs=1 parametresi tam ekran butonunu zorlar
-    videoUrl += separator + 'playsinline=1&rel=0&enablejsapi=1&fs=1';
+    // fs=1 (fullscreen) ve playsinline=1 (iOS uyumu) önemli
+    videoUrl += separator + 'playsinline=1&rel=0&enablejsapi=1&fs=1&modestbranding=1';
     
     modalBody.innerHTML = `
         <div class="video-container">
-            <iframe src="${videoUrl}" 
+            <iframe 
+                src="${videoUrl}" 
                 frameborder="0" 
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen" 
-                allowfullscreen="true"
-                webkitallowfullscreen="true"
-                mozallowfullscreen="true">
+                allowfullscreen
+            >
             </iframe>
         </div>
     `;
-} 
+}
             else if (content.type === 'link') {
                 modalBody.innerHTML = `<div class="link-box"><a href="${content.data}" target="_blank" class="link-btn">Linki Aç →</a><div class="link-url">${content.data}</div></div>`;
             } 
