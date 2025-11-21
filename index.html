@@ -948,16 +948,16 @@
         }
 
         .modal {
-            position: fixed;
-            inset: 0;
-            background: var(--shadow-color);
-            backdrop-filter: blur(4px);
-            z-index: 50;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            padding: 1rem;
-        }
+    position: fixed;
+    inset: 0;
+    background: var(--shadow-color);
+    backdrop-filter: blur(4px);
+    z-index: 2000; /* Header (1000) ve Dropdown (1001) değerlerinden yüksek olmalı */
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+}
 
         .modal.active {
             display: flex;
@@ -3788,14 +3788,17 @@ Abartısız ve yalansız bir şekilde, hakkını vererek bilinmesini sağlamakt�
     
     // Gerekli parametreleri ekle
     const separator = videoUrl.includes('?') ? '&' : '?';
-    videoUrl += separator + 'playsinline=1&rel=0&enablejsapi=1';
+    // fs=1 parametresi tam ekran butonunu zorlar
+    videoUrl += separator + 'playsinline=1&rel=0&enablejsapi=1&fs=1';
     
     modalBody.innerHTML = `
         <div class="video-container">
             <iframe src="${videoUrl}" 
                 frameborder="0" 
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                allowfullscreen>
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen" 
+                allowfullscreen="true"
+                webkitallowfullscreen="true"
+                mozallowfullscreen="true">
             </iframe>
         </div>
     `;
