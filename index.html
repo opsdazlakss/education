@@ -299,9 +299,6 @@
     .header-progress-container p { display: none; }
     .progress-bar { width: 60px; }
     /* Mobilde paneller ekran dışına taşmasın diye genişliği ayarla */
-    .dropdown-menu, #notifPanel {
-        width: 260px;
-    }
 }
 
         .logo {
@@ -397,9 +394,102 @@
             gap: 2rem;
         }
         @media (max-width: 768px) {
+            .dropdown-menu, #notifPanel {
+        position: fixed !important;
+        top: 100% !important;
+        left: 50% !important;
+        right: auto !important;
+        bottom: auto !important;
+        transform: translate(-50%, -50%) !important;
+        width: 90% !important;
+        max-width: 320px !important;
+        max-height: 70vh !important;
+        border-radius: 16px !important;
+        z-index: 2001 !important;
+        overflow-y: auto;
+    }
+    
+    /* Açık durumda transform'u düzelt */
+    .dropdown-menu.show, #notifPanel.show {
+        display: flex !important;
+        opacity: 1 !important;
+        transform: translate(-50%, -50%) !important;
+    }
+    
+    #notifPanel.show {
+        display: block !important;
+    }
+    
+    /* Arka plan overlay ekle */
+    .dropdown-menu.show::before, #notifPanel.show::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: -1;
+    }
             header {
-                position: static;
-                    }
+        position: static;
+    }
+    
+    .header-content {
+        flex-direction: row; /* Yatay düzen kalsın */
+        flex-wrap: wrap;
+        padding: 0.75rem 1rem;
+        gap: 0.5rem;
+    }
+    
+    /* Logo küçültme */
+    .logo {
+        flex: 1;
+        min-width: 0;
+    }
+    
+    .logo-icon {
+        width: 35px;
+        height: 35px;
+        font-size: 16px;
+    }
+    
+    .logo-text h1 {
+        font-size: 16px;
+    }
+    
+    .logo-text p {
+        font-size: 10px;
+    }
+    
+    /* Header aksiyonları */
+    .header-actions {
+        gap: 0.5rem;
+    }
+    
+    /* Progress bar'ı mobilde gizle */
+    .header-progress-container {
+        display: none;
+    }
+    
+    /* İkon butonları küçült */
+    .icon-btn {
+        width: 36px;
+        height: 36px;
+        font-size: 18px;
+    }
+    
+    /* Dropdown menüler */
+    .dropdown-menu, #notifPanel {
+        position: fixed;
+        top: auto;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        max-height: 70vh;
+        border-radius: 16px 16px 0 0;
+    }
     
     
             .stages-list {
@@ -414,27 +504,6 @@
             .content-card {
                 position: relative;
                 z-index: 1;
-            }
-            
-            .header-content > div:last-child {
-                width: 100%;
-                flex-direction: column;
-                align-items: stretch;
-            }
-            
-            .header-content > div:last-child > * {
-                width: 100%;
-                text-align: center;
-            }
-            
-            .logo-text h1 {
-                font-size: 20px;
-            }
-            
-            .logo-icon {
-                width: 35px;
-                height: 35px;
-                font-size: 16px;
             }
             
             .container {
@@ -506,7 +575,7 @@
             
         @media (max-width: 480px) {
             .modal-body {
-            padding: 0.5rem !important; /* 2rem'den 0.5rem'e düşürdük */
+        padding: 0.5rem !important; /* 2rem'den 0.5rem'e düşürdük */
             }
             
             .video-container {
@@ -520,13 +589,29 @@
             .modal-header {
                 padding: 1rem !important;
             }
-            .logo-text h1 {
-                font-size: 18px;
-            }
-            
-            .logo-text p {
-                font-size: 11px;
-            }
+            .header-content {
+        padding: 0.5rem 0.75rem;
+    }
+    
+    .logo-text h1 {
+        font-size: 14px;
+    }
+    
+    .logo-text p {
+        display: none; /* "To The Future" yazısını gizle */
+    }
+    
+    .logo-icon {
+        width: 32px;
+        height: 32px;
+        font-size: 14px;
+    }
+    
+    .icon-btn {
+        width: 34px;
+        height: 34px;
+        font-size: 16px;
+    }
             
             .card-header h2 {
                 font-size: 20px;
